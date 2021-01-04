@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateRoles extends Migration
+class CreateRolesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -16,8 +16,7 @@ class CreateRoles extends Migration
         Schema::create('roles', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->integer('permission');
-            $table->string('desc');
+            $table->string('desc')->nullable();
             $table->timestamps();
         });
     }

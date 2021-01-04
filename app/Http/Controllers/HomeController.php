@@ -25,4 +25,12 @@ class HomeController extends Controller
     {
         return view('home');
     }
+
+    public function edit() {
+        dd('edit - Debug');
+    }
+
+    public function delete() {
+        dd('delete - Debug');
+    }
 }

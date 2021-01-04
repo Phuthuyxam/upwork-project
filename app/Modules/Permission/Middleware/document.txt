@@ -1,0 +1,4 @@
+create a custom middle ware check has permission with role current user login
+// config file
+app/Http/Kernel.php
+add config to array $routeMiddleware

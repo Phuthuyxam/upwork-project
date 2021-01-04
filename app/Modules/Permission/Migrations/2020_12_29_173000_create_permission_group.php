@@ -16,7 +16,7 @@ class CreatePermissionGroup extends Migration
         Schema::create('permission_group', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('desc');
+            $table->string('desc')->nullable();
             $table->timestamps();
         });
     }
