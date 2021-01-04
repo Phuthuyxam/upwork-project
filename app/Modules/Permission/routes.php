@@ -7,7 +7,7 @@ Route::group(
         Route::get('permision-manage', [
             # middle here
             'as' => 'index',
-            'uses' => 'PostController@index'
+            'uses' => 'DashboardController@index'
         ]);
     }
 );

@@ -23,4 +23,10 @@ Route::get('/home-del', 'HomeController@delete' );
 
 Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+//Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+//Route::group(['prefix'=>'/admin'],function(){
+//    Route::get('/dashboard','CommentController@showComment');
+//});
+//Route::get('/dashboard', function () {
+//    return view('backend.dashboard');
+//});

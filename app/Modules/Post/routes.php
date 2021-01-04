@@ -7,7 +7,7 @@ Route::group(
         Route::get('post', [
             # middle here
             'as' => 'index',
-            'uses' => 'PostController@index'
+            'uses' => 'DashboardController@index'
         ]);
     }
 );
