@@ -15,6 +15,9 @@ class CreateTermMetaTable extends Migration
     {
         Schema::create('term_meta', function (Blueprint $table) {
             $table->id();
+            $table->bigInteger('term_id');
+            $table->string('meta_key');
+            $table->string('meta_value');
             $table->timestamps();
         });
     }

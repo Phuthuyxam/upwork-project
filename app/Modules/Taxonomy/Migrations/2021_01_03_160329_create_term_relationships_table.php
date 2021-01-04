@@ -15,6 +15,9 @@ class CreateTermRelationshipsTable extends Migration
     {
         Schema::create('term_relationships', function (Blueprint $table) {
             $table->id();
+            $table->bigInteger('object_id')->comment('example post id');
+            $table->bigInteger('term_taxonomy_id');
+            $table->integer('term_order');
             $table->timestamps();
         });
     }
