@@ -2,7 +2,28 @@
 
 @section('style')
     <style>
-        
+        .permission-group-head {
+            display: flex;
+            align-items: center;
+        }
+        .permission-group-head label {
+            margin: 0;
+        }
+        .permission-group-head span {
+            line-height: unset;
+            margin-left: auto;
+            order: 2;
+        }
+        .checkbox-permission {
+            display: flex;
+            align-items: center;
+        }
+        .checkbox-permission input{
+            margin-right: 5px;
+        }
+        .checkbox-permission p {
+            margin: 0;
+        }
     </style>
 @endsection
 
@@ -45,7 +66,8 @@
 
                                         @foreach($permissionGroup as $perGroup)
                                             <div class="card shadow-none border mb-2">
-                                                <div class="card-header p-3" id="heading{{ $perGroup->id }}" data-toggle="collapse"
+
+                                                <div class="card-header p-3 permission-group-head" id="heading{{ $perGroup->id }}" data-toggle="collapse"
                                                      aria-expanded="true"
                                                      aria-controls="collapse{{ $perGroup->id }}" href="#collapse{{ $perGroup->id }}" style="cursor: pointer">
                                                     <h6 class="m-0">
@@ -55,32 +77,29 @@
                                                         <p style="margin: 0px; font-size: 12px; font-weight: 500">{{ $perGroup->desc }}</p>
                                                     </h6>
                                                     <span>
-                                                            <input type="checkbox" id="switch64" switch="primary" checked/>
-                                                            <label for="switch64" data-on-label="Yes" data-off-label="No"></label>
+                                                            <input type="checkbox" id="switchGroup{{$perGroup->id}}" onchange="acceptAllGroup({{ $perGroup->id }})" switch="primary"/>
+                                                            <label for="switchGroup{{$perGroup->id}}" id="labelGroup{{$perGroup->id}}" data-on-label="All" data-off-label="No"></label>
                                                     </span>
                                                 </div>
 
-                                                <div id="collapse{{ $perGroup->id }}" class="collapse" aria-labelledby="heading{{ $perGroup->id }}" data-parent="#accordion">
+                                                @if($perGroup->permission)
+
+                                                    <div id="collapse{{ $perGroup->id }}" class="collapse" aria-labelledby="heading{{ $perGroup->id }}" data-parent="#accordion">
                                                     <div class="card-body">
-
-                                                        <div>
-                                                            <input type="checkbox" id="switch6" switch="primary" checked/>
-                                                            <label for="switch6" data-on-label="Yes" data-off-label="No"></label>
+                                                        <div class="row">
+                                                            @foreach($perGroup->permission as $permission)
+                                                                <div class="col-lg-4">
+                                                                    <div class="checkbox-permission">
+                                                                        <input type="checkbox" id="switchPermission{{ $permission->id }}" class="switch-permission" data-id="{{ $permission->id }}" onchange="setAcceptAllGroup({{ $perGroup->id }})"/>
+                                                                        <p>{{ $permission->name }}</p>
+                                                                    </div>
+                                                                    @if($permission->desc) <p>( {{ $permission->desc }} )</p> @endif
+                                                                </div>
+                                                            @endforeach
                                                         </div>
-
-                                                        <div>
-                                                            <input type="checkbox" id="switch4" switch="primary" checked/>
-                                                            <label for="switch6" data-on-label="Yes" data-off-label="No"></label>
-                                                        </div>
-
-                                                        <div>
-                                                            <input type="checkbox" id="switch3" switch="primary" checked/>
-                                                            <label for="switch6" data-on-label="Yes" data-off-label="No"></label>
-                                                        </div>
-
-
                                                     </div>
                                                 </div>
+                                                @endif
                                             </div>
 
                                         @endforeach
@@ -112,4 +131,41 @@
             </div>
         </div>
     </div>
+@endsection
+
+@section('script')
+    <script>
+        function setValuePermissionSwitch(id , value) {
+            if(value === 'checked') {
+                $('#switchPermission'+id).prop('checked', true);
+            }
+            if(value === 'unchecked') {
+                $('#switchPermission'+id).prop('checked', false);
+            }
+        }
+        function acceptAllGroup( id ) {
+            // set check all
+            $('#collapse'+id).find('.switch-permission').each(function (item) {
+                var permissionId = $(this).data('id');
+                var status = $('#switchGroup' + id).is(":checked") ? 'checked' : 'unchecked';
+                setValuePermissionSwitch(permissionId,status);
+            })
+        }
+
+        function setAcceptAllGroup(id) {
+            var checker = true;
+            $('#collapse'+id).find('.switch-permission').each(function (item) {
+                if(!$(this).is(":checked")) {
+                    checker = false;
+                    break;
+                }
+            })
+            if(checker === true) {
+                $('#switchGroup'+id).prop('checked', true);
+            }else {
+                $('#switchGroup'+id).prop('checked', false);
+            }
+        }
+
+    </script>
 @endsection
