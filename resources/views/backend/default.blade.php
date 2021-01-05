@@ -3,7 +3,7 @@
 
     <head>
         <meta charset="utf-8" />
-        <title>Dashboard | Fonik - Responsive Bootstrap 4 Admin Dashboard</title>
+        <title>@yield('title')</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta content="Premium Multipurpose Admin & Dashboard Template" name="description" />
         <meta content="Themesbrand" name="author" />
@@ -15,6 +15,8 @@
         <link href="{{ asset('assets/css/icons.min.css') }}" rel="stylesheet" type="text/css" />
         <!-- App Css-->
         <link href="{{ asset('assets/css/app.min.css') }}" id="app-style" rel="stylesheet" type="text/css" />
+
+        @yield('style');
 
     </head>
 
@@ -63,7 +65,7 @@
         <script src="{{ asset('assets/js/pages/dashboard.init.js') }}"></script>
 
         <script src="{{ asset('assets/js/app.js') }}"></script>
-
+        @yield('script')
     </body>
 
 </html>

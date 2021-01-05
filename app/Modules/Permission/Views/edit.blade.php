@@ -1,4 +1,11 @@
 @extends('backend.default')
+
+@section('style')
+    <style>
+        
+    </style>
+@endsection
+
 @section('content')
     <div class="container-fluid">
 
