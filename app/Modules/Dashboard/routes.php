@@ -1,8 +1,8 @@
 <?php
 use Illuminate\Support\Facades\Route;
-$namespace = 'App\Modules\dashboard\Controllers';
+$namespace = 'App\Modules\Dashboard\Controllers';
 Route::group(
-    ['module'=>'dashboard', 'namespace' => $namespace],
+    ['module'=>'dashboard', 'namespace' => $namespace, 'middleware' => ['web','auth','ptx.permission']],
     function() {
         Route::get('/admin', [
             # middle here

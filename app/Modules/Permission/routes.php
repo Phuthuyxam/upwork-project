@@ -1,11 +1,10 @@
 <?php
 use Illuminate\Support\Facades\Route;
-$namespace = 'App\Modules\Post\Controllers';
+$namespace = 'App\Modules\Permission\Controllers';
 Route::group(
-    ['module'=>'Post', 'namespace' => $namespace],
+    ['module'=>'Permission', 'namespace' => $namespace],
     function() {
-        Route::get('permision-manage', [
-            # middle here
+        Route::get('/permision-manage', [
             'as' => 'index',
             'uses' => 'DashboardController@index'
         ]);

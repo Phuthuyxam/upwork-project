@@ -1,12 +1,12 @@
 <?php
-namespace App\Modules\dashboard\Controllers;
+namespace App\Modules\Post\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 //use App\Modules\Post\Repositories\PostRepository;
 
 
-class DashboardController extends Controller{
+class PermissionManagerController extends Controller{
 
     protected $posRepository;
 
@@ -17,7 +17,7 @@ class DashboardController extends Controller{
     public function index(Request $request){
 //        $get = $this->posRepository->getAll();
 //        dump($get);
-        return view('dashboard::dashboard');
+        dump("asdad");
     }
 
 }
