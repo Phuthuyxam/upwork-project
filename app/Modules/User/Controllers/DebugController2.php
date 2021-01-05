@@ -1,7 +1,7 @@
 <?php
 
 
-namespace App\Modules\Debug\Controllers;
+namespace App\Modules\Debug\Controllersold;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;

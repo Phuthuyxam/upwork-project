@@ -2,11 +2,27 @@
 use Illuminate\Support\Facades\Route;
 $namespace = 'App\Modules\Permission\Controllers';
 Route::group(
-    ['module'=>'Permission', 'namespace' => $namespace],
+    ['module'=>'Permission', 'namespace' => $namespace, 'middleware' => [ 'web', 'auth' , 'ptx.permission' ], 'as'=>'permission.', 'prefix' => '/admin' ],
     function() {
         Route::get('/permision-manage', [
             'as' => 'index',
-            'uses' => 'DashboardController@index'
+            'uses' => 'PermissionManagerController@index'
         ]);
+        Route::post('/add-permision', [
+            'as' => 'add',
+            'uses' => 'PermissionManagerController@add'
+        ]);
+
+        Route::any('/edit-permision/{id}', [
+            'as' => 'edit',
+            'uses' => 'PermissionManagerController@edit'
+        ]);
+
+        Route::post('/del-permision/{id}', [
+            'as' => 'delete',
+            'uses' => 'PermissionManagerController@delete'
+        ]);
+
+
     }
 );

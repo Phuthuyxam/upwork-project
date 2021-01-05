@@ -1,5 +1,6 @@
 <?php
-    if(!function_exists('getClientIp')){
+
+if(!function_exists('getClientIp')){
         function getClientIp(){
             $ipaddress = '';
             if (getenv('HTTP_CLIENT_IP'))
@@ -17,5 +18,12 @@
             else
                 $ipaddress = 'UNKNOWN';
             return $ipaddress;
+        }
+    }
+    if(!function_exists('displayAlert')) {
+        function displayAlert($messageFull) {
+            if(!$messageFull) return '';
+            list($type, $message) = explode('|', $messageFull);
+            return sprintf('<div class="alert alert-%s" role="alert">%s</div>', $type, $message);
         }
     }

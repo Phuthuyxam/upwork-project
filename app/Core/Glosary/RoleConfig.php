@@ -6,5 +6,5 @@ namespace App\Core\Glosary;
 
 class RoleConfig extends BasicEnum
 {
-    const SUPPERADMIN = ['VALUE' => 4];
+    const SUPPERADMIN = ['VALUE' => 1];
 }
