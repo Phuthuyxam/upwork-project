@@ -38,7 +38,7 @@ class PermissionManagerController extends Controller{
 
     }
 
-    public function edit($id) {
+    public function edit($id, Request $request) {
 
         $role = $this->roleRepository->find($id);
         $permissionGroup = $this->permissionGroupRepository->getAll();

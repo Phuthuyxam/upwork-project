@@ -18,7 +18,7 @@
                         @csrf
                         <div class="form-group">
                             <label>Name</label>
-                            <input type="text" class="form-control" name="role_name"  placeholder="Type something" value="{{ old('role_name') }}" />
+                            <input type="text" class="form-control" name="role_name" required  placeholder="Type something" value="{{ old('role_name') }}" />
                             @if($errors->first('role_name')) {!! '<p style="color: red"> '. $errors->first('role_name') .' </p>' !!} @endif
                         </div>
 

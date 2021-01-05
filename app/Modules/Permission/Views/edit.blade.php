@@ -41,13 +41,13 @@
 
                         {!! displayAlert(Session::get('message'))  !!}
 
-                        <form class="custom-validation" action="{{ route( 'permission.add' ) }}" method="POST">
+                        <form class="custom-validation" action="" method="POST">
                             @csrf
                             <div class="row">
                                 <div class="col-lg-4">
                                     <div class="form-group">
                                         <label>Name</label>
-                                        <input type="text" class="form-control" name="role_name"  placeholder="Type something" value="{{ old('role_name') }}" />
+                                        <input type="text" class="form-control" name="role_name" required placeholder="Type something" value="{{ old('role_name') }}" />
                                         @if($errors->first('role_name')) {!! '<p style="color: red"> '. $errors->first('role_name') .' </p>' !!} @endif
                                     </div>
 
@@ -77,7 +77,7 @@
                                                         <p style="margin: 0px; font-size: 12px; font-weight: 500">{{ $perGroup->desc }}</p>
                                                     </h6>
                                                     <span>
-                                                            <input type="checkbox" id="switchGroup{{$perGroup->id}}" onchange="acceptAllGroup({{ $perGroup->id }})" switch="primary"/>
+                                                            <input type="checkbox" id="switchGroup{{$perGroup->id}}" class="checkbox-permission-group" data-id="{{ $perGroup->id }}" onchange="acceptAllGroup({{ $perGroup->id }})" switch="primary"/>
                                                             <label for="switchGroup{{$perGroup->id}}" id="labelGroup{{$perGroup->id}}" data-on-label="All" data-off-label="No"></label>
                                                     </span>
                                                 </div>
@@ -90,7 +90,7 @@
                                                             @foreach($perGroup->permission as $permission)
                                                                 <div class="col-lg-4">
                                                                     <div class="checkbox-permission">
-                                                                        <input type="checkbox" id="switchPermission{{ $permission->id }}" class="switch-permission" data-id="{{ $permission->id }}" onchange="setAcceptAllGroup({{ $perGroup->id }})"/>
+                                                                        <input type="checkbox" id="switchPermission{{ $permission->id }}" class="checkbox-permission-input" data-id="{{ $permission->id }}" onchange="setAcceptAllGroup({{ $perGroup->id }})"/>
                                                                         <p>{{ $permission->name }}</p>
                                                                     </div>
                                                                     @if($permission->desc) <p>( {{ $permission->desc }} )</p> @endif
@@ -114,9 +114,11 @@
 
                                 </div>
                             </div>
+                            <input type="hidden" name="permission_group">
+                            <input type="hidden" name="permission">
                             <div class="form-group mb-0">
                                 <div>
-                                    <button type="submit" class="btn btn-pink waves-effect waves-light">
+                                    <button type="submit" class="btn btn-pink waves-effect waves-light" onclick="setValueHidden(event)">
                                         Submit
                                     </button>
                                     <button type="reset" class="btn btn-secondary waves-effect ml-1">
@@ -157,7 +159,7 @@
             $('#collapse'+id).find('.switch-permission').each(function (item) {
                 if(!$(this).is(":checked")) {
                     checker = false;
-                    break;
+                    return false;
                 }
             })
             if(checker === true) {
@@ -166,6 +168,30 @@
                 $('#switchGroup'+id).prop('checked', false);
             }
         }
+
+        function setValueHidden(event) {
+            event.preventDefault();
+            // add value to permission group
+            var permission_group = [];
+            var permissons = [];
+            $('.checkbox-permission-group').each(function (item) {
+                if($(this).is(':checked')) {
+                    var id = $(this).data('id');
+                    permission_group.push(id)
+                }
+            });
+
+            $('.checkbox-permission-group').each(function (item) {
+                if($(this).is(':checked')) {
+                    var id = $(this).data('id');
+                    permission_group.push(id)
+                }
+            });
+
+            console.log("asdad");
+        }
+
+
 
     </script>
 @endsection
