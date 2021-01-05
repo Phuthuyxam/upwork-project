@@ -1,4 +1,7 @@
 @extends('backend.default')
+@section('heading')
+    <h4 class="page-title font-size-18">Dashboard</h4>
+@endsection
 @section('content')
     <div class="header-bg">
         <div class="container-fluid">

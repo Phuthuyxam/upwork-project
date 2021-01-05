@@ -21,8 +21,8 @@ Route::get('/home-edit', 'PostController@index' );
 
 Route::get('/home-del', 'HomeController@delete' );
 
-Auth::routes();
-
+\Illuminate\Support\Facades\Auth::routes();
+Route::get('logout', '\App\Http\Controllers\Auth\LoginController@loggedOut')->name('logout');
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 //Route::group(['prefix'=>'/admin'],function(){
 //    Route::get('/dashboard','CommentController@showComment');
