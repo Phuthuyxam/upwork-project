@@ -1,6 +1,7 @@
 <?php
 namespace App\Modules\Permission\Repositories;
 
+use App\Core\Glosary\RoleConfigs;
 use App\Core\Repositories\EloquentRepository;
 use App\Modules\Permission\Model\Roles;
 use Illuminate\Support\Facades\DB;
@@ -50,5 +51,22 @@ class RoleRepository extends EloquentRepository {
             return false;
         }
 
+    }
+
+    public function delete($id, $trash = false)
+    {
+        DB::beginTransaction();
+        try {
+            // update user
+            $this->_model->find($id)->users()->update(['role' => RoleConfigs::GUEST['VALUE']]);
+            // delete role - permission
+            $deleteRelationship = $this->_model->find($id)->getAllPermission()->delete();
+            $deleteRole = parent::delete($id, $trash);
+            DB::commit();
+            return true;
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return false;
+        }
     }
 }

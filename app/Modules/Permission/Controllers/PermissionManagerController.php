@@ -2,12 +2,10 @@
 namespace App\Modules\Permission\Controllers;
 
 use App\Core\Glosary\RoleConfig;
-use App\Modules\Permission\Model\Roles;
+use App\Http\Controllers\Controller;
 use App\Modules\Permission\Repositories\PermissionGroupRepository;
 use App\Modules\Permission\Repositories\RoleRepository;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Redirect;
 
 
 class PermissionManagerController extends Controller{
@@ -63,9 +61,9 @@ class PermissionManagerController extends Controller{
 
 
     public function delete($id) {
-//        try {
-//            $del = $this->roleRepository->delete($id);
-//        }
+        $del = $this->roleRepository->delete($id);
+        if( $del) return redirect()->back()->with('message', 'success|Successfully delete the role');
+        return redirect()->back()->with('message','danger|Something wrong try again!');
     }
 
 }
