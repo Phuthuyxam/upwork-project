@@ -18,4 +18,12 @@ class ResponeCode extends BasicEnum
     const UNSUPPORTEDMEDIATYPE = ['CODE' => 415, 'STATUS' => 'Unsupported Media Type'];
     const UNPROCESSABLEENTITY = ['CODE' => 422, 'STATUS' => 'Unprocessable Entity'];
     const SERVERERROR = ['CODE' => 500, 'STATUS' => 'Internal Server Error'];
+
+    const COMMON_SAVE_FAIL = ['VALUE' => 1, 'MESSAGE' => 'Save fail !'];
+
+    public static function getAll() {
+        $oClass = new \ReflectionClass(__CLASS__);
+        $constants = $oClass->getConstants();
+        return $constants;
+    }
 }
