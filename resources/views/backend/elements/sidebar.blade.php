@@ -16,7 +16,7 @@
                 </li>
 
                 <li>
-                    <a href="#" class="waves-effect">
+                    <a href="{{route('filemanager.index')}}" class="waves-effect">
                         <i class="dripicons-photo-group"></i>
                         <span>Gallery</span>
                     </a>

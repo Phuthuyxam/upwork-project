@@ -17,6 +17,7 @@
         <link href="{{ asset('assets/css/icons.min.css') }}" rel="stylesheet" type="text/css" />
         <!-- App Css-->
         <link href="{{ asset('assets/css/app.min.css') }}" id="app-style" rel="stylesheet" type="text/css" />
+        @yield('extension_style')
 
         @yield('style');
 
@@ -69,6 +70,8 @@
 
         <script src="{{ asset('assets/js/app.js') }}"></script>
         <script src="{{ asset('assets/js/common.js') }}"></script>
+
+        @yield('extension_script')
         @yield('script')
     </body>
 
