@@ -47,11 +47,11 @@
                 <li>
                     <a href="javascript: void(0);" class="has-arrow waves-effect">
                         <i class="dripicons-user"></i>
-                        <span>Roles & Permission</span>
+                        <span>Users & Roles</span>
                     </a>
                     <ul class="sub-menu" aria-expanded="false">
-                        <li><a href="#">Create</a></li>
-                        <li><a href="#">All Roles</a></li>
+                        <li><a href="#">Users</a></li>
+                        <li><a href="{{ route('permission.index') }}">Roles</a></li>
                     </ul>
                 </li>
                 <li class="menu-title">General settings</li>

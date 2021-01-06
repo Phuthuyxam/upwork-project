@@ -11,9 +11,6 @@
                         <span class="badge badge-primary"> <i class="mdi mdi-key-plus"></i> Add Permission</span>
                     </h4>
 
-
-                    {!! displayAlert(Session::get('message'))  !!}
-
                     <form class="custom-validation" action="{{ route( 'permission.add' ) }}" method="POST">
                         @csrf
                         <div class="form-group">
@@ -51,9 +48,9 @@
                     <p class="card-title-desc">
                         manager all permission
                     </p>
-
+                    {!! displayAlert(Session::get('message'))  !!}
                     <div class="table-responsive">
-                        <table class="table table-dark table-borderless">
+                        <table class="table table-striped">
                             <thead>
                             <tr>
                                 <th>#</th>
@@ -70,7 +67,7 @@
                                     <td>{{ $role->desc }}</td>
                                     <td>
                                         <div class="button-items">
-                                            <button type="button" class="btn btn-primary waves-effect waves-light"><a href="{{ route('permission.edit',['id' => $role->id]) }}" style="color: #ffffff"> Edit </a></button>
+                                            <button type="button" class="btn btn-primary waves-effect waves-light"><a href="{{ route('permission.edit',['id' => $role->id]) }}" style="color: #ffffff"> Edit/Add Permissions </a></button>
                                             <form action="{{ route( 'permission.delete', ['id' => $role->id] ) }}" id="deleterole{{$role->id}}" method="POST" style="display: inline-block">
                                                 @csrf
                                                 <button type="button" class="btn btn-danger waves-effect waves-light" onclick="deleteRole({{$role->id}})">Delete</button>

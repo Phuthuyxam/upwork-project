@@ -1,6 +1,7 @@
 <?php
 namespace App\Modules\Permission\Model;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 
 class Roles extends Model {
@@ -19,6 +20,10 @@ class Roles extends Model {
 
     public function permissionGroup() {
         return $this->belongsToMany(Permissions::class, 'role_permission','role', 'permission_group');
+    }
+
+    public function users() {
+        return $this->hasMany(User::class, 'role');
     }
 
 }
