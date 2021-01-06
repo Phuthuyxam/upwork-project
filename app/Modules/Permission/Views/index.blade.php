@@ -71,7 +71,10 @@
                                     <td>
                                         <div class="button-items">
                                             <button type="button" class="btn btn-primary waves-effect waves-light"><a href="{{ route('permission.edit',['id' => $role->id]) }}" style="color: #ffffff"> Edit </a></button>
-                                            <button type="button" class="btn btn-danger waves-effect waves-light">Delete</button>
+                                            <form action="{{ route( 'permission.delete', ['id' => $role->id] ) }}" id="deleterole{{$role->id}}" method="POST" style="display: inline-block">
+                                                @csrf
+                                                <button type="button" class="btn btn-danger waves-effect waves-light" onclick="deleteRole({{$role->id}})">Delete</button>
+                                            </form>
                                         </div>
                                     </td>
                                 </tr>
@@ -85,4 +88,12 @@
         </div>
     </div>
 </div>
+@endsection
+@section('script')
+    <script>
+        function deleteRole(id) {
+            if(confirm("are you sure delete role?"))
+                $('#deleterole'+id).submit();
+        }
+    </script>
 @endsection

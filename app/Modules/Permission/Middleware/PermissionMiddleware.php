@@ -31,7 +31,8 @@ class PermissionMiddleware
             $checkExitAlias = false;
 
             foreach ($permissions as $per) {
-                if($per['alias'] == $alias) {
+                $aliasArray = explode('|', $per['alias']);
+                if(in_array($alias, $aliasArray)) {
                     $checkExitAlias = true;
                     break;
                 }

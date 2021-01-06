@@ -1,10 +1,9 @@
 <?php
 namespace App\Core\Repositories;
 
-use App\Core\Repositories\RepositoryInterface;
 use Illuminate\Support\Facades\Log;
 
-abstract class EloquentRespository implements RepositoryInterface {
+abstract class EloquentRepository implements RepositoryInterface {
 
     protected $_model;
 

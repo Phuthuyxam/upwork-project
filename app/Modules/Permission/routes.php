@@ -13,9 +13,14 @@ Route::group(
             'uses' => 'PermissionManagerController@add'
         ]);
 
-        Route::any('/edit-permision/{id}', [
+        Route::get('/edit-permision/{id}', [
             'as' => 'edit',
             'uses' => 'PermissionManagerController@edit'
+        ]);
+
+        Route::post('/save-permision/{id}', [
+            'as' => 'save',
+            'uses' => 'PermissionManagerController@save'
         ]);
 
         Route::post('/del-permision/{id}', [

@@ -1,10 +1,10 @@
 <?php
 namespace App\Modules\Taxonomy\Repositories;
 
-use App\Core\Repositories\EloquentRespository;
+use App\Core\Repositories\EloquentRepository;
 use App\Modules\Taxonomy\Model\Term;
 
-class TermRepository extends EloquentRespository {
+class TermRepository extends EloquentRepository {
 
     public function getModel() {
         return Term::class;
