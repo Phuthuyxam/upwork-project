@@ -11,6 +11,6 @@ class TermRepository extends EloquentRepository {
     }
 
     public function getCategories() {
-        return $this->_model->join('term_taxonomy','terms.id','=','term_taxonomy.id')->get();
+        return $this->_model->join('term_taxonomy','terms.id','=','term_taxonomy.term_id')->orderBy('terms.id','DESC')->paginate(9);
     }
 }

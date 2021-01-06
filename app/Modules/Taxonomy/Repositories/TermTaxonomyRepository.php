@@ -10,4 +10,7 @@ class TermTaxonomyRepository extends EloquentRepository {
         return TermTaxonomy::class;
     }
 
+    public function deleteByTermId($termId){
+        return $this->_model->where('term_id',$termId)->delete();
+    }
 }

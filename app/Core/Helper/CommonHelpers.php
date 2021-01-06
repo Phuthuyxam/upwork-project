@@ -26,6 +26,6 @@ if (!function_exists('displayAlert')) {
     {
         if (!$messageFull) return '';
         list($type, $message) = explode('|', $messageFull);
-        return sprintf('<div class="alert alert-%s" role="alert">%s</div>', $type, $message);
+        return sprintf('<div class="alert alert-%s" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>%s</div>', $type, $message);
     }
 }

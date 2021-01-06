@@ -29,32 +29,49 @@ class TaxonomyController extends Controller
 
     public function add(Request $request)
     {
+        if($request->isMethod('post')) {
+            $validate = $request->validate([
+                'name' => 'required|max:191',
+                'slug' => 'required|unique:terms'
+            ]);
 
-        $validate = $request->validate([
-            'name' => 'required|max:191',
-            'slug' => 'required|unique:terms'
-        ]);
-
-        $dataTerm = [
-            'name' => $request->input('name'),
-            'slug' => $request->input('slug'),
-        ];
-
-        $termId = $this->termRepository->create($dataTerm)->id;
-        if ($termId) {
-            $dataTermTax = [
-                'term_id' => $termId,
-                'taxonomy' => TaxonomyType::CATEGORY['VALUE'],
-                'description' => $request->input('description'),
-                'parent' => $request->input('parent') < 0 ? null : $request->input('parent')
+            $dataTerm = [
+                'name' => $request->input('name'),
+                'slug' => $request->input('slug'),
             ];
-            if ($this->termTaxonomyRepository->create($dataTermTax)) {
-                return response(ResponeCode::SUCCESS['CODE']);
+
+            $termId = $this->termRepository->create($dataTerm)->id;
+            if ($termId) {
+                $dataTermTax = [
+                    'term_id' => $termId,
+                    'taxonomy' => TaxonomyType::CATEGORY['VALUE'],
+                    'description' => $request->input('description'),
+                    'parent' => $request->input('parent') < 0 ? null : $request->input('parent')
+                ];
+                if ($this->termTaxonomyRepository->create($dataTermTax)) {
+                    return redirect()->back()->with('message', 'success|Successfully add "'.$request->input('name').'" category');
+                } else {
+                    return redirect()->back()->with('message','danger|Something wrong try again!');
+                }
             } else {
-                return response(ResponeCode::SUCCESS['CODE']);
+                return redirect()->back()->with('message','danger|Something wrong try again!');
             }
-        } else {
-            return response(ResponeCode::COMMON_SAVE_FAIL['VALUE']);
+        }else{
+            return view('Taxonomy::add');
+        }
+
+    }
+
+    public function delete(Request $request) {
+        $id = $request->input('id');
+        try {
+            if (isset($id) && !empty($id)) {
+                $this->termRepository->delete($id);
+                $this->termTaxonomyRepository->deleteByTermId($id);
+            }
+            return response(ResponeCode::SUCCESS['CODE']);
+        }catch (\Throwable $th) {
+           return response(ResponeCode::SERVERERROR['CODE']);
         }
     }
 }

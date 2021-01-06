@@ -7,6 +7,10 @@
         .form-group p {
             margin-bottom: 0;
         }
+        .pagination-wrapper {
+            display: flex;
+            justify-content: flex-end;
+        }
     </style>
 @endsection
 @section('heading')
@@ -15,12 +19,13 @@
 @section('content')
     <div class="content-wrapper">
         <div class="container-fluid">
+            {!! displayAlert(Session::get('message'))  !!}
             <div class="row">
                 <div class="col-4">
                     <div class="card">
                         <div class="card-body">
                             <h4 class="card-title">Add New Category</h4>
-                            <form action="" method="post" role="form">
+                            <form action="{{ route('taxonomy.add') }}" method="post" role="form">
                                 @csrf
                                 <div class="form-group">
                                     <label for="name">Name</label>
@@ -61,29 +66,39 @@
                     <div class="card">
                         <div class="card-body">
                             <div class="table-wrapper">
-                                <table class="table table-striped table-hover">
+                                <table class="table table-striped table-hover" id="cate-table">
                                     <thead>
                                     <tr>
                                         <th style="color:#1967a9;">Name</th>
                                         <th style="color:#1967a9;">Description</th>
                                         <th style="color:#1967a9;">Slug</th>
-                                        <th style="color:#1967a9;">Created at</th>
-                                        <th style="color:#1967a9;">Updated at</th>
                                         <th style="color:#1967a9;">Count</th>
+                                        <th style="color:#1967a9; text-align: center">Action</th>
                                     </tr>
                                     </thead>
                                     <tbody>
                                         @if(isset($categories) && !empty($categories))
                                             @foreach($categories as $value)
                                                 <tr>
-                                                    <td>{{ $value->name }}</td>
+                                                    <td><a href="#">{{ $value->name }}</a></td>
                                                     <td>{{ $value->description }}</td>
                                                     <td>{{ $value->slug }}</td>
+                                                    <td></td>
+                                                    <td>
+                                                        <div class="btn-wrapper" style="display: flex; align-items: center;justify-content: center">
+                                                            <button class="btn btn-primary btn-edit" style="margin-right: 10px">Edit</button>
+                                                            <button class="btn btn-danger btn-delete" data-id="{{ $value->id }}">Delete</button>
+                                                        </div>
+                                                    </td>
                                                 </tr>
                                             @endforeach
                                         @endif
                                     </tbody>
                                 </table>
+                                <div class="pagination-wrapper">
+                                    {{ $categories->links('backend.elements.pagination') }}
+                                </div>
+
                             </div>
                         </div>
                     </div>
@@ -94,7 +109,6 @@
 @endsection
 @section('script')
     <script>
-        const responseCode = @php echo json_encode(\App\Core\Glosary\ResponeCode::getAll()) @endphp;
         $(document).ready(function (){
             $('#name').on('change',function (){
                 let val = $(this).val();
@@ -104,47 +118,50 @@
                     $('#name-error').text("");
                 }
             })
-            $('.btn-submit').click(function (e){
-                e.preventDefault();
 
-                let _token = $("input[name='_token']").val();
-                let name = $('#name').val();
-                let slug = $('#slug').val();
-                let parent = $('#parent').val();
-                let description = $('#description').val();
-                let valid = true;
-                if (name.trim() === '') {
-                    valid = false;
-                    $('#name-error').text("Name can not be null");
-                    $('#name').addClass('error');
-                }
-                if (valid) {
-                    $('#name-error').text("");
-                    $('#name').removeClass('error');
+            $('.btn-delete').click(function (){
+                let id = $(this).data('id');
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: "You won't be able to revert this!",
+                    type: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes, delete it!'
+                }).then((result) => {
                     $.ajax({
-                        url: "{{ route('taxonomy.add') }}",
-                        type:'POST',
-                        data: {
-                            _token:_token,
-                            name:name,
-                            slug:slug,
-                            parent:parent,
-                            description:description
+                        type : 'POST',
+                        url : '{{ route('taxonomy.delete') }}',
+                        data : {
+                            _token : '{{ csrf_token() }}',
+                            id : id
                         },
-                        success: function(response) {
-                            if (response == responseCode.SUCCESS.CODE) {
+                        success: function (response){
+                            if (response == 200) {
                                 Swal.fire({
                                     type: 'success',
-                                    title: 'Success',
+                                    title: 'Deleted !',
+                                    text: 'Category has been deleted.',
+                                }).then((result) => {
+                                    window.location.href= '{{ route('taxonomy.index') }}';
+                                })
+                            }else{
+                                Swal.fire({
+                                    type: 'error',
+                                    title: 'Oops... !',
+                                    text: 'Something went wrong.',
                                 })
                             }
                         },
-                        error:function (e){
+                        error: function (e) {
                             console.log(e);
                         }
-                    });
-                }
+                    })
+                    if (result.value) {
 
+                    }
+                })
             })
         })
     </script>

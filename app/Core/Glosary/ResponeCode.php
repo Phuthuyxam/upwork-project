@@ -20,6 +20,7 @@ class ResponeCode extends BasicEnum
     const SERVERERROR = ['CODE' => 500, 'STATUS' => 'Internal Server Error'];
 
     const COMMON_SAVE_FAIL = ['VALUE' => 1, 'MESSAGE' => 'Save fail !'];
+//    const COMMON_SAVE_SUCCESS = ['VALUE' => 2 , 'MESSAGE' => 'Save success'];
 
     public static function getAll() {
         $oClass = new \ReflectionClass(__CLASS__);

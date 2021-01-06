@@ -28,8 +28,8 @@
                         <span> Categories </span>
                     </a>
                     <ul class="sub-menu" aria-expanded="false">
-                        <li><a href="{{ route('taxonomy.index') }}">Create</a></li>
-                        <li><a href="#">All Categories</a></li>
+                        <li><a href="{{ route('taxonomy.add') }}">Create</a></li>
+                        <li><a href="{{ route('taxonomy.index') }}">All Categories</a></li>
                     </ul>
                 </li>
 

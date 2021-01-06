@@ -6,7 +6,8 @@ Route::group(
     function() {
         Route::prefix('admin/taxonomy')->group(function () {
             Route::get('/','TaxonomyController@index')->name('taxonomy.index');
-            Route::post('/add','TaxonomyController@add')->name('taxonomy.add');
+            Route::match(['get','post'],'/add','TaxonomyController@add')->name('taxonomy.add');
+            Route::post('/delete','TaxonomyController@delete')->name('taxonomy.delete');
         });
     }
 );
