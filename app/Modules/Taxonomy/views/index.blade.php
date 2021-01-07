@@ -11,6 +11,30 @@
             display: flex;
             justify-content: flex-end;
         }
+        .preview-image {
+            margin-bottom: 1rem;
+            position: relative;
+            overflow: hidden;
+        }
+        .preview-image .close {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            cursor: pointer;
+            background: #9C9C9C;
+            border-radius: 100%;
+            opacity: 1;
+            text-shadow: unset;
+            width: 25px;
+            height: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .preview-image .close i {
+            font-size: 14px;
+            line-height: .4;
+        }
     </style>
 @endsection
 @section('heading')
@@ -25,7 +49,7 @@
                     <div class="card">
                         <div class="card-body">
                             <h4 class="card-title">Add New Category</h4>
-                            <form action="{{ route('taxonomy.add') }}" method="post" role="form">
+                            <form action="{{ route('taxonomy.add') }}" method="post" role="form" enctype="multipart/form-data">
                                 @csrf
                                 <div class="form-group">
                                     <label for="name">Name</label>
@@ -49,6 +73,15 @@
                                     <p style="font-style: italic; font-size: 12px">Categories can have a hierarchy. You
                                         might have and Jazz category, and under that have children categories for Debop
                                         and Big Band. Totally optional</p>
+                                </div>
+                                <div class="form-group">
+                                    <label for="file">Banner</label>
+                                    <div class="preview-image">
+                                        <div class="close">
+                                            <i class="dripicons-cross"></i>
+                                        </div>
+                                    </div>
+                                    <input type="file" name="file" id="file">
                                 </div>
                                 <div class="form-group">
                                     <label for="description">Description</label>
@@ -163,6 +196,31 @@
                     }
                 })
             })
+            $("#file").change(function() {
+                if ($(this).val()) {
+                    readURL(this);
+                }else {
+                    $('.preview-image img').remove();
+                }
+            });
+            $('.preview-image .close').click(function (){
+                $(this).parent().find('img').remove();
+                $('#file').val('');
+            })
         })
+
+        function readURL(input) {
+            if (input.files && input.files[0]) {
+                let reader = new FileReader();
+
+                reader.onload = function(e) {
+                    let html = '<img id="image" style="width: 100%" src="'+e.target.result+'" alt="your image" />';
+                    $('.preview-image').append(html);
+                }
+
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
     </script>
 @endsection
