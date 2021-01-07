@@ -10,7 +10,7 @@ Route::group(
         ]);
 
         Route::get('/file-manager-ckeditor', [
-            'as' => 'index',
+            'as' => 'test-ck-editor',
             'uses' => 'FileManagerController@cktest'
         ]);
 
