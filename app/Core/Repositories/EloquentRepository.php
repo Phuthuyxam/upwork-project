@@ -49,6 +49,10 @@ abstract class EloquentRepository implements RepositoryInterface {
         return $this->_model->create($attributes);
     }
 
+    public function insert(array $attributes)
+    {
+        return $this->_model->insert($attributes);
+    }
     /**
      * Update
      * @param $id
@@ -99,5 +103,19 @@ abstract class EloquentRepository implements RepositoryInterface {
             return false;
         }
 
+    }
+
+    public function saveMany(array $data,$condition = null)
+    {
+        // TODO: Implement saveMany() method.
+        try {
+            $query = $this->_model;
+            if (isset($data) && !empty($data)) {
+                return $condition ? $query->where($condition)->saveMany($data) : $query->saveMany($data);
+            }
+        }catch ( \Exception $e ){
+            Log::error("Filter error in " . $this->_model);
+            return false;
+        }
     }
 }

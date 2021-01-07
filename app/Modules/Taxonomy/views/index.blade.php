@@ -49,31 +49,40 @@
                     <div class="card">
                         <div class="card-body">
                             <h4 class="card-title">Add New Category</h4>
-                            <form action="{{ route('taxonomy.add') }}" method="post" role="form" enctype="multipart/form-data">
+                            <form action="{{ route('taxonomy.add') }}" id="add-form" method="post" role="form" enctype="multipart/form-data">
                                 @csrf
                                 <div class="form-group">
                                     <label for="name">Name</label>
-                                    <input type="text" class="form-control" name="name" id="name" placeholder="Name">
+                                    <input type="text" class="form-control required" name="name" id="name" placeholder="Name" value="{{ old('name') }}">
                                     <p style="font-style: italic; font-size: 12px">The name is how it appears on your
                                         website</p>
-                                    <p class="text-danger" style="font-weight: bold" id="name-error"></p>
+                                    <p class="text-danger error-message" style="font-weight: bold"  id="name-error">
+                                        @error('name')
+                                            {{ $message }}
+                                        @enderror
+                                    </p>
                                 </div>
                                 <div class="form-group">
                                     <label for="slug">Slug</label>
-                                    <input type="text" class="form-control" name="slug" id="slug" placeholder="Slug">
+                                    <input type="text" class="form-control required" name="slug" id="slug" placeholder="Slug" value="{{ old('slug') }}">
                                     <p style="font-style: italic; font-size: 12px">The "slug" is the URL-friendly of the
                                         name. It is usually all lower case and contains only letters, numbers, and
-                                        hyphens</p>
+                                        hyphens and must be unique</p>
+                                    <p class="text-danger error-message" style="font-weight: bold" id="slug-error">
+                                        @error('slug')
+                                            {{ $message }}
+                                        @enderror
+                                    </p>
                                 </div>
-                                <div class="form-group">
-                                    <label for="parent">Parent</label>
-                                    <select name="parent" class="form-control" id="parent">
-                                        <option value="-1">None</option>
-                                    </select>
-                                    <p style="font-style: italic; font-size: 12px">Categories can have a hierarchy. You
-                                        might have and Jazz category, and under that have children categories for Debop
-                                        and Big Band. Totally optional</p>
-                                </div>
+{{--                                <div class="form-group">--}}
+{{--                                    <label for="parent">Parent</label>--}}
+{{--                                    <select name="parent" class="form-control" id="parent">--}}
+{{--                                        <option value="-1">None</option>--}}
+{{--                                    </select>--}}
+{{--                                    <p style="font-style: italic; font-size: 12px">Categories can have a hierarchy. You--}}
+{{--                                        might have and Jazz category, and under that have children categories for Debop--}}
+{{--                                        and Big Band. Totally optional</p>--}}
+{{--                                </div>--}}
                                 <div class="form-group">
                                     <label for="file">Banner</label>
                                     <div class="preview-image">
@@ -81,19 +90,34 @@
                                             <i class="dripicons-cross"></i>
                                         </div>
                                     </div>
-                                    <input type="file" style="padding: 3px 5px; overflow: hidden" class="form-control" name="file" id="file">
+                                    <input type="file" style="padding: 3px 5px; overflow: hidden" class="form-control required" name="file" id="file" value="{{ old('file') }}" >
+                                    <p class="text-danger error-message" style="font-weight: bold" id="file-error">
+                                        @error('file')
+                                            {{ $message }}
+                                        @enderror
+                                    </p>
                                 </div>
                                 <div class="form-group">
                                     <label for="title">Title</label>
-                                    <input name="title" id="title" class="form-control" placeholder="Title">
+                                    <input name="title" id="title" class="form-control required" placeholder="Title" value="{{ old('title') }}">
                                     <p style="font-style: italic; font-size: 12px"></p>
+                                    <p class="text-danger error-message" style="font-weight: bold"  id="title-error">
+                                        @error('title')
+                                            {{ $message }}
+                                        @enderror
+                                    </p>
                                 </div>
                                 <div class="form-group">
                                     <label for="description">Description</label>
-                                    <textarea name="description" id="description" class="form-control"
-                                              style="width: 100%; height: 90px" placeholder="Description"></textarea>
+                                    <textarea name="description" id="description" class="form-control required"
+                                              style="width: 100%; height: 90px" placeholder="Description">{{ old('description') }}</textarea>
                                     <p style="font-style: italic; font-size: 12px">Description for your category.
                                         Totally optional</p>
+                                    <p class="text-danger error-message" style="font-weight: bold" id="description-error" >
+                                        @error('description')
+                                            {{ $message }}
+                                        @enderror
+                                    </p>
                                 </div>
                                 <button type="submit" class="btn btn-primary btn-submit">Submit</button>
                             </form>
@@ -124,8 +148,8 @@
                                                     <td></td>
                                                     <td>
                                                         <div class="btn-wrapper" style="display: flex; align-items: center;justify-content: center">
-                                                            <button class="btn btn-primary btn-edit" style="margin-right: 10px">Edit</button>
-                                                            <button class="btn btn-danger btn-delete" data-id="{{ $value->id }}">Delete</button>
+                                                            <a href="{{ route('taxonomy.edit',$value->term_id) }}" class="btn btn-primary btn-edit" style="margin-right: 10px">Edit</a>
+                                                            <button class="btn btn-danger btn-delete" data-id="{{ $value->term_id }}">Delete</button>
                                                         </div>
                                                     </td>
                                                 </tr>
@@ -136,7 +160,6 @@
                                 <div class="pagination-wrapper">
                                     {{ $categories->links('backend.elements.pagination') }}
                                 </div>
-
                             </div>
                         </div>
                     </div>
@@ -147,13 +170,75 @@
 @endsection
 @section('script')
     <script>
+        const slugs = JSON.parse('{!! json_encode($slugs) !!}');
         $(document).ready(function (){
+            // Validate Name
             $('#name').on('change',function (){
                 let val = $(this).val();
                 $('#slug').val(changeToSlug(val));
                 if (val.trim() !== '') {
                     $(this).removeClass('error');
                     $('#name-error').text("");
+                }else {
+                    $(this).addClass('error');
+                    $('#name-error').text("This field cannot be null");
+                }
+            })
+
+            $('#slug').on('change',function () {
+                let val = $(this).val();
+                if (val.trim() === '') {
+                    $(this).val(changeToSlug($('#name').val()));
+                }else{
+                    if (slugs.indexOf(val) >= 0) {
+                        $('#slug-error').text('Slug already exist');
+                        $(this).addClass('error');
+                    }else{
+                        $('#slug-error').text('');
+                        $(this).removeClass('error');
+                    }
+                }
+            })
+            // Validate File Input
+            $("#file").change(function() {
+                let val = $(this).val();
+                if (val) {
+                    if (validateFileUpload(val)) {
+                        readURL(this);
+                        $('#file-error').text('');
+                    }else{
+                        $('#file-error').text('File extension is not allow');
+                        $('.preview-image img').remove();
+                        $(this).addClass('error');
+                    }
+                }else {
+                    $('#file-error').text('This field cannot be null');
+                    $(this).removeClass('error');
+                    $('.preview-image img').remove();
+                }
+            });
+
+            $('#title').on('change',function () {
+                if ($(this).val().trim() !== '') {
+                    $(this).removeClass('error');
+                    $('#title-error').text('')
+                }
+            })
+            $('#description').on('change',function () {
+                if ($(this).val().trim() !== '') {
+                    $(this).removeClass('error');
+                    $('#description-error').text('')
+                }
+            })
+            $('.preview-image .close').click(function (){
+                $(this).parent().find('img').remove();
+                $('#file').val('');
+            })
+
+            $('.btn-submit').click(function (e){
+                e.preventDefault();
+                if (checkRequired('add-form')) {
+                    $('#add-form').submit();
                 }
             })
 
@@ -201,17 +286,6 @@
                     }
                 })
             })
-            $("#file").change(function() {
-                if ($(this).val()) {
-                    readURL(this);
-                }else {
-                    $('.preview-image img').remove();
-                }
-            });
-            $('.preview-image .close').click(function (){
-                $(this).parent().find('img').remove();
-                $('#file').val('');
-            })
         })
 
         function readURL(input) {
@@ -222,10 +296,25 @@
                     let html = '<img id="image" style="width: 100%" src="'+e.target.result+'" alt="your image" />';
                     $('.preview-image').append(html);
                 }
-
                 reader.readAsDataURL(input.files[0]);
             }
         }
 
+        function checkRequired(formId) {
+            let valid = true;
+            $('#'+formId).find('.required').each(function (){
+                if ($(this).val().trim() === '') {
+                    $(this).addClass('error');
+                    $(this).parents('.form-group').find('.error-message').text('This field cannot be null');
+                    valid = false;
+                }else{
+                    $(this).removeClass('error');
+                    $(this).parents('.form-group').find('.error-message').text('');
+                    valid = true;
+                }
+            })
+
+            return valid;
+        }
     </script>
 @endsection
