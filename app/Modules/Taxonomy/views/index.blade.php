@@ -127,28 +127,31 @@
                 <div class="col-8">
                     <div class="card">
                         <div class="card-body">
+                            <button class="btn btn-warning btn-delete-many" style="float: right; margin-bottom: 1rem" disabled>Delete Selected</button>
                             <div class="table-wrapper">
                                 <table class="table table-striped table-hover" id="cate-table">
                                     <thead>
-                                    <tr>
-                                        <th style="color:#1967a9;">Name</th>
-                                        <th style="color:#1967a9;">Description</th>
-                                        <th style="color:#1967a9;">Slug</th>
-                                        <th style="color:#1967a9;">Count</th>
-                                        <th style="color:#1967a9; text-align: center">Action</th>
-                                    </tr>
+                                        <tr>
+                                            <th><input type="checkbox" name="" id="checkAll"></th>
+                                            <th style="color:#1967a9;">Name</th>
+                                            <th style="color:#1967a9;">Description</th>
+                                            <th style="color:#1967a9;">Slug</th>
+                                            <th style="color:#1967a9;">Count</th>
+                                            <th style="color:#1967a9; text-align: center">Action</th>
+                                        </tr>
                                     </thead>
                                     <tbody>
                                         @if(isset($categories) && !empty($categories))
                                             @foreach($categories as $value)
                                                 <tr>
+                                                    <td><input type="checkbox" class="cate-check" data-id="{{ $value['id'] }}" name="" id=""></td>
                                                     <td><a href="#">{{ $value->name }}</a></td>
                                                     <td>{{ $value->description }}</td>
                                                     <td>{{ $value->slug }}</td>
                                                     <td></td>
                                                     <td>
                                                         <div class="btn-wrapper" style="display: flex; align-items: center;justify-content: center">
-                                                            <a href="{{ route('taxonomy.edit',$value->term_id) }}" class="btn btn-primary btn-edit" style="margin-right: 10px">Edit</a>
+                                                            <a href="{{ route('taxonomy.edit',$value->term_id) }}" target="_blank" class="btn btn-primary btn-edit" style="margin-right: 10px">Edit</a>
                                                             <button class="btn btn-danger btn-delete" data-id="{{ $value->term_id }}">Delete</button>
                                                         </div>
                                                     </td>
@@ -253,41 +256,106 @@
                     cancelButtonColor: '#d33',
                     confirmButtonText: 'Yes, delete it!'
                 }).then((result) => {
-                    $.ajax({
-                        type : 'POST',
-                        url : '{{ route('taxonomy.delete') }}',
-                        data : {
-                            _token : '{{ csrf_token() }}',
-                            id : id
-                        },
-                        success: function (response){
-                            if (response == 200) {
-                                Swal.fire({
-                                    type: 'success',
-                                    title: 'Deleted !',
-                                    text: 'Category has been deleted.',
-                                }).then((result) => {
-                                    window.location.href= '{{ route('taxonomy.index') }}';
-                                })
-                            }else{
-                                Swal.fire({
-                                    type: 'error',
-                                    title: 'Oops... !',
-                                    text: 'Something went wrong.',
-                                })
-                            }
-                        },
-                        error: function (e) {
-                            console.log(e);
-                        }
-                    })
                     if (result.value) {
-
+                        $.ajax({
+                            type : 'POST',
+                            url : '{{ route('taxonomy.delete') }}',
+                            data : {
+                                _token : '{{ csrf_token() }}',
+                                id : id
+                            },
+                            success: function (response){
+                                if (response == 200) {
+                                    Swal.fire({
+                                        type: 'success',
+                                        title: 'Deleted !',
+                                        text: 'Category has been deleted.',
+                                    }).then((result) => {
+                                        window.location.href= '{{ route('taxonomy.index') }}';
+                                    })
+                                }else{
+                                    Swal.fire({
+                                        type: 'error',
+                                        title: 'Oops... !',
+                                        text: 'Something went wrong.',
+                                    })
+                                }
+                            },
+                            error: function (e) {
+                                console.log(e);
+                            }
+                        })
                     }
                 })
             })
         })
 
+        let checkArr = [];
+        $('.cate-check').each(function (){
+            checkArr.push(0);
+        })
+        $('#checkAll').on('change',function () {
+            if ($(this).prop('checked')){
+                $(this).parents('table').find('tbody tr').each(function (i){
+                    $(this).find('.cate-check').prop('checked',true);
+                    checkArr[i] = 1;
+                })
+                $('.btn-delete-many').prop('disabled',false);
+            }else{
+                $(this).parents('table').find('tbody tr').each(function (i){
+                    $(this).find('.cate-check').prop('checked',false);
+                    checkArr[i] = 0;
+                });
+                $('.btn-delete-many').prop('disabled',true);
+            }
+        })
+
+        $('.cate-check').on('change',function (){
+            $(this).parents('table').find('tbody tr .cate-check').each(function (i){
+                let self = this;
+                if ($('.cate-check').index(self) == i ) {
+                    if ($(this).prop('checked')) {
+                        checkArr[i] = 1;
+                    }else{
+                        checkArr[i] = 0;
+                    }
+                }
+            })
+            if (checkArr.indexOf(1) < 0 || checkArr.indexOf(0) >= 0) {
+                $('#checkAll').prop('checked',false);
+            }
+            if (checkArr.indexOf(0) < 0) {
+                $('#checkAll').prop('checked',true);
+            }
+            if (checkArr.indexOf(1) < 0) {
+                $('.btn-delete-many').prop('disabled',true);
+            }else{
+                $('.btn-delete-many').prop('disabled',false);
+            }
+        })
+
+        $('.btn-delete-many').click(function (){
+            let ids = "";
+            $('.cate-check').each(function (){
+                if ($(this).prop('checked')) {
+                    ids += $(this).data('id')+',';
+                }
+            })
+            console.log(ids.substring(0, ids.length-1));
+            Swal.fire({
+                title: 'Do you want to delete these categories?',
+                text: "You won't be able to revert this!",
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.value) {
+
+                }
+            })
+        })
         function readURL(input) {
             if (input.files && input.files[0]) {
                 let reader = new FileReader();
@@ -310,7 +378,6 @@
                 }else{
                     $(this).removeClass('error');
                     $(this).parents('.form-group').find('.error-message').text('');
-                    valid = true;
                 }
             })
 

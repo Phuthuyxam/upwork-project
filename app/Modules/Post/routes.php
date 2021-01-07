@@ -2,12 +2,10 @@
 use Illuminate\Support\Facades\Route;
 $namespace = 'App\Modules\Post\Controllers';
 Route::group(
-    ['module'=>'Post', 'namespace' => $namespace],
+    ['module'=>'taxonomy', 'namespace' => $namespace, 'middleware' => ['web','auth','ptx.permission']],
     function() {
-        Route::get('post', [
-            # middle here
-            'as' => 'index',
-            'uses' => 'DashboardController@index'
-        ]);
+        Route::prefix('admin/post')->group(function () {
+            Route::get('/','PostController@index')->name('post.index');
+        });
     }
 );

@@ -105,6 +105,7 @@ class TaxonomyController extends Controller
     }
 
     public function edit(Request $request,$id) {
+
         if ($request->isMethod('get')) {
             $term = $this->termRepository->find($id);
             $termMeta = $term->termMeta->toArray();
@@ -117,21 +118,29 @@ class TaxonomyController extends Controller
                 $result[MetaKey::display($value['meta_key'])] = $value['meta_value'];
             }
             $slugs = $this->termRepository->getAllSlug();
-
             return view('Taxonomy::edit',compact('slugs','result'));
         }else{
             $validate = $request->validate([
                 'name' => 'required|max:191',
-                'slug' => 'required|unique:terms',
-                'file' => 'required|mimes:jpg,png,gif',
+                'slug' => 'required|unique:terms,slug,'. $id,
+                'file' => 'mimes:jpg,png,gif',
                 'title' => 'required',
                 'description' => 'required'
             ]);
 
+
             $result = false;
             $file = $request->file('file');
-            $fileName = $file->getClientOriginalName();
-            $file->storeAs('public/categories', $fileName);
+
+            if (!$file) {
+                $fileName = $request->input('fileName');
+            }else{
+                $fileName = $file->getClientOriginalName();
+                if ($fileName != $request->input('fileName')) {
+                    $file->storeAs('public/categories', $fileName);
+                }
+            }
+
             $dataTerm = [
                 'name' => $request->input('name'),
                 'slug' => $request->input('slug'),
@@ -173,6 +182,23 @@ class TaxonomyController extends Controller
             } else {
                 return redirect()->back()->with('message', 'danger|Something wrong try again!');
             }
+        }
+    }
+
+    public function deleteImage(Request $request) {
+        $termId = $request->input('termId');
+        if ($termId && $termId != '') {
+            $condition = [
+                ['term_id' ,'=', $termId],
+                ['meta_key','=', MetaKey::BANNER['VALUE']]
+            ];
+            if ($this->termMetaRepository->removeTermByCondition($condition)) {
+                return response(ResponeCode::SUCCESS['CODE']);
+            }else{
+                return response(ResponeCode::SERVERERROR['CODE']);
+            }
+        }else {
+            return response(ResponeCode::SERVERERROR['CODE']);
         }
     }
 }
