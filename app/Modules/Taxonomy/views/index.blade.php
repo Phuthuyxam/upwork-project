@@ -81,12 +81,17 @@
                                             <i class="dripicons-cross"></i>
                                         </div>
                                     </div>
-                                    <input type="file" name="file" id="file">
+                                    <input type="file" style="padding: 3px 5px; overflow: hidden" class="form-control" name="file" id="file">
+                                </div>
+                                <div class="form-group">
+                                    <label for="title">Title</label>
+                                    <input name="title" id="title" class="form-control" placeholder="Title">
+                                    <p style="font-style: italic; font-size: 12px"></p>
                                 </div>
                                 <div class="form-group">
                                     <label for="description">Description</label>
                                     <textarea name="description" id="description" class="form-control"
-                                              style="width: 100%; height: 90px"></textarea>
+                                              style="width: 100%; height: 90px" placeholder="Description"></textarea>
                                     <p style="font-style: italic; font-size: 12px">Description for your category.
                                         Totally optional</p>
                                 </div>
