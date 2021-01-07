@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Modules\Permission\Model\Permissions;
 use App\Modules\Permission\Model\Roles;
+use App\Modules\User\Model\UserMeta;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -61,5 +62,13 @@ class User extends Authenticatable
 
         }
         return $result;
+    }
+
+    public function userMeta() {
+        return $this->hasMany(UserMeta::class, 'user_id');
+    }
+
+    public function roleInfo() {
+        return $this->belongsTo(Roles::class, 'role', 'id');
     }
 }

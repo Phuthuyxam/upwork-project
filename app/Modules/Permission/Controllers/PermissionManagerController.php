@@ -1,7 +1,7 @@
 <?php
 namespace App\Modules\Permission\Controllers;
 
-use App\Core\Glosary\RoleConfig;
+use App\Core\Glosary\RoleConfigs;
 use App\Http\Controllers\Controller;
 use App\Modules\Permission\Repositories\PermissionGroupRepository;
 use App\Modules\Permission\Repositories\RoleRepository;
@@ -19,7 +19,7 @@ class PermissionManagerController extends Controller{
     }
 
     public function index() {
-        $roles = $this->roleRepository->filter([['id' , '<>',  RoleConfig::SUPPERADMIN['VALUE']]], [ 'id' , 'desc' ]);
+        $roles = $this->roleRepository->filter([['id' , '<>',  RoleConfigs::SUPPERADMIN['VALUE']]], [ 'id' , 'desc' ]);
         return view('Permission::index' , compact('roles') );
     }
 

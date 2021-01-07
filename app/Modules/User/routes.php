@@ -6,26 +6,26 @@ Route::group(
     function() {
         Route::get('/', [
             'as' => 'index',
-            'uses' => 'PermissionManagerController@index'
+            'uses' => 'UserManageController@index'
         ]);
         Route::post('/add', [
             'as' => 'add',
-            'uses' => 'PermissionManagerController@add'
+            'uses' => 'UserManageController@add'
         ]);
 
         Route::get('/edit/{id}', [
             'as' => 'edit',
-            'uses' => 'PermissionManagerController@edit'
+            'uses' => 'UserManageController@edit'
         ]);
 
         Route::post('/save/{id}', [
             'as' => 'save',
-            'uses' => 'PermissionManagerController@save'
+            'uses' => 'UserManageController@save'
         ]);
 
         Route::post('/del/{id}', [
             'as' => 'delete',
-            'uses' => 'PermissionManagerController@delete'
+            'uses' => 'UserManageController@delete'
         ]);
     }
 );
