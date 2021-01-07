@@ -49,7 +49,7 @@
                         <span>Users & Roles</span>
                     </a>
                     <ul class="sub-menu" aria-expanded="false">
-                        <li><a href="#">Users</a></li>
+                        <li><a href="{{ route('user.manager.index') }}">Users</a></li>
                         <li><a href="{{ route('permission.index') }}">Roles</a></li>
                     </ul>
                 </li>

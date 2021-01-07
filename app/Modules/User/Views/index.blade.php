@@ -129,8 +129,11 @@
                                         <td> {{ $user->roleInfo ?  $user->roleInfo->name : \App\Core\Glosary\RoleConfigs::GUEST['DISPLAY'] }} </td>
                                         <td>
                                             <div class="btn-wrapper" style="display: flex; align-items: center;justify-content: center">
-                                                <button class="btn btn-primary btn-edit" style="margin-right: 10px"> <a href="{{ route('user.manager.edit', ['id' => $user->id]) }}">  Edit </a></button>
-                                                <button class="btn btn-danger btn-delete" data-id="{{ $user->id }}">Delete</button>
+                                                <button class="btn btn-primary btn-edit" style="margin-right: 10px"> <a href="{{ route('user.manager.edit', ['id' => $user->id]) }}" style="color: #FFFFFF">  Edit </a></button>
+                                                <form action="{{ route( 'user.manager.delete', ['id' => $user->id] ) }}" id="deleteuser{{$user->id}}" method="POST" style="display: inline-block">
+                                                    @csrf
+                                                    <button type="button" class="btn btn-danger waves-effect waves-light" onclick="deleteUser({{$user->id}})">Delete</button>
+                                                </form>
                                             </div>
                                         </td>
                                     </tr>
@@ -151,4 +154,10 @@
 </div>
 @endsection
 @section('script')
+    <script>
+        function deleteUser(id) {
+            if(confirm("are you sure delete user?"))
+                $('#deleteuser'+id).submit();
+        }
+    </script>
 @endsection

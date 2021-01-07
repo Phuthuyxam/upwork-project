@@ -39,6 +39,7 @@ class UserManageController extends Controller
                 'name' => ['required', 'string', 'max:255' , 'unique:users'],
                 'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
                 'password' => ['required', 'string', 'min:8', 'confirmed'],
+                'phone' => ['required', 'regex:/(0)[0-9]/', 'not_regex:/[a-z]/', 'min:9'],
             ]
         );
         try {
@@ -64,29 +65,45 @@ class UserManageController extends Controller
     public function edit($id) {
         $user = $this->userRepository->find($id);
         $roles = $this->roleRepository->filter([['id' , '<>',  RoleConfigs::SUPPERADMIN['VALUE']]], [ 'id' , 'desc' ]);
-//        $permissionGroup = $this->permissionGroupRepository->getAll();
-//        $rolePermission = $this->roleRepository->getPermission($id);
-        return view('User::edit',compact('role', 'user'));
+        $phone = $user->userMeta()->where('meta_key', UserMetaKey::PHONE['VALUE'])->first();
+        return view('User::edit',compact('roles', 'user', 'phone'));
     }
     public function save($id, Request $request) {
-//        $request->validate(
-//            ['role_name' => 'required|unique:roles,name,'.$id]
-//        );
-//        $permission = [];
-//        $permission_group = [];
-//        if(!is_null($request->permission_group)) $permission_group = explode(',' , $request->permission_group);
-//        if(!is_null($request->permission)) $permission = explode(',' , $request->permission);
-//
-//        $saveRole = $this->roleRepository->update($id, ['name' => $request->role_name , 'desc' => $request->role_desc ]);
-//        $savePermission = $this->roleRepository->savePermission($id, $permission_group  , $permission);
-//        if( $saveRole && $savePermission ) return redirect()->back()->with('message', 'success|Successfully edit the role');
-//        return redirect()->back()->with('message','danger|Something wrong try again!');
+
+        $validateArray = [
+            'name' => ['required', 'string', 'max:255' , 'unique:users,name,'.$id],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email,'.$id],
+            'phone' => ['required', 'regex:/(0)[0-9]/', 'not_regex:/[a-z]/', 'min:9'],
+        ];
+
+        if(!empty($request->password)) $validateArray['password'] = ['string', 'min:8', 'confirmed'];
+
+        $request->validate( $validateArray );
+        try {
+            $dataSave = [
+                            'name' => $request->name,
+                            'email' => $request->email,
+                            'role' => $request->role
+                        ];
+            if($request->password) $dataSave[] = Hash::make($request->password);
+
+            $metaSave = [
+                'meta_value' => $request->phone
+            ];
+
+            $this->userRepository->update($id, $dataSave);
+            $this->userRepository->find($id)->userMeta()->where('meta_key','user_phone')->first()->update($metaSave);
+            return redirect()->back()->with('message', 'success|Successfully edit the user');
+
+        } catch (\Throwable $th) {
+            return redirect()->back()->with('message','danger|Something wrong try again!');
+        }
     }
 
 
     public function delete($id) {
-//        $del = $this->roleRepository->delete($id);
-//        if( $del) return redirect()->back()->with('message', 'success|Successfully delete the role');
-//        return redirect()->back()->with('message','danger|Something wrong try again!');
+        $del = $this->userRepository->delete($id);
+        if( $del) return redirect()->back()->with('message', 'success|Successfully delete the user');
+        return redirect()->back()->with('message','danger|Something wrong try again!');
     }
 }
