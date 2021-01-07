@@ -17,7 +17,7 @@ class CreateTermMetaTable extends Migration
             $table->id();
             $table->bigInteger('term_id');
             $table->string('meta_key');
-            $table->string('meta_value');
+            $table->string('meta_value')->nullable();
             $table->timestamps();
         });
     }

@@ -9,6 +9,7 @@ Route::group(
             Route::post('/add','TaxonomyController@add')->name('taxonomy.add');
             Route::post('/delete','TaxonomyController@delete')->name('taxonomy.delete');
             Route::match(['get','post'],'/edit/{id}','TaxonomyController@edit')->name('taxonomy.edit');
+            Route::post('/delete-image','TaxonomyController@deleteImage')->name('taxonomy.delete.image');
         });
     }
 );
