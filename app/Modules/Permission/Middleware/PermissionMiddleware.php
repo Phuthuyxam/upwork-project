@@ -12,6 +12,7 @@ class PermissionMiddleware
     public function handle($request, Closure $next)
     {
         $currentAction = \Route::currentRouteAction();
+        if(!$currentAction) return $next($request);
         list($controller, $method) = explode('@', $currentAction);
         // $controller now is "App\Http\Controllers\FooBarController"
         $controller = preg_replace('/.*\\\/', '', $controller);

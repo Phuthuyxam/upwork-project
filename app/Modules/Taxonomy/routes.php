@@ -1,8 +1,9 @@
 <?php
 use Illuminate\Support\Facades\Route;
 $namespace = 'App\Modules\Taxonomy\Controllers';
+$prefix = generatePrefixLanguage();
 Route::group(
-    ['module'=>'taxonomy', 'namespace' => $namespace, 'middleware' => ['web','auth','ptx.permission']],
+    ['module'=>'taxonomy', 'namespace' => $namespace, 'middleware' => ['web','auth','ptx.permission'], 'prefix' => $prefix ],
     function() {
         Route::prefix('admin/taxonomy')->group(function () {
             Route::get('/','TaxonomyController@index')->name('taxonomy.index');

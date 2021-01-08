@@ -1,14 +1,17 @@
 <?php
 namespace App\Core\Repositories;
 
+use App\Core\Glosary\LocationConfigs;
 use Illuminate\Support\Facades\Log;
 
 abstract class EloquentRepository implements RepositoryInterface {
 
     protected $_model;
+    protected $_suffixes;
 
     public function __construct() {
         $this->setModel();
+        $this->setSuffixesLanguage();
     }
 
     abstract public function getModel();
@@ -19,6 +22,15 @@ abstract class EloquentRepository implements RepositoryInterface {
         );
     }
 
+    public function setSuffixesLanguage() {
+        $lang = app()->getLocale();
+        $defaultCode = LocationConfigs::getLanguageDefault();
+        if($lang != $defaultCode['VALUE']){
+            $this->_suffixes = '_'.$lang;
+        } else {
+            $this->_suffixes = '';
+        }
+    }
     /**
      * Get All
      * @return \Illuminate\Database\Eloquent\Collection|static[]

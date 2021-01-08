@@ -1,12 +1,17 @@
 <?php
 namespace App\Modules\Taxonomy\Repositories;
 
+use App\Core\Glosary\LocationConfigs;
 use App\Core\Repositories\EloquentRepository;
 use App\Modules\Taxonomy\Model\TermMeta;
+use App\Modules\Taxonomy\Model\Translations\Ar\TermMetaAr;
 
 class TermMetaRepository extends EloquentRepository {
 
     public function getModel() {
+        $lang = app()->getLocale();
+        if($lang == LocationConfigs::ARABIC['VALUE'])
+            return TermMetaAr::class;
         return TermMeta::class;
     }
 
