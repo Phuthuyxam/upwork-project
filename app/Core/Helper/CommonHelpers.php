@@ -1,5 +1,7 @@
 <?php
 
+use App\Core\Glosary\LocationConfigs;
+
 if (!function_exists('getClientIp')) {
     function getClientIp()
     {
@@ -27,5 +29,21 @@ if (!function_exists('displayAlert')) {
         if (!$messageFull) return '';
         list($type, $message) = explode('|', $messageFull);
         return sprintf('<div class="alert alert-%s" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>%s</div>', $type, $message);
+    }
+}
+
+if(!function_exists('generatePrefixLanguage')) {
+    function generatePrefixLanguage() {
+        if(!isset($_SERVER['REQUEST_URI']) || empty($_SERVER['REQUEST_URI'])) return false;
+        $serverPath = explode('/', $_SERVER['REQUEST_URI']);
+        $firstLevel = $serverPath[1];
+        if((LocationConfigs::checkLanguageCode($firstLevel))){
+            app()->setLocale($firstLevel);
+            return  app()->getLocale().'/';
+        }else {
+            return '';
+        }
+
+
     }
 }
