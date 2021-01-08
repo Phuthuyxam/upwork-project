@@ -16,6 +16,14 @@ class ServiceProvider extends  \Illuminate\Support\ServiceProvider{
             }
             if(is_dir(__DIR__.'/'.$module.'/Migrations')){
                 $this->loadMigrationsFrom(__DIR__.'/'.$module.'/Migrations');
+                if(is_dir(__DIR__.'/'.$module.'/Migrations/Translations')) {
+                    $directories = glob(__DIR__.'/'.$module.'/Migrations/Translations/*' , GLOB_ONLYDIR);
+                    if(isset($directories) && !empty($directories)) {
+                        foreach ($directories as $dir) {
+                            $this->loadMigrationsFrom($dir);
+                        }
+                    }
+                }
             }
         }
     }

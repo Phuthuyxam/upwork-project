@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateTermTransiationTable extends Migration
+class CreateTermRelationshipsArTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,11 @@ class CreateTermTransiationTable extends Migration
      */
     public function up()
     {
-        Schema::create('term_transiation', function (Blueprint $table) {
+        Schema::create('term_relationships_ar', function (Blueprint $table) {
             $table->id();
+            $table->bigInteger('object_id')->comment('example post id');
+            $table->bigInteger('term_taxonomy_id');
+            $table->integer('term_order');
             $table->timestamps();
         });
     }
@@ -26,6 +29,6 @@ class CreateTermTransiationTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('term_transiation');
+        Schema::dropIfExists('term_relationships_ar');
     }
 }

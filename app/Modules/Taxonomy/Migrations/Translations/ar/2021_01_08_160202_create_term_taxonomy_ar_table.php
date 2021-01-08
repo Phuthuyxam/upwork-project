@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateTermMetaTransiationTable extends Migration
+class CreateTermTaxonomyArTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,12 @@ class CreateTermMetaTransiationTable extends Migration
      */
     public function up()
     {
-        Schema::create('term_meta_transiation', function (Blueprint $table) {
+        Schema::create('term_taxonomy_ar', function (Blueprint $table) {
             $table->id();
+            $table->bigInteger('term_id');
+            $table->string('taxonomy');
+            $table->string('description')->nullable();
+            $table->bigInteger('parent')->nullable();
             $table->timestamps();
         });
     }
@@ -26,6 +30,6 @@ class CreateTermMetaTransiationTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('term_meta_transiation');
+        Schema::dropIfExists('term_taxonomy_ar');
     }
 }

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateTermTaxonomyTransiationTable extends Migration
+class CreateTermsArTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,10 @@ class CreateTermTaxonomyTransiationTable extends Migration
      */
     public function up()
     {
-        Schema::create('term_taxonomy_transiation', function (Blueprint $table) {
+        Schema::create('terms_ar', function (Blueprint $table) {
             $table->id();
+            $table->string('name');
+            $table->string('slug')->unique();
             $table->timestamps();
         });
     }
@@ -26,6 +28,6 @@ class CreateTermTaxonomyTransiationTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('term_taxonomy_transiation');
+        Schema::dropIfExists('terms_ar');
     }
 }

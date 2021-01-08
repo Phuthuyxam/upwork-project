@@ -1,12 +1,17 @@
 <?php
 namespace App\Modules\Taxonomy\Repositories;
 
+use App\Core\Glosary\LocationConfigs;
 use App\Core\Repositories\EloquentRepository;
 use App\Modules\Taxonomy\Model\TermTaxonomy;
+use App\Modules\Taxonomy\Model\Translations\Ar\TermTaxonomyAr;
 
 class TermTaxonomyRepository extends EloquentRepository {
 
     public function getModel() {
+        $lang = app()->getLocale();
+        if($lang == LocationConfigs::ARABIC['VALUE'])
+            return TermTaxonomyAr::class;
         return TermTaxonomy::class;
     }
 
