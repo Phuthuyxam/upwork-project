@@ -144,7 +144,7 @@
                                         @if(isset($categories) && !empty($categories))
                                             @foreach($categories as $value)
                                                 <tr>
-                                                    <td><input type="checkbox" class="cate-check" data-id="{{ $value['id'] }}" name="" id=""></td>
+                                                    <td><input type="checkbox" class="cate-check" data-id="{{ $value->term_id }}" name="" id=""></td>
                                                     <td><a href="#">{{ $value->name }}</a></td>
                                                     <td>{{ $value->description }}</td>
                                                     <td>{{ $value->slug }}</td>
@@ -257,6 +257,7 @@
                     confirmButtonText: 'Yes, delete it!'
                 }).then((result) => {
                     if (result.value) {
+                        $('#loading').show();
                         $.ajax({
                             type : 'POST',
                             url : '{{ route('taxonomy.delete') }}',
@@ -265,6 +266,7 @@
                                 id : id
                             },
                             success: function (response){
+                                $('#loading').hide();
                                 if (response == 200) {
                                     Swal.fire({
                                         type: 'success',
@@ -341,7 +343,6 @@
                     ids += $(this).data('id')+',';
                 }
             })
-            console.log(ids.substring(0, ids.length-1));
             Swal.fire({
                 title: 'Do you want to delete these categories?',
                 text: "You won't be able to revert this!",
@@ -352,7 +353,36 @@
                 confirmButtonText: 'Yes, delete it!'
             }).then((result) => {
                 if (result.value) {
-
+                    $('#loading').show();
+                    $.ajax({
+                        type : 'POST',
+                        url : '{{ route('taxonomy.delete.many') }}',
+                        data : {
+                            _token : '{{ csrf_token() }}',
+                            ids : ids
+                        },
+                        success: function (response){
+                            $('#loading').hide();
+                            if (response == 200) {
+                                Swal.fire({
+                                    type: 'success',
+                                    title: 'Deleted !',
+                                    text: 'Category has been deleted.',
+                                }).then(() => {
+                                    window.location.href= '{{ route('taxonomy.index') }}';
+                                })
+                            }else{
+                                Swal.fire({
+                                    type: 'error',
+                                    title: 'Oops... !',
+                                    text: 'Something went wrong.',
+                                })
+                            }
+                        },
+                        error: function (e) {
+                            console.log(e);
+                        }
+                    })
                 }
             })
         })

@@ -105,16 +105,26 @@ abstract class EloquentRepository implements RepositoryInterface {
 
     }
 
-    public function saveMany(array $data,$condition = null)
-    {
-        // TODO: Implement saveMany() method.
+//    public function saveMany(array $data,$condition = null)
+//    {
+//        // TODO: Implement saveMany() method.
+//        try {
+//            $query = $this->_model;
+//            if (isset($data) && !empty($data)) {
+//                return $condition ? $query->where($condition)->saveMany($data) : $query->saveMany($data);
+//            }
+//        }catch ( \Exception $e ){
+//            Log::error("Filter error in " . $this->_model);
+//            return false;
+//        }
+//    }
+
+    public function deleteMany($field,$conditions) {
         try {
             $query = $this->_model;
-            if (isset($data) && !empty($data)) {
-                return $condition ? $query->where($condition)->saveMany($data) : $query->saveMany($data);
-            }
+            return $query->whereIn($field,$conditions)->delete();
         }catch ( \Exception $e ){
-            Log::error("Filter error in " . $this->_model);
+            Log::error("Delete error in " . $this->_model);
             return false;
         }
     }

@@ -38,7 +38,7 @@
                         <span> Post </span>
                     </a>
                     <ul class="sub-menu" aria-expanded="false">
-                        <li><a href="#">Create</a></li>
+                        <li><a href="{{ route('post.add') }}">Create</a></li>
                         <li><a href="#">All Posts</a></li>
                     </ul>
                 </li>

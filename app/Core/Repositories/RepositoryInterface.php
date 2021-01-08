@@ -13,7 +13,9 @@ interface RepositoryInterface{
 
     public function delete($id, $trash = true);
 
-    public function saveMany(array $data , $condition = null);
+//    public function saveMany(array $data , $condition = null);
 
     public function insert(array $data);
+
+    public function deleteMany($field,$conditions);
 }

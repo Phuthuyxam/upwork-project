@@ -18,6 +18,24 @@
         <link href="{{ asset('assets/libs/dropzone/min/dropzone.min.css') }}" rel="stylesheet" type="text/css" />
         <!-- App Css-->
         <link href="{{ asset('assets/css/app.min.css') }}" id="app-style" rel="stylesheet" type="text/css" />
+        <style>
+            #loading {
+                position: absolute;
+                left: 0;
+                top: 0;
+                height: 100vh;
+                right: 0;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            #loading img{
+                width: 150px;
+            }
+            .footer {
+                left: 0;
+            }
+        </style>
         @yield('extension_style')
 
         @yield('style');
@@ -41,16 +59,19 @@
             <!-- ============================================================== -->
             <!-- Start right Content here -->
             <!-- ============================================================== -->
-            <div class="main-content">
+            <div class="main-content" style="position: relative; min-height: 97vh">
                 <div class="page-content">
                     @yield('content')
                     <!-- container-fluid -->
+                        <div id="loading" style="display: none;">
+                            <img  src="{{ asset('assets/images/loading.gif') }}" alt="">
+                        </div>
                 </div>
                 <!-- End Page-content -->
-
-                @include('backend.elements.footer')
             <!-- end main content-->
+                @include('backend.elements.footer')
             </div>
+
         </div>
         <!-- END layout-wrapper -->
 

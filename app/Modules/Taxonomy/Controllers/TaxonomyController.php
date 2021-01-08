@@ -201,4 +201,22 @@ class TaxonomyController extends Controller
             return response(ResponeCode::SERVERERROR['CODE']);
         }
     }
+
+    public function deleteMany(Request $request) {
+        $data = $request->input('ids');
+        if ($data != '') {
+            $valid = false;
+            $ids = explode(',',$data);
+            if ($this->termRepository->deleteMany('id',$ids)) $valid = true;
+            if ($this->termTaxonomyRepository->deleteMany('term_id',$ids)) $valid = true;
+            if ($this->termMetaRepository->deleteMany('term_id',$ids)) $valid = true;
+            if ($valid) {
+                return response(ResponeCode::SUCCESS['CODE']);
+            }else{
+                return response(ResponeCode::SERVERERROR['CODE']);
+            }
+        }else{
+            return response(ResponeCode::BADREQUEST['CODE']);
+        }
+    }
 }

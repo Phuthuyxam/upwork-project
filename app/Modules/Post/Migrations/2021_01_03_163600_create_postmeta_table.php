@@ -13,11 +13,11 @@ class CreatePostmetaTable extends Migration
      */
     public function up()
     {
-        Schema::create('postmeta', function (Blueprint $table) {
+        Schema::create('post_meta', function (Blueprint $table) {
             $table->id();
             $table->bigInteger('post_id');
             $table->string('meta_key');
-            $table->string('meta_value');
+            $table->longText('meta_value')->nullable();
             $table->timestamps();
         });
     }
