@@ -15,7 +15,6 @@
         }
 
         .preview-image {
-            margin-bottom: 1rem;
             position: relative;
             overflow: hidden;
             width: 50%;
@@ -114,36 +113,74 @@
                                                 @enderror
                                             </p>
                                         </div>
-                                        {{--                                <div class="form-group">--}}
-                                        {{--                                    <label for="parent">Parent</label>--}}
-                                        {{--                                    <select name="parent" class="form-control" id="parent">--}}
-                                        {{--                                        <option value="-1">None</option>--}}
-                                        {{--                                    </select>--}}
-                                        {{--                                    <p style="font-style: italic; font-size: 12px">Categories can have a hierarchy. You--}}
-                                        {{--                                        might have and Jazz category, and under that have children categories for Debop--}}
-                                        {{--                                        and Big Band. Totally optional</p>--}}
-                                        {{--                                </div>--}}
                                         <div class="form-group">
                                             <label for="file">Banner</label>
-                                            <div class="preview-image">
-                                                <div class="close">
-                                                    <i class="dripicons-cross"></i>
-                                                </div>
-                                            </div>
-                                            <input type="file" style="padding: 3px 5px; overflow: hidden"
-                                                   class="form-control required"
-                                                   name="file" id="file" value="{{ old('file') }}">
-                                            <p class="text-danger error-message" style="font-weight: bold" id="file-error">
-                                                @error('file')
-                                                {{ $message }}
-                                                @enderror
-                                            </p>
+                                            <table class="table table-bordered">
+                                                <tbody>
+                                                    <tr>
+                                                        <th style="vertical-align: middle; width: 100px">Desktop</th>
+                                                        <td>
+                                                            <div class="preview-image">
+                                                                <div class="close">
+                                                                    <i class="dripicons-cross"></i>
+                                                                </div>
+                                                            </div>
+                                                            <input type="file" style="padding: 3px 5px; overflow: hidden"
+                                                                   class="form-control required banner-image"
+                                                                   name="file[]">
+                                                            <p class="text-danger error-message" style="font-weight: bold">
+                                                                @error('file')
+                                                                    {{ $message }}
+                                                                @enderror
+                                                            </p>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th style="vertical-align: middle; width: 100px">Tablet</th>
+                                                        <td>
+                                                            <div class="preview-image">
+                                                                <div class="close">
+                                                                    <i class="dripicons-cross"></i>
+                                                                </div>
+                                                            </div>
+                                                            <input type="file" style="padding: 3px 5px; overflow: hidden"
+                                                                   class="form-control required banner-image"
+                                                                   name="file[]">
+                                                            <p class="text-danger error-message" style="font-weight: bold">
+                                                                @error('file')
+                                                                {{ $message }}
+                                                                @enderror
+                                                            </p>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th style="vertical-align: middle; width: 100px">Mobile</th>
+                                                        <td>
+                                                            <div class="preview-image">
+                                                                <div class="close">
+                                                                    <i class="dripicons-cross"></i>
+                                                                </div>
+                                                            </div>
+                                                            <input type="file" style="padding: 3px 5px; overflow: hidden"
+                                                                   class="form-control required banner-image"
+                                                                   name="file[]">
+                                                            <p class="text-danger error-message" style="font-weight: bold">
+                                                                @error('file')
+                                                                {{ $message }}
+                                                                @enderror
+                                                            </p>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
                                         </div>
                                         <div class="form-group">
                                             <label for="description">Description</label>
-                                            <textarea name="post_content" id="description" class="form-control"
-                                                      style="width: 100%; height: 90px"
-                                                      placeholder="Description"></textarea>
+                                            <div class="editor-wrapper">
+                                                <textarea name="post_content" id="description" class="form-control"
+                                                          style="width: 100%; height: 90px"
+                                                          placeholder="Description"></textarea>
+                                            </div>
                                             <p class="text-danger error-message" style="font-weight: bold"
                                                id="description-error">
                                                 @error('post_content')
@@ -258,9 +295,28 @@
                             </div>
                         </div>
                         <div class="card-footer" style="display: flex; align-items: center; justify-content: space-between">
-                            <input type="hidden" id="status">
+                            <input type="hidden" id="publishStatus" name="status">
                             <button type="submit" class="btn btn-info btn-draft waves-effect waves-light">Save Draft</button>
                             <button type="submit" class="btn btn-primary btn-submit waves-effect waves-light">Publish</button>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <h5 class="card-header mt-0 font-size-16">Select Category</h5>
+                        <div class="card-body">
+                            <div class="form-group">
+                                <select name="taxonomy" id="tax" class="form-control required">
+                                    <option value="">Select Category</option>
+                                    @foreach($taxonomy as $value)
+                                        <option value="{{ $value['id'] }}">{{ $value['name'] }}</option>
+                                    @endforeach
+                                </select>
+                                <p class="text-danger error-message" style="font-weight: bold" id="title-error">
+                                    @error('post_title')
+                                    {{ $message }}
+                                    @enderror
+                                </p>
+                            </div>
+
                         </div>
                     </div>
                 </div>
@@ -283,16 +339,21 @@
                 if (val.trim() !== '') {
                     $(this).removeClass('error');
                     $('#title-error').text("");
+                    $('#slug').removeClass('error');
+                    $('#slug-error').text('');
+                    $(this).removeClass('required');
                 } else {
                     $(this).addClass('error');
                     $('#title-error').text("This field cannot be null");
+                    $(this).addClass('required');
                 }
             })
 
             $('#slug').on('change', function () {
                 let val = $(this).val();
                 if (val.trim() === '') {
-                    $(this).val(changeToSlug($('#name').val()));
+                    $(this).val(changeToSlug($('#title').val()));
+                    $(this).removeClass('required');
                 } else {
                     if (slugs.indexOf(val) >= 0) {
                         $('#slug-error').text('Slug already exist');
@@ -304,12 +365,15 @@
                 }
             })
             // Validate File Input
-            $("#file").change(function () {
+            $(".banner-image").change(function () {
                 let val = $(this).val();
                 if (val) {
                     if (validateFileUpload(val)) {
                         readURL(this, $(this).parent().find('.preview-image'));
-                        $('#file-error').text('');
+                        $(this).removeClass('error');
+                        $(this).parents('td').find('.error-message').text('');
+                        $(this).removeClass('required');
+                        $(this).hide();
                     } else {
                         $('#file-error').text('File extension is not allow');
                         $('.preview-image img').remove();
@@ -322,21 +386,40 @@
                 }
             });
 
-            $('#description').on('change', function () {
-                if ($(this).val().trim() !== '') {
+            $('#tax').on('change',function () {
+                if ($(this).val() == '') {
+                    $(this).addClass('error');
+                    $(this).parents('.form-group').find('.error-message').text('This field cannot be null');
+                }else {
                     $(this).removeClass('error');
-                    $('#description-error').text('')
+                    $(this).parents('.form-group').find('.error-message').text('');
                 }
             })
+
+            CKEDITOR.instances.description.on('change',function (){
+                let value = CKEDITOR.instances.description.getData();
+
+                if (value == '') {
+                    $('#description').parents('.form-group').find('.editor-wrapper').addClass('error');
+                    $('#description').parents('.form-group').find('.error-message').text('This field cannot be null');
+                }else{
+                    $('#description').parents('.form-group').find('.editor-wrapper').removeClass('error');
+                    $('#description').parents('.form-group').find('.error-message').text('');
+                }
+            })
+
             $('body').on('click', '.preview-image .close', function () {
                 $(this).parent().find('img').remove();
                 $(this).parent().parent().find('input[type=file]').val('');
+                $(this).parent().parent().find('input[type=file]').show();
+
+                $(this).parents('td').find('.banner-image').addClass('required');
             })
 
             $('.btn-submit').click(function (e) {
                 e.preventDefault();
                 if (checkRequired('add-form')) {
-                    $('#status').val(1);
+                    $('#publishStatus').val(1);
                     $('#add-form').submit();
                     $('.alert-common').hide();
                 }else{
@@ -347,7 +430,7 @@
             $('.btn-draft').click(function (e) {
                 e.preventDefault();
                 if (checkRequired('add-form')) {
-                    $('#status').val(0);
+                    $('#publishStatus').val(0);
                     $('#add-form').submit();
                     $('.alert-common').hide();
                 }else{
@@ -358,10 +441,12 @@
 
         function readURL(input, element) {
             if (input.files && input.files[0]) {
+                element.find('img').remove();
                 let reader = new FileReader();
-
+                let name = input.files[0].name;
                 reader.onload = function (e) {
-                    let html = '<img id="image" style="width: 100%" src="' + e.target.result + '" alt="your image" />';
+
+                    let html = '<img id="image" style="width: 100%" src="' + e.target.result + '" title="'+name+'" alt="your image" />';
                     element.append(html);
                 }
                 reader.readAsDataURL(input.files[0]);
@@ -373,16 +458,20 @@
             $('#' + formId).find('.required').each(function () {
                 if ($(this).val().trim() === '') {
                     $(this).addClass('error');
-                    $(this).parents('.form-group').find('.error-message').text('This field cannot be null');
+                    $(this).parent().find('.error-message').text('This field cannot be null');
                     valid = false;
                 } else {
                     $(this).removeClass('error');
-                    $(this).parents('.form-group').find('.error-message').text('');
+                    $(this).parent().find('.error-message').text('This field cannot be null');
                 }
             })
             if (CKEDITOR.instances.description.getData() == '') {
-                $(this).parents('.form-group').find('.error-message').text('This field cannot be null');
+                $('#description').parents('.form-group').find('.editor-wrapper').addClass('error');
+                $('#description').parents('.form-group').find('.error-message').text('This field cannot be null');
                 valid = false;
+            }else{
+                $('#description').parents('.form-group').find('.editor-wrapper').removeClass('error');
+                $('#description').parents('.form-group').find('.error-message').text('');
             }
             return valid;
         }
@@ -432,10 +521,10 @@
 
         var type = `<tr>
                         <td>
-                            <input type="text" class="form-control" name="room_type[]">
+                            <input type="text" class="form-control" name="room_types[]">
                         </td>
                         <td>
-                            <input type="number" class="form-control" name="inventory[]">
+                            <input type="number" class="form-control" name="inventories[]">
                         </td>
                         <td style="width: 120px;vertical-align: middle">
                             <div class="action-wrapper">

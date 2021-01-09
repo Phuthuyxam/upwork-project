@@ -207,6 +207,7 @@
                 let val = $(this).val();
                 if (val) {
                     if (validateFileUpload(val)) {
+                        $('.preview-image img').remove();
                         readURL(this);
                         $('#file-error').text('');
                     }else{

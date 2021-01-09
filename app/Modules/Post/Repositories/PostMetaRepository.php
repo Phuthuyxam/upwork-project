@@ -13,4 +13,16 @@ class PostMetaRepository extends EloquentRepository {
     public function getByPostId($postId){
         return $this->_model->where('post_id',$postId)->get()->toArray();
     }
+
+    public function updateMeta($metaKey,$data){
+        return $this->_model->where('meta_key',$metaKey)->update($data);
+    }
+
+    public function getMetaValueByCondition($condition){
+        return $this->_model->where($condition)->first()->toArray();
+    }
+
+    public function updateByCondition($condition,$data) {
+        return $this->_model->where($condition)->update($data);
+    }
 }
