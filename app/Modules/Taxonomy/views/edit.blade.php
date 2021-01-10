@@ -88,6 +88,16 @@
                         {{--                                        and Big Band. Totally optional</p>--}}
                         {{--                                </div>--}}
                         <div class="form-group">
+                            <label for="layout">Layout</label>
+                            <select name="layout" class="form-control" id="layout">
+                                @foreach(\App\Core\Glosary\TaxonomyType::getAll() as $value)
+                                    <option value="{{ $value['VALUE'] }}" @if($value['VALUE'] == $taxonomy['taxonomy']) selected @endif> {{ $value['NAME'] }}</option>
+                                @endforeach
+                            </select>
+                            <p style="font-style: italic; font-size: 12px">Choose layout to appear in Front. Default is Hotel,
+                                Service will not have detail page</p>
+                        </div>
+                        <div class="form-group">
                             <label for="file">Banner</label>
                             <table class="table table-bordered">
                                 @php

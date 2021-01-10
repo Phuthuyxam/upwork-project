@@ -300,25 +300,6 @@
                             <button type="submit" class="btn btn-primary btn-submit waves-effect waves-light">Publish</button>
                         </div>
                     </div>
-                    <div class="card">
-                        <h5 class="card-header mt-0 font-size-16">Select Category</h5>
-                        <div class="card-body">
-                            <div class="form-group">
-                                <select name="taxonomy" id="tax" class="form-control required">
-                                    <option value="">Select Category</option>
-                                    @foreach($taxonomy as $value)
-                                        <option value="{{ $value['id'] }}">{{ $value['name'] }}</option>
-                                    @endforeach
-                                </select>
-                                <p class="text-danger error-message" style="font-weight: bold" id="title-error">
-                                    @error('post_title')
-                                    {{ $message }}
-                                    @enderror
-                                </p>
-                            </div>
-
-                        </div>
-                    </div>
                 </div>
             </div>
             </form>

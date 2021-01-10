@@ -73,15 +73,17 @@
                                         @enderror
                                     </p>
                                 </div>
-{{--                                <div class="form-group">--}}
-{{--                                    <label for="parent">Parent</label>--}}
-{{--                                    <select name="parent" class="form-control" id="parent">--}}
-{{--                                        <option value="-1">None</option>--}}
-{{--                                    </select>--}}
-{{--                                    <p style="font-style: italic; font-size: 12px">Categories can have a hierarchy. You--}}
-{{--                                        might have and Jazz category, and under that have children categories for Debop--}}
-{{--                                        and Big Band. Totally optional</p>--}}
-{{--                                </div>--}}
+
+                                <div class="form-group">
+                                    <label for="layout">Layout</label>
+                                    <select name="layout" class="form-control" id="layout">
+                                        @foreach(\App\Core\Glosary\TaxonomyType::getAll() as $value)
+                                            <option value="{{ $value['VALUE'] }}"> {{ $value['NAME'] }}</option>
+                                        @endforeach
+                                    </select>
+                                    <p style="font-style: italic; font-size: 12px">Choose layout to appear in Front. Default is Hotel,
+                                    Service will not have detail page</p>
+                                </div>
                                 <div class="form-group">
                                     <label for="file">Banner</label>
                                     <table class="table table-bordered">

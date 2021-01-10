@@ -23,23 +23,31 @@
                 </li>
 
                 <li>
-                    <a href="javascript: void(0);" class="has-arrow waves-effect">
+                    <a href="{{ route('taxonomy.index') }}" class="waves-effect">
                         <i class="dripicons-checklist"></i>
                         <span> Categories </span>
                     </a>
+                </li>
+
+                <li>
+                    <a href="javascript: void(0);" class="has-arrow waves-effect">
+                        <i class="dripicons-home"></i>
+                        <span> Hotels </span>
+                    </a>
                     <ul class="sub-menu" aria-expanded="false">
-                        <li><a href="{{ route('taxonomy.index') }}">All Categories</a></li>
+                        <li><a href="{{ route('post.add',\App\Core\Glosary\PostType::HOTEL['NAME']) }}">Create</a></li>
+                        <li><a href="{{ route('post.index') }}">All Hotels</a></li>
                     </ul>
                 </li>
 
                 <li>
                     <a href="javascript: void(0);" class="has-arrow waves-effect">
-                        <i class="dripicons-article"></i>
-                        <span> Post </span>
+                        <i class="dripicons-stack"></i>
+                        <span> Services </span>
                     </a>
                     <ul class="sub-menu" aria-expanded="false">
-                        <li><a href="{{ route('post.add') }}">Create</a></li>
-                        <li><a href="{{ route('post.index') }}">All Posts</a></li>
+                        <li><a href="{{ route('post.add',\App\Core\Glosary\PostType::SERVICE['NAME'])}}">Create</a></li>
+                        <li><a href="{{ route('post.index') }}">All Services</a></li>
                     </ul>
                 </li>
 

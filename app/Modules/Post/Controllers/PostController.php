@@ -38,7 +38,7 @@ class PostController extends Controller
         return view('Post::index',compact('posts'));
     }
 
-    public function add(Request $request)
+    public function add(Request $request,$postType)
     {
         if ($request->isMethod('get')) {
             $taxonomy = $this->termRepository->getAll()->toArray();
@@ -51,7 +51,6 @@ class PostController extends Controller
                 'file.*' => 'required|mimes:jpg,png,gif',
                 'post_content' => 'required',
                 'images.*' => 'mimes:jpg,png,gif',
-                'taxonomy' => 'required'
             ]);
             $post_title = $request->input('post_title');
             $status = $request->input('status') == 0 ? PostStatus::DRAFT['VALUE'] : PostStatus::PUBLIC['VALUE'];
@@ -136,14 +135,6 @@ class PostController extends Controller
                     $result = true;
                 }
 
-                // Save term relation
-                $dataTermRelation = [
-                    'object_id' => $postId,
-                    'term_taxonomy_id' => $request->input('taxonomy')
-                ];
-                if ($this->termRelationRepository->create($dataTermRelation)) {
-                    $result = true;
-                }
             }
 
             if ($result) {

@@ -40,7 +40,8 @@ class TaxonomyController extends Controller
             'slug' => 'required|unique:terms',
             'file.*' => 'required|mimes:jpg,png,gif',
             'title' => 'required',
-            'description' => 'required'
+            'description' => 'required',
+            'layout' => 'required'
         ]);
 
         $dataTerm = [
@@ -60,10 +61,10 @@ class TaxonomyController extends Controller
                 }
             }
 
-
+            $taxonomy = $request->input('layout');
             $dataTermTax = [
                 'term_id' => $termId,
-                'taxonomy' => TaxonomyType::CATEGORY['VALUE'],
+                'taxonomy' => $taxonomy,
                 'description' => $request->input('description'),
                 'parent' => $request->input('parent') < 0 ? null : $request->input('parent')
             ];
@@ -125,15 +126,17 @@ class TaxonomyController extends Controller
             foreach ($termMeta as $value) {
                 $result[MetaKey::display($value['meta_key'])] = $value['meta_value'];
             }
+            $taxonomy = $this->termTaxonomyRepository->getByTermId($id);
             $slugs = $this->termRepository->getAllSlug();
-            return view('Taxonomy::edit',compact('slugs','result'));
+            return view('Taxonomy::edit',compact('slugs','result','taxonomy'));
         }else{
             $validate = $request->validate([
                 'name' => 'required|max:191',
                 'slug' => 'required|unique:terms,slug,'. $id,
                 'file' => 'mimes:jpg,png,gif',
                 'title' => 'required',
-                'description' => 'required'
+                'description' => 'required',
+                'layout' => 'required'
             ]);
 
             $name = $request->input('name');
@@ -176,7 +179,9 @@ class TaxonomyController extends Controller
 
             if ($this->termRepository->update($id,$dataTerm)) {
                 $result = false;
+                $taxonomy = $request->input('layout');
                 $dataTermTax = [
+                    'taxonomy' => $taxonomy,
                     'description' => $request->input('description'),
                     'parent' => $request->input('parent') < 0 ? null : $request->input('parent')
                 ];
