@@ -22,6 +22,12 @@ abstract class EloquentRepository implements RepositoryInterface {
         );
     }
 
+    public function getInstantModel() {
+        return app()->make(
+            $this->getModel()
+        );
+    }
+
     public function setSuffixesLanguage() {
         $lang = app()->getLocale();
         $defaultCode = LocationConfigs::getLanguageDefault();

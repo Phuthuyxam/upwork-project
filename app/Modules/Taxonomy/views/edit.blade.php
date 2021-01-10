@@ -197,9 +197,21 @@
                     </form>
                 </div>
             </div>
+
+            <div class="car">
+                <div class="card-body row">
+                    <div class="col-4">
+                        @include('Seo::seo',['objectId' => $result['id'] , 'seoType' => \App\Core\Glosary\SeoConfigs::SEOTYPE['SINGLE']['KEY'] ])
+                    </div>
+                </div>
+            </div>
+
         </div>
 
     </div>
+
+
+
 @endsection
 @section('script')
     <script>
