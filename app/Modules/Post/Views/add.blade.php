@@ -70,7 +70,7 @@
                         <div class="card-body">
                             <ul class="nav nav-tabs" role="tablist">
                                 <li class="nav-item">
-                                    <a class="nav-link active" data-toggle="tab" href="#common" role="tab">Common</a>
+                                    <a class="nav-link active" id="commonTab" data-toggle="tab" href="#common" role="tab">Common</a>
                                 </li>
                                 <li class="nav-item">
                                     <a class="nav-link " data-toggle="tab" href="#slide" role="tab">Slides setting</a>
@@ -337,15 +337,14 @@
                 let val = $(this).val();
                 $('#slug').val(changeToSlug(val));
                 if (val.trim() !== '') {
-                    $(this).removeClass('error');
+                    $(this).removeClass('error required');
                     $('#title-error').text("");
-                    $('#slug').removeClass('error');
+                    $('#slug').removeClass('error required');
                     $('#slug-error').text('');
-                    $(this).removeClass('required');
                 } else {
-                    $(this).addClass('error');
+                    $(this).addClass('error required');
                     $('#title-error').text("This field cannot be null");
-                    $(this).addClass('required');
+                    $('#slug').addClass('required');
                 }
             })
 
@@ -375,14 +374,14 @@
                         $(this).removeClass('required');
                         $(this).hide();
                     } else {
-                        $('#file-error').text('File extension is not allow');
-                        $('.preview-image img').remove();
+                        $(this).parents('td').find('.error-message').text('File extension is not allow');
+                        $(this).parent().find('.preview-image img').remove();
                         $(this).addClass('error');
                     }
                 } else {
-                    $('#file-error').text('This field cannot be null');
+                    $(this).parents('td').find('.error-message').text('This field cannot be null');
                     $(this).removeClass('error');
-                    $('.preview-image img').remove();
+                    $(this).parent().find('.preview-image img').remove();
                 }
             });
 
@@ -393,6 +392,7 @@
                 }else {
                     $(this).removeClass('error');
                     $(this).parents('.form-group').find('.error-message').text('');
+                    $(this).removeClass('required');
                 }
             })
 
@@ -421,9 +421,14 @@
                 if (checkRequired('add-form')) {
                     $('#publishStatus').val(1);
                     $('#add-form').submit();
-                    $('.alert-common').hide();
+                    $('#commonTab').css('background','');
                 }else{
-                    $('.alert-common').show();
+                    Swal.fire({
+                        type: 'warning',
+                        title: 'Oops... !',
+                        text: 'Some field need to required. Please check it again',
+                    });
+                    $('#commonTab').css('background','#FF7575');
                 }
             })
 
@@ -432,9 +437,14 @@
                 if (checkRequired('add-form')) {
                     $('#publishStatus').val(0);
                     $('#add-form').submit();
-                    $('.alert-common').hide();
+                    $('#commonTab').css('background','');
                 }else{
-                    $('.alert-common').show();
+                    Swal.fire({
+                        type: 'warning',
+                        title: 'Oops... !',
+                        text: 'Some field need to required. Please check it again',
+                    });
+                    $('#commonTab').css('background','#FF7575');
                 }
             })
         })

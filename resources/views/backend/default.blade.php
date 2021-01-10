@@ -16,11 +16,12 @@
         <!-- Icons Css -->
         <link href="{{ asset('assets/css/icons.min.css') }}" rel="stylesheet" type="text/css" />
         <link href="{{ asset('assets/libs/dropzone/min/dropzone.min.css') }}" rel="stylesheet" type="text/css" />
+        @yield('lib')
         <!-- App Css-->
         <link href="{{ asset('assets/css/app.min.css') }}" id="app-style" rel="stylesheet" type="text/css" />
         <style>
             #loading {
-                position: absolute;
+                position: fixed;
                 left: 0;
                 top: 0;
                 height: 100vh;

@@ -396,11 +396,14 @@
                 let val = $(this).val();
                 $('#slug').val(changeToSlug(val));
                 if (val.trim() !== '') {
-                    $(this).removeClass('error');
+                    $(this).removeClass('error required');
                     $('#title-error').text("");
+                    $('#slug').removeClass('error required');
+                    $('#slug-error').text('');
                 } else {
-                    $(this).addClass('error');
+                    $(this).addClass('error required');
                     $('#title-error').text("This field cannot be null");
+                    $('#slug').addClass('required');
                 }
             })
 
@@ -408,6 +411,7 @@
                 let val = $(this).val();
                 if (val.trim() === '') {
                     $(this).val(changeToSlug($('#name').val()));
+                    $(this).removeClass('required');
                 } else {
                     if (slugs.indexOf(val) >= 0) {
                         $('#slug-error').text('Slug already exist');
@@ -428,12 +432,13 @@
                         $(this).hide();
                     } else {
                         $(this).parents('td').find('.error-message').text('File extension is not allow');
-                        $('.preview-image img').remove();
+                        $(this).parent().find('.preview-image img').remove();
                         $(this).addClass('error');
                     }
                 } else {
+                    $(this).parents('td').find('.error-message').text('This field cannot be null');
                     $(this).removeClass('error');
-                    $('.preview-image img').remove();
+                    $(this).parent().find('.preview-image img').remove();
                 }
             });
 

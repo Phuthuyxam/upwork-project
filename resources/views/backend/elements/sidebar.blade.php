@@ -39,7 +39,7 @@
                     </a>
                     <ul class="sub-menu" aria-expanded="false">
                         <li><a href="{{ route('post.add') }}">Create</a></li>
-                        <li><a href="#">All Posts</a></li>
+                        <li><a href="{{ route('post.index') }}">All Posts</a></li>
                     </ul>
                 </li>
 

@@ -13,6 +13,7 @@ use App\Modules\Taxonomy\Repositories\TermRepository;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class PostController extends Controller
 {
@@ -33,9 +34,8 @@ class PostController extends Controller
 
     public function index(Request $request)
     {
-//        $get = $this->posRepository->getAll();
-//        dump($get);
-        dump("asdad");
+        $posts = $this->posRepository->getPosts();
+        return view('Post::index',compact('posts'));
     }
 
     public function add(Request $request)
@@ -54,7 +54,7 @@ class PostController extends Controller
                 'taxonomy' => 'required'
             ]);
             $post_title = $request->input('post_title');
-            $status = $request->input('status') == 0 ? PostStatus::DRAFT['VALUE'] : PostStatus::PUBLIC['value'];
+            $status = $request->input('status') == 0 ? PostStatus::DRAFT['VALUE'] : PostStatus::PUBLIC['VALUE'];
             $result = false;
 
             $dataPost = [
@@ -147,6 +147,7 @@ class PostController extends Controller
             }
 
             if ($result) {
+                Log::info('user '.Auth::id().' has create post '. $postId);
                 return redirect('admin/post/edit/' . $postId)->with('message', 'success|Successfully create  "' . $request->input('post_title') . '" post');
             } else {
                 return redirect()->back()->with('message', 'danger|Something wrong try again!');
@@ -329,6 +330,41 @@ class PostController extends Controller
         if ($result) {
             return response(ResponeCode::SUCCESS['CODE']);
         }else {
+            return response(ResponeCode::SERVERERROR['CODE']);
+        }
+    }
+
+    public function deleteMany(Request $request) {
+        $data = $request->input('ids');
+        if ($data != '') {
+            $valid = false;
+            $ids = explode(',',$data);
+            if ($this->posRepository->deleteMany('id',$ids)) $valid = true;
+            if ($this->postMetaRepository->deleteMany('post_id',$ids)) $valid = true;
+            if ($this->termRelationRepository->deleteMany('object_id',$ids)) $valid = true;
+            if ($valid) {
+                return response(ResponeCode::SUCCESS['CODE']);
+                Log::info('user '.Auth::id().' has deleted post ['.$data.']');
+            }else{
+                return response(ResponeCode::SERVERERROR['CODE']);
+            }
+        }else{
+            return response(ResponeCode::BADREQUEST['CODE']);
+        }
+    }
+
+    public function delete(Request $request)
+    {
+        $id = $request->input('id');
+        try {
+            if (isset($id) && !empty($id)) {
+                $this->posRepository->delete($id);
+                $this->postMetaRepository->deleteByPostId($id);
+                $this->termRelationRepository->deleteByPostId($id);
+            }
+            Log::info('user '.Auth::id().' has deleted post '.$id);
+            return response(ResponeCode::SUCCESS['CODE']);
+        } catch (\Throwable $th) {
             return response(ResponeCode::SERVERERROR['CODE']);
         }
     }
