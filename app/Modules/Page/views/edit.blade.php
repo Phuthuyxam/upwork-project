@@ -223,7 +223,7 @@
                             <div class="card-body">
                                 <select name="template" class="form-control" id="template">
                                     @foreach(\App\Core\Glosary\PageTemplateConfigs::getAll() as $value)
-                                        <option value="{{ $value['VALUE'] }}">{{ $value['NAME'] }}</option>
+                                        <option value="{{ $value['VALUE'] }}" @if($result['page_template'] == $value['VALUE']) selected @endif>{{ $value['NAME'] }}</option>
                                     @endforeach
                                 </select>
                             </div>

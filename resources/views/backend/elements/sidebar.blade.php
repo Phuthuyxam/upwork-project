@@ -30,7 +30,7 @@
                         </a>
                     </li>
                 @endif
-                @if(PermissionHelpers::canAccess(route('post.add',\App\Core\Glosary\PostType::HOTEL['NAME']))
+                @if(PermissionHelpers::canAccess(route('post.add',\App\Core\Glosary\PostType::POST['NAME']))
                     || PermissionHelpers::canAccess(route('post.index')) )
                 <li>
                     <a href="javascript: void(0);" class="has-arrow waves-effect">
@@ -38,8 +38,8 @@
                         <span> Hotels </span>
                     </a>
                     <ul class="sub-menu" aria-expanded="false">
-                        @if(PermissionHelpers::canAccess(route('post.add',\App\Core\Glosary\PostType::HOTEL['NAME'])))
-                        <li><a href="{{ route('post.add',\App\Core\Glosary\PostType::HOTEL['NAME']) }}">Create</a></li>
+                        @if(PermissionHelpers::canAccess(route('post.add',\App\Core\Glosary\PostType::POST['NAME'])))
+                        <li><a href="{{ route('post.add',\App\Core\Glosary\PostType::POST['NAME']) }}">Create</a></li>
                         @endif
                         @if(PermissionHelpers::canAccess(route('post.index')))
                             <li><a href="{{ route('post.index') }}">All Hotels</a></li>
@@ -47,19 +47,19 @@
                     </ul>
                 </li>
                 @endif
-                @if(PermissionHelpers::canAccess(route('post.add',\App\Core\Glosary\PostType::SERVICE['NAME']))
-                    || PermissionHelpers::canAccess(route('post.index')) )
+                @if(PermissionHelpers::canAccess(route('post.add',\App\Core\Glosary\PostType::PAGE['NAME']))
+                    || PermissionHelpers::canAccess(route('page.index')) )
                 <li>
                     <a href="javascript: void(0);" class="has-arrow waves-effect">
                         <i class="dripicons-stack"></i>
                         <span> Services </span>
                     </a>
                     <ul class="sub-menu" aria-expanded="false">
-                        @if(PermissionHelpers::canAccess(route('post.add',\App\Core\Glosary\PostType::SERVICE['NAME'])))
-                            <li><a href="{{ route('post.add',\App\Core\Glosary\PostType::SERVICE['NAME'])}}">Create</a></li>
+                        @if(PermissionHelpers::canAccess(route('post.add',\App\Core\Glosary\PostType::PAGE['NAME'])))
+                            <li><a href="{{ route('page.add',\App\Core\Glosary\PostType::PAGE['NAME'])}}">Create</a></li>
                         @endif
                         @if(PermissionHelpers::canAccess(route('post.index')))
-                            <li><a href="{{ route('post.index') }}">All Services</a></li>
+                            <li><a href="{{ route('page.index') }}">All Services</a></li>
                         @endif
                     </ul>
                 </li>
