@@ -14,53 +14,73 @@
                         <span>Dashboard</span>
                     </a>
                 </li>
-
-                <li>
-                    <a href="{{route('filemanager.index')}}" class="waves-effect">
-                        <i class="dripicons-photo-group"></i>
-                        <span>Gallery</span>
-                    </a>
-                </li>
-
-                <li>
-                    <a href="{{ route('taxonomy.index') }}" class="waves-effect">
-                        <i class="dripicons-checklist"></i>
-                        <span> Categories </span>
-                    </a>
-                </li>
-
+                @if(PermissionHelpers::canAccess(route('filemanager.index')))
+                    <li>
+                        <a href="{{route('filemanager.index')}}" class="waves-effect">
+                            <i class="dripicons-photo-group"></i>
+                            <span>Gallery</span>
+                        </a>
+                    </li>
+                @endif
+                @if(PermissionHelpers::canAccess(route('taxonomy.index')))
+                    <li>
+                        <a href="{{ route('taxonomy.index') }}" class="waves-effect">
+                            <i class="dripicons-checklist"></i>
+                            <span> Categories </span>
+                        </a>
+                    </li>
+                @endif
+                @if(PermissionHelpers::canAccess(route('post.add',\App\Core\Glosary\PostType::HOTEL['NAME']))
+                    || PermissionHelpers::canAccess(route('post.index')) )
                 <li>
                     <a href="javascript: void(0);" class="has-arrow waves-effect">
                         <i class="dripicons-home"></i>
                         <span> Hotels </span>
                     </a>
                     <ul class="sub-menu" aria-expanded="false">
-                        <li><a href="{{ route('post.add',\App\Core\Glosary\PostType::POST['NAME']) }}">Create</a></li>
-                        <li><a href="{{ route('post.index') }}">All Hotels</a></li>
+                        @if(PermissionHelpers::canAccess(route('post.add',\App\Core\Glosary\PostType::HOTEL['NAME'])))
+                        <li><a href="{{ route('post.add',\App\Core\Glosary\PostType::HOTEL['NAME']) }}">Create</a></li>
+                        @endif
+                        @if(PermissionHelpers::canAccess(route('post.index')))
+                            <li><a href="{{ route('post.index') }}">All Hotels</a></li>
+                        @endif
                     </ul>
                 </li>
-
+                @endif
+                @if(PermissionHelpers::canAccess(route('post.add',\App\Core\Glosary\PostType::SERVICE['NAME']))
+                    || PermissionHelpers::canAccess(route('post.index')) )
                 <li>
                     <a href="javascript: void(0);" class="has-arrow waves-effect">
                         <i class="dripicons-stack"></i>
                         <span> Services </span>
                     </a>
                     <ul class="sub-menu" aria-expanded="false">
-                        <li><a href="{{ route('post.add',\App\Core\Glosary\PostType::PAGE['NAME'])}}">Create</a></li>
-                        <li><a href="{{ route('post.index') }}">All Services</a></li>
+                        @if(PermissionHelpers::canAccess(route('post.add',\App\Core\Glosary\PostType::SERVICE['NAME'])))
+                            <li><a href="{{ route('post.add',\App\Core\Glosary\PostType::SERVICE['NAME'])}}">Create</a></li>
+                        @endif
+                        @if(PermissionHelpers::canAccess(route('post.index')))
+                            <li><a href="{{ route('post.index') }}">All Services</a></li>
+                        @endif
                     </ul>
                 </li>
-
+                @endif
+                @if(PermissionHelpers::canAccess(route('user.manager.index'))
+                    || PermissionHelpers::canAccess(route('permission.index')) )
                 <li>
                     <a href="javascript: void(0);" class="has-arrow waves-effect">
                         <i class="dripicons-user"></i>
                         <span>Users & Roles</span>
                     </a>
                     <ul class="sub-menu" aria-expanded="false">
-                        <li><a href="{{ route('user.manager.index') }}">Users</a></li>
-                        <li><a href="{{ route('permission.index') }}">Roles</a></li>
+                        @if(PermissionHelpers::canAccess(route('user.manager.index')))
+                            <li><a href="{{ route('user.manager.index') }}">Users</a></li>
+                        @endif
+                        @if(PermissionHelpers::canAccess(route('permission.index')))
+                            <li><a href="{{ route('permission.index') }}">Roles</a></li>
+                        @endif
                     </ul>
                 </li>
+                @endif
                 <li class="menu-title">General settings</li>
                 <li>
                     <a href="#" class="waves-effect">

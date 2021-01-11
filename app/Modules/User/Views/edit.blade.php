@@ -82,7 +82,7 @@
 
                                 <div class="form-group">
                                     <label for="title">Phone</label>
-                                    <input type="tel" name="phone" id="title" class="form-control" placeholder="Type user's phone" value="{{ old('phone', $phone->meta_value) }}">
+                                    <input type="tel" name="phone" id="title" class="form-control" placeholder="Type user's phone" value="{{ old('phone', $phone ? $phone->meta_value : "" ) }}">
                                     <p style="font-style: italic; font-size: 12px"></p>
                                     @if($errors->first('phone')) {!! '<p class="text-danger" style="font-weight: bold" id="email-phone"> '. $errors->first('phone') .' </p>' !!} @endif
                                 </div>
