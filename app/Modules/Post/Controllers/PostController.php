@@ -62,7 +62,7 @@ class PostController extends Controller
                 'post_author' => Auth::id(),
                 'post_status' => $status,
                 'post_content' => $request->input('post_content'),
-                'post_type' => PostType::HOTEL['VALUE']
+                'post_type' => PostType::POST['VALUE']
             ];
             $postId = $this->posRepository->create($dataPost)->id;
             if ($postId) {
@@ -181,7 +181,7 @@ class PostController extends Controller
                 'post_author' => Auth::id(),
                 'post_status' => $status,
                 'post_content' => $request->input('post_content'),
-                'post_type' => PostType::HOTEL['VALUE']
+                'post_type' => PostType::POST['VALUE']
             ];
 
             if ($this->posRepository->update($id,$dataPost)) {

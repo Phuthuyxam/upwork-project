@@ -6,6 +6,6 @@ namespace App\Core\Glosary;
 
 class PostType extends BasicEnum
 {
-    const HOTEL = ['VALUE' => 0, 'NAME' => 'hotel'];
-    const SERVICE = ['VALUE' => 1,'NAME' => 'service'];
+    const POST = ['VALUE' => 0, 'NAME' => 'post'];
+    const PAGE = ['VALUE' => 1,'NAME' => 'page'];
 }

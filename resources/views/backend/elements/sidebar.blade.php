@@ -35,7 +35,7 @@
                         <span> Hotels </span>
                     </a>
                     <ul class="sub-menu" aria-expanded="false">
-                        <li><a href="{{ route('post.add',\App\Core\Glosary\PostType::HOTEL['NAME']) }}">Create</a></li>
+                        <li><a href="{{ route('post.add',\App\Core\Glosary\PostType::POST['NAME']) }}">Create</a></li>
                         <li><a href="{{ route('post.index') }}">All Hotels</a></li>
                     </ul>
                 </li>
@@ -46,7 +46,7 @@
                         <span> Services </span>
                     </a>
                     <ul class="sub-menu" aria-expanded="false">
-                        <li><a href="{{ route('post.add',\App\Core\Glosary\PostType::SERVICE['NAME'])}}">Create</a></li>
+                        <li><a href="{{ route('post.add',\App\Core\Glosary\PostType::PAGE['NAME'])}}">Create</a></li>
                         <li><a href="{{ route('post.index') }}">All Services</a></li>
                     </ul>
                 </li>

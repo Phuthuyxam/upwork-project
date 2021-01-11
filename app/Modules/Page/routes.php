@@ -8,7 +8,8 @@ Route::group(
         Route::prefix('admin/page')->group(function () {
             Route::get('/','PageController@index')->name('page.index');
             Route::match(['get','post'],'/add','PageController@add')->name('page.add');
-            Route::match(['get','post'],'/template','PageController@template')->name('page.template');
+            Route::post('/template','PageController@template')->name('page.template');
+            Route::match(['get','post'],'/edit/{id}','PageController@edit')->name('page.edit');
         });
     }
 );

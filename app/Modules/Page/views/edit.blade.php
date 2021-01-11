@@ -1,6 +1,6 @@
 @extends('backend.default')
 @section('title')
-    Add Page
+    Edit Page
 @endsection
 @section('style')
     <style>
@@ -53,10 +53,13 @@
         .action-wrapper .btn-add {
             margin-right: 10px;
         }
+        .hidden {
+            display: none;
+        }
     </style>
 @endsection
 @section('heading')
-    <h4 class="page-title font-size-18">Add Page</h4>
+    <h4 class="page-title font-size-18">Edit Page</h4>
 @endsection
 @section('content')
     <div class="content-wrapper">
@@ -66,7 +69,7 @@
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
                 Some fields need to required. Please check it again !
             </div>
-            <form action="{{ route('page.add') }}" id="add-form" method="post" role="form" enctype="multipart/form-data">
+            <form action="{{ route('page.edit',$result['id']) }}" id="add-form" method="post" role="form" enctype="multipart/form-data">
                 <div class="row">
                     <div class="col-9">
                         <div class="card">
@@ -75,10 +78,9 @@
                                     <li class="nav-item" id="commonTab">
                                         <a class="nav-link active" id="commonTab" data-toggle="tab" href="#common" role="tab">Common</a>
                                     </li>
-                                    <li class="nav-item" id="customTab" style="display: none">
+                                    <li class="nav-item" id="customTab" @if ($result['page_template'] == \App\Core\Glosary\PageTemplateConfigs::HOTEL['VALUE']) style="display: none" @endif>
                                         <a class="nav-link " data-toggle="tab" href="#slide" role="tab">Custom Setting</a>
                                     </li>
-
                                 </ul>
                                 <div class="tab-content">
                                     @csrf
@@ -87,7 +89,7 @@
                                             <label for="title">Title</label>
                                             <input type="text" class="form-control required" name="post_title" id="title"
                                                    placeholder="Title"
-                                                   value="{{ old('post_title') }}">
+                                                   value="{{ old('post_title') ? old('post_title') : $result['post_title']  }}">
                                             <p style="font-style: italic; font-size: 12px">The name is how it appears on your
                                                 website</p>
                                             <p class="text-danger error-message" style="font-weight: bold" id="title-error">
@@ -100,7 +102,7 @@
                                             <label for="slug">Slug</label>
                                             <input type="text" class="form-control required" name="post_name" id="slug"
                                                    placeholder="Slug"
-                                                   value="{{ old('post_name') }}">
+                                                   value="{{ old('post_name') ? old('post_name') : $result['post_name'] }}">
                                             <p style="font-style: italic; font-size: 12px">The "slug" is the URL-friendly of the
                                                 name. It is usually all lower case and contains only letters, numbers, and
                                                 hyphens and must be unique</p>
@@ -114,9 +116,9 @@
                                             <label for="excerpt">Title</label>
                                             <input type="text" class="form-control required" name="post_excerpt" id="excerpt"
                                                    placeholder="Excerpt"
-                                                   value="{{ old('post_excerpt') }}">
+                                                   value="{{ old('post_excerpt') ? old('post_excerpt') : $result['post_excerpt'] }}">
                                             <p class="text-danger error-message" style="font-weight: bold" id="excerpt-error">
-                                                @error('post_title')
+                                                @error('post_excerpt')
                                                 {{ $message }}
                                                 @enderror
                                             </p>
@@ -126,7 +128,7 @@
                                             <div class="editor-wrapper">
                                                 <textarea name="post_content" id="description" class="form-control"
                                                           style="width: 100%; height: 90px"
-                                                          placeholder="Description"></textarea>
+                                                          placeholder="Description">{{ old('post_content') ? old('post_content') : $result['post_content'] }}</textarea>
                                             </div>
                                             <p class="text-danger error-message" style="font-weight: bold"
                                                id="description-error">
@@ -137,19 +139,24 @@
                                         </div>
                                         <div class="form-group">
                                             <label for="file">Banner</label>
+                                            @php
+                                                $banner = json_decode($result[\App\Core\Glosary\MetaKey::BANNER['NAME']])
+                                            @endphp
                                             <table class="table table-bordered">
                                                 <tbody>
                                                 <tr>
                                                     <th style="vertical-align: middle; width: 100px">Desktop</th>
                                                     <td>
                                                         <div class="preview-image">
-                                                            <div class="close">
+                                                            <div class="close  @if($banner[0] == '') {{ 'deleted' }} @endif">
                                                                 <i class="dripicons-cross"></i>
                                                             </div>
+                                                            <img src="{{ asset($banner[0]) }}" style="width: 100%" alt="">
                                                         </div>
                                                         <input type="file" style="padding: 3px 5px; overflow: hidden"
-                                                               class="form-control required banner-image"
+                                                               class="form-control banner-image @if($banner[0] != '') {{ 'hidden' }} @else {{ 'required' }} @endif"
                                                                name="files[]">
+                                                        <input type="hidden" class="banner-link" name="banners[]" data-type="{{ \App\Core\Glosary\MetaKey::BANNER['VALUE'] }}" value="{{ $banner[0] }}">
                                                         <p class="text-danger error-message" style="font-weight: bold">
                                                             @error('files')
                                                             {{ $message }}
@@ -161,13 +168,15 @@
                                                     <th style="vertical-align: middle; width: 100px">Tablet</th>
                                                     <td>
                                                         <div class="preview-image">
-                                                            <div class="close">
+                                                            <div class="close  @if($banner[1] == '') {{ 'deleted' }} @endif">
                                                                 <i class="dripicons-cross"></i>
                                                             </div>
+                                                            <img src="{{ asset($banner[1]) }}" style="width: 100%" alt="">
                                                         </div>
                                                         <input type="file" style="padding: 3px 5px; overflow: hidden"
-                                                               class="form-control required banner-image"
+                                                               class="form-control banner-image @if($banner[1] != '') {{ 'hidden' }} @else {{ 'required' }} @endif"
                                                                name="files[]">
+                                                        <input type="hidden" class="banner-link" name="banners[]" data-type="{{ \App\Core\Glosary\MetaKey::BANNER['VALUE'] }}" value="{{ $banner[1] }}">
                                                         <p class="text-danger error-message" style="font-weight: bold">
                                                             @error('files')
                                                             {{ $message }}
@@ -179,13 +188,15 @@
                                                     <th style="vertical-align: middle; width: 100px">Mobile</th>
                                                     <td>
                                                         <div class="preview-image">
-                                                            <div class="close">
+                                                            <div class="close  @if($banner[2] == '') {{ 'deleted' }} @endif">
                                                                 <i class="dripicons-cross"></i>
                                                             </div>
+                                                            <img src="{{ asset($banner[2]) }}" style="width: 100%" alt="">
                                                         </div>
                                                         <input type="file" style="padding: 3px 5px; overflow: hidden"
-                                                               class="form-control required banner-image"
+                                                               class="form-control banner-image @if($banner[2] != '') {{ 'hidden' }} @else {{ 'required' }} @endif"
                                                                name="files[]">
+                                                        <input type="hidden" class="banner-link" name="banners[]" data-type="{{ \App\Core\Glosary\MetaKey::BANNER['VALUE'] }}" value="{{ $banner[2] }}">
                                                         <p class="text-danger error-message" style="font-weight: bold">
                                                             @error('files')
                                                             {{ $message }}
@@ -198,7 +209,9 @@
                                         </div>
                                     </div>
                                     <div class="tab-pane p-3" id="slide" role="tabpanel">
-
+                                        @if($result['page_template'] == \App\Core\Glosary\PageTemplateConfigs::SERVICE['VALUE'])
+                                            @include('Page::elements.service',['result' => $result[\App\Core\Glosary\MetaKey::SERVICE_ITEM['NAME']]])
+                                        @endif
                                     </div>
                                 </div>
                             </div>
@@ -358,6 +371,22 @@
                 e.preventDefault();
                 if (checkRequired('add-form')) {
                     $('#publishStatus').val(1);
+                    // $('#add-form').submit();
+                    $('#commonTab').css('background','');
+                }else{
+                    Swal.fire({
+                        type: 'warning',
+                        title: 'Oops... !',
+                        text: 'Some field need to required. Please check it again',
+                    });
+                    $('#commonTab').css('background','#FF7575');
+                }
+            })
+
+            $('.btn-draft').click(function (e) {
+                e.preventDefault();
+                if (checkRequired('add-form')) {
+                    $('#publishStatus').val(0);
                     $('#add-form').submit();
                     $('#commonTab').css('background','');
                 }else{
@@ -381,23 +410,7 @@
                 }
             })
 
-            $('.btn-draft').click(function (e) {
-                e.preventDefault();
-                if (checkRequired('add-form')) {
-                    $('#publishStatus').val(0);
-                    $('#add-form').submit();
-                    $('#commonTab').css('background','');
-                }else{
-                    Swal.fire({
-                        type: 'warning',
-                        title: 'Oops... !',
-                        text: 'Some field need to required. Please check it again',
-                    });
-                    $('#commonTab').css('background','#FF7575');
-                }
-            })
         })
-
         function readURL(input, element) {
             if (input.files && input.files[0]) {
                 element.find('img').remove();
@@ -421,7 +434,7 @@
                     valid = false;
                 } else {
                     $(this).removeClass('error');
-                    $(this).parent().find('.error-message').text('This field cannot be null');
+                    $(this).parent().find('.error-message').text('');
                 }
             })
             if (CKEDITOR.instances.description.getData() == '') {
@@ -452,3 +465,4 @@
         })
     </script>
 @endsection
+
