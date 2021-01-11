@@ -36,7 +36,9 @@
             align-items: center;
             justify-content: center;
         }
-
+        .preview-image img {
+            width: 100%;
+        }
         .preview-image .close i {
             font-size: 14px;
             line-height: .4;
@@ -51,6 +53,9 @@
         .action-wrapper .btn-add {
             margin-right: 10px;
         }
+        .hidden {
+            display: none;
+        }
     </style>
 @endsection
 @section('heading')
@@ -64,7 +69,7 @@
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
                 Some fields need to required. Please check it again !
             </div>
-            <form action="{{ route('post.add') }}" id="add-form" method="post" role="form" enctype="multipart/form-data">
+            <form action="{{ route('post.edit',$post['id']) }}" id="add-form" method="post" role="form" enctype="multipart/form-data">
                 <div class="row">
                     <div class="col-9">
                         <div class="card">
@@ -86,6 +91,7 @@
                                 </ul>
                                 <div class="tab-content">
                                     @csrf
+                                    <input type="hidden" id="postId" value="{{ $post['id'] }}">
                                     <div class="tab-pane active p-3" id="common" role="tabpanel">
                                         <div class="form-group">
                                             <label for="title">Title</label>
@@ -110,45 +116,97 @@
                                                 hyphens and must be unique</p>
                                             <p class="text-danger error-message" style="font-weight: bold" id="slug-error">
                                                 @error('post_name')
-                                                {{ $message }}
-                                                @enderror
-                                            </p>
-                                        </div>
-                                        {{--                                <div class="form-group">--}}
-                                        {{--                                    <label for="parent">Parent</label>--}}
-                                        {{--                                    <select name="parent" class="form-control" id="parent">--}}
-                                        {{--                                        <option value="-1">None</option>--}}
-                                        {{--                                    </select>--}}
-                                        {{--                                    <p style="font-style: italic; font-size: 12px">Categories can have a hierarchy. You--}}
-                                        {{--                                        might have and Jazz category, and under that have children categories for Debop--}}
-                                        {{--                                        and Big Band. Totally optional</p>--}}
-                                        {{--                                </div>--}}
-                                        <div class="form-group">
-                                            <label for="file">Banner</label>
-                                            <div class="preview-image">
-                                                <div class="close">
-                                                    <i class="dripicons-cross"></i>
-{{--                                                    <img src="{{ asset('storage/posts/'.$post["id"].'_'.'$post["post_title"].'/banner/'.$postMeta[Me]) }}" alt="">--}}
-                                                </div>
-                                            </div>
-                                            <input type="file" style="padding: 3px 5px; overflow: hidden"
-                                                   class="form-control required"
-                                                   name="file" id="file" value="{{ old('file') }}">
-                                            <p class="text-danger error-message" style="font-weight: bold" id="file-error">
-                                                @error('file')
                                                     {{ $message }}
                                                 @enderror
                                             </p>
                                         </div>
                                         <div class="form-group">
+                                            <label for="file">Banner</label>
+                                            @php
+                                                $banner = $postMetaMap[\App\Core\Glosary\MetaKey::BANNER['VALUE']];
+                                            @endphp
+                                            <table class="table table-bordered">
+                                                <tbody>
+                                                <tr>
+                                                    <th style="vertical-align: middle; width: 100px">Desktop</th>
+                                                    <td>
+                                                        <div class="preview-image">
+                                                            <div class="close @if($banner[0] == '') {{ 'deleted' }} @endif">
+                                                                <i class="dripicons-cross"></i>
+                                                            </div>
+                                                            @if($banner[0] != '')
+                                                                <img src="{{ asset($banner[0]) }}" alt="">
+                                                            @endif
+                                                        </div>
+                                                        <input type="file" style="padding: 3px 5px; overflow: hidden;"
+                                                               class="form-control banner-image @if($banner[0] != '') {{ 'hidden' }} @else {{ 'required' }} @endif"
+                                                               name="files[]">
+                                                        <input type="hidden" class="banner-link" name="banner[]" data-type="{{ \App\Core\Glosary\MetaKey::BANNER['VALUE'] }}" value="{{ $banner[0] }}">
+                                                        <p class="text-danger error-message" style="font-weight: bold">
+                                                            @error('files')
+                                                            {{ $message }}
+                                                            @enderror
+                                                        </p>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <th style="vertical-align: middle; width: 100px">Tablet</th>
+                                                    <td>
+                                                        <div class="preview-image">
+                                                            <div class="close @if($banner[1] == '') {{ 'deleted' }} @endif">
+                                                                <i class="dripicons-cross"></i>
+                                                            </div>
+                                                            @if($banner[1] != '')
+                                                                <img src="{{ asset($banner[1]) }}" alt="">
+                                                            @endif
+                                                        </div>
+                                                        <input type="file" style="padding: 3px 5px; overflow: hidden;"
+                                                               class="form-control banner-image @if($banner[1] != '') {{ 'hidden' }} @else {{ 'required' }} @endif"
+                                                               name="files[]">
+                                                        <input type="hidden" class="banner-link" name="banner[]" data-type="{{ \App\Core\Glosary\MetaKey::BANNER['VALUE'] }}" value="{{ $banner[1] }}">
+                                                        <p class="text-danger error-message" style="font-weight: bold">
+                                                            @error('files')
+                                                            {{ $message }}
+                                                            @enderror
+                                                        </p>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <th style="vertical-align: middle; width: 100px">Mobile</th>
+                                                    <td>
+                                                        <div class="preview-image">
+                                                            <div class="close @if($banner[2] == '') {{ 'deleted' }} @endif">
+                                                                <i class="dripicons-cross"></i>
+                                                            </div>
+                                                            @if($banner[2] != '')
+                                                                <img src="{{ asset($banner[2]) }}" alt="">
+                                                            @endif
+                                                        </div>
+                                                        <input type="file" style="padding: 3px 5px; overflow: hidden;"
+                                                               class="form-control banner-image @if($banner[2] != '') {{ 'hidden' }} @else {{ 'required' }} @endif"
+                                                               name="files[]">
+                                                        <input type="hidden" class="banner-link" name="banner[]" data-type="{{ \App\Core\Glosary\MetaKey::BANNER['VALUE'] }}" value="{{ $banner[2] }}">
+                                                        <p class="text-danger error-message" style="font-weight: bold">
+                                                            @error('files')
+                                                            {{ $message }}
+                                                            @enderror
+                                                        </p>
+                                                    </td>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div class="form-group">
                                             <label for="description">Description</label>
-                                            <textarea name="post_content" id="description" class="form-control"
-                                                      style="width: 100%; height: 90px"
-                                                      placeholder="Description"></textarea>
+                                            <div class="editor-wrapper">
+                                                <textarea name="post_content" id="description" class="form-control"
+                                                          style="width: 100%; height: 90px"
+                                                          placeholder="Description">{{ $post['post_content'] }}</textarea>
+                                            </div>
                                             <p class="text-danger error-message" style="font-weight: bold"
                                                id="description-error">
                                                 @error('post_content')
-                                                {{ $message }}
+                                                    {{ $message }}
                                                 @enderror
                                             </p>
                                         </div>
@@ -162,64 +220,90 @@
                                             </tr>
                                             </thead>
                                             <tbody>
-                                            <tr>
-                                                <td>
-                                                    <div class="preview-image">
-                                                        <div class="close">
-                                                            <i class="dripicons-cross"></i>
+                                            @php
+                                                $slides = $postMetaMap[\App\Core\Glosary\MetaKey::SLIDE['VALUE']];
+                                            @endphp
+                                            @if(isset($slides) && !empty($slides))
+                                                @foreach($slides as $key => $value)
+                                                    <tr>
+                                                        <td>
+                                                            <div class="preview-image">
+                                                                <div class="close @if($value == '') {{ 'deleted' }} @endif">
+                                                                    <i class="dripicons-cross"></i>
+                                                                </div>
+                                                                @if($value != '')
+                                                                    <img src="{{ asset($value) }}" alt="">
+                                                                @endif
+                                                            </div>
+                                                            <input type="file" style="padding: 3px 5px; overflow: hidden;" class="form-control input-image @if($value != '') {{ 'hidden' }} @endif" name="images[]">
+                                                            <input type="hidden" class="banner-link" data-type="{{ \App\Core\Glosary\MetaKey::SLIDE['VALUE'] }}" value="{{ $value }}" name="imageMap[]">
+                                                        </td>
+                                                        <td style="width: 120px; vertical-align: middle">
+                                                            <div class="action-wrapper">
+                                                                <button class="btn btn-success btn-add"><i class="dripicons-plus"></i>
+                                                                </button>
+                                                                @if($key > 0)
+                                                                    <button class="btn btn-danger btn-delete"><i class="dripicons-minus"></i>
+                                                                    </button>
+                                                                @endif
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                @endforeach
+                                            @else
+                                                <tr>
+                                                    <td>
+                                                        <div class="preview-image">
+                                                            <div class="close">
+                                                                <i class="dripicons-cross"></i>
+                                                            </div>
+
                                                         </div>
-                                                    </div>
-                                                    <input type="file" name="images[]" class="input-image">
-                                                </td>
-                                                <td style="width: 120px; vertical-align: middle">
-                                                    <div class="action-wrapper">
-                                                        <button class="btn btn-success btn-add"><i class="dripicons-plus"></i>
-                                                        </button>
-                                                    </div>
-                                                </td>
-                                            </tr>
+                                                        <input type="file" style="padding: 3px 5px; overflow: hidden;" class="form-control input-image " name="images[]">
+                                                    </td>
+                                                    <td style="width: 120px; vertical-align: middle">
+                                                        <div class="action-wrapper">
+                                                            <button class="btn btn-success btn-add"><i class="dripicons-plus"></i>
+                                                            </button>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            @endif
                                             </tbody>
                                         </table>
                                     </div>
                                     <div class="tab-pane p-3" id="type" role="tabpanel">
                                         <table class="table table-bordered">
                                             <thead>
-                                            <tr>
-                                                <th>Rooms type</th>
-                                                <th>Inventory</th>
-                                                <th></th>
-                                            </tr>
+                                                <tr>
+                                                    <th>Rooms type</th>
+                                                    <th>Inventory</th>
+                                                    <th></th>
+                                                </tr>
                                             </thead>
                                             <tbody>
-                                            <tr>
-                                                <td>
-                                                    <input type="text" class="form-control" name="room_types[]">
-                                                </td>
-                                                <td>
-                                                    <input type="number" class="form-control" name="inventories[]">
-                                                </td>
-                                                <td style="width: 120px; vertical-align: middle">
-                                                    <div class="action-wrapper">
-                                                        <button class="btn btn-success btn-add-type"><i class="dripicons-plus"></i></button>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                            @if(old('room_types[]') && old('inventories[]'))
-                                                @foreach(old('room_types[]') as $key => $value)
-                                                    <tr>
-                                                        <td>
-                                                            <input type="text" class="form-control" name="room_types[]" value="{{ $value }}">
-                                                        </td>
-                                                        <td>
-                                                            <input type="number" class="form-control" name="inventories[]" value="{{ old('inventories[]')[$key] }}">
-                                                        </td>
-                                                        <td style="width: 120px; vertical-align: middle">
-                                                            <div class="action-wrapper">
-                                                                <button class="btn btn-success btn-add-type"><i class="dripicons-plus"></i></button>
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                @endforeach
+                                            @php
+                                                $types = $postMetaMap[\App\Core\Glosary\MetaKey::ROOM_TYPE['VALUE']];
+                                            @endphp
+                                            @if(isset($types) && !empty($types))
+                                                @foreach($types as $key => $value)
+                                                <tr>
+                                                    <td>
+                                                        <input type="text" class="form-control" name="room_types[]" value="{{ $value->type }}">
+                                                    </td>
+                                                    <td>
+                                                        <input type="number" class="form-control" name="inventories[]" value="{{ $value->inven }}">
+                                                    </td>
+                                                    <td style="width: 120px; vertical-align: middle">
+                                                        <div class="action-wrapper">
+                                                            <button class="btn btn-success btn-add-type"><i class="dripicons-plus"></i></button>
+                                                            @if($key > 0)
+                                                                <button class="btn btn-danger btn-delete-type"><i class="dripicons-minus"></i></button>
+                                                            @endif
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            @endforeach
                                             @endif
                                             </tbody>
                                         </table>
@@ -233,16 +317,26 @@
                                             </tr>
                                             </thead>
                                             <tbody>
-                                            <tr>
-                                                <td>
-                                                    <input type="text" class="form-control" name="facilities[]">
-                                                </td>
-                                                <td style="width: 120px; vertical-align: middle">
-                                                    <div class="action-wrapper">
-                                                        <button class="btn btn-success btn-add-facility"><i class="dripicons-plus"></i></button>
-                                                    </div>
-                                                </td>
-                                            </tr>
+                                                @php
+                                                    $facilities = $postMetaMap[\App\Core\Glosary\MetaKey::FACILITY['VALUE']];
+                                                @endphp
+                                                @if(isset($facilities) && !empty($facilities))
+                                                    @foreach($facilities as $key => $value)
+                                                        <tr>
+                                                            <td>
+                                                                <input type="text" class="form-control" name="facilities[]" value="{{ $value }}">
+                                                            </td>
+                                                            <td style="width: 120px; vertical-align: middle">
+                                                                <div class="action-wrapper">
+                                                                    <button class="btn btn-success btn-add-facility"><i class="dripicons-plus"></i></button>
+                                                                    @if($key > 0)
+                                                                        <button class="btn btn-danger btn-delete-facility"><i class="dripicons-minus"></i></button>
+                                                                    @endif
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                    @endforeach
+                                                @endif
                                             </tbody>
                                         </table>
                                     </div>
@@ -255,13 +349,33 @@
                             <h5 class="card-header mt-0 font-size-16">Publish</h5>
                             <div class="card-body">
                                 <div class="status">
-                                    <span><i class="dripicons-flag"></i> Status : {{ \App\Core\Glosary\PostStatus::DRAFT['NAME'] }}</span>
+                                    <p><i class="dripicons-flag"></i> Status : {{ \App\Core\Glosary\PostStatus::display($post['post_status']) }}</p>
+                                    <a href="#" target="_blank"><i class="dripicons-web"></i> Make translation</a>
                                 </div>
                             </div>
                             <div class="card-footer" style="display: flex; align-items: center; justify-content: space-between">
-                                <input type="hidden" id="status">
+                                <input type="hidden" id="publishStatus" name="status">
                                 <button type="submit" class="btn btn-info btn-draft waves-effect waves-light">Save Draft</button>
                                 <button type="submit" class="btn btn-primary btn-submit waves-effect waves-light">Publish</button>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <h5 class="card-header mt-0 font-size-16">Select Category</h5>
+                            <div class="card-body">
+                                <div class="form-group">
+                                    <select name="taxonomy" id="tax" class="form-control required">
+                                        <option value="">Select Category</option>
+                                        @foreach($taxonomy as $value)
+                                            <option value="{{ $value['id'] }}" {{ $value['id'] == $term_id['term_taxonomy_id'] ? 'selected':'' }}>{{ $value['name'] }}</option>
+                                        @endforeach
+                                    </select>
+                                    <p class="text-danger error-message" style="font-weight: bold" id="title-error">
+                                        @error('post_title')
+                                        {{ $message }}
+                                        @enderror
+                                    </p>
+                                </div>
+
                             </div>
                         </div>
                     </div>
@@ -282,11 +396,14 @@
                 let val = $(this).val();
                 $('#slug').val(changeToSlug(val));
                 if (val.trim() !== '') {
-                    $(this).removeClass('error');
+                    $(this).removeClass('error required');
                     $('#title-error').text("");
+                    $('#slug').removeClass('error required');
+                    $('#slug-error').text('');
                 } else {
-                    $(this).addClass('error');
+                    $(this).addClass('error required');
                     $('#title-error').text("This field cannot be null");
+                    $('#slug').addClass('required');
                 }
             })
 
@@ -294,6 +411,7 @@
                 let val = $(this).val();
                 if (val.trim() === '') {
                     $(this).val(changeToSlug($('#name').val()));
+                    $(this).removeClass('required');
                 } else {
                     if (slugs.indexOf(val) >= 0) {
                         $('#slug-error').text('Slug already exist');
@@ -305,39 +423,111 @@
                 }
             })
             // Validate File Input
-            $("#file").change(function () {
+            $(".banner-image").change(function () {
                 let val = $(this).val();
                 if (val) {
                     if (validateFileUpload(val)) {
                         readURL(this, $(this).parent().find('.preview-image'));
-                        $('#file-error').text('');
+                        $(this).parents('td').find('.error-message').text('');
+                        $(this).hide();
                     } else {
-                        $('#file-error').text('File extension is not allow');
-                        $('.preview-image img').remove();
+                        $(this).parents('td').find('.error-message').text('File extension is not allow');
+                        $(this).parent().find('.preview-image img').remove();
                         $(this).addClass('error');
                     }
                 } else {
-                    $('#file-error').text('This field cannot be null');
+                    $(this).parents('td').find('.error-message').text('This field cannot be null');
                     $(this).removeClass('error');
-                    $('.preview-image img').remove();
+                    $(this).parent().find('.preview-image img').remove();
                 }
             });
 
-            $('#description').on('change', function () {
-                if ($(this).val().trim() !== '') {
+            $('#tax').on('change',function () {
+                if ($(this).val() == '') {
+                    $(this).addClass('error');
+                    $(this).parents('.form-group').find('.error-message').text('This field cannot be null');
+                }else {
                     $(this).removeClass('error');
-                    $('#description-error').text('')
+                    $(this).parents('.form-group').find('.error-message').text('');
                 }
             })
+
+            CKEDITOR.instances.description.on('change',function (){
+                let value = CKEDITOR.instances.description.getData();
+
+                if (value == '') {
+                    $('#description').parents('.form-group').find('.editor-wrapper').addClass('error');
+                    $('#description').parents('.form-group').find('.error-message').text('This field cannot be null');
+                }else{
+                    $('#description').parents('.form-group').find('.editor-wrapper').removeClass('error');
+                    $('#description').parents('.form-group').find('.error-message').text('');
+                }
+            })
+
             $('body').on('click', '.preview-image .close', function () {
-                $(this).parent().find('img').remove();
-                $(this).parent().parent().find('input[type=file]').val('');
+                let self = $(this);
+                let data = $(this).parent().parent().find('.banner-link').val();
+                let type = $(this).parent().parent().find('.banner-link').data('type');
+                let id = $('#postId').val();
+                if (!self.hasClass('deleted')) {
+                    Swal.fire({
+                        title: 'Are you sure you want to delete ?',
+                        text: "You won't be able to revert this!",
+                        type: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Yes, delete it!'
+                    }).then((result) => {
+                        if (result.value) {
+                            $('#loading').show();
+                            $.ajax({
+                                url : '{{ route('post.delete.image') }}',
+                                type : 'POST',
+                                data : {
+                                    _token : '{{ csrf_token() }}',
+                                    data : data,
+                                    type : type,
+                                    id : id
+                                },
+                                success : function (response){
+                                    $('#loading').hide();
+                                    if (response == 200) {
+                                        Swal.fire({
+                                            type: 'success',
+                                            title: 'Deleted !',
+                                            text: 'Category has been deleted.',
+                                        }).then((result) => {
+                                            self.parent().find('img').remove();
+                                            self.parent().parent().find('input[type=file]').val('');
+                                            self.parent().parent().find('input[type=file]').show();
+                                            self.addClass('deleted');
+                                        })
+                                    }else{
+                                        Swal.fire({
+                                            type: 'error',
+                                            title: 'Oops... !',
+                                            text: 'Something went wrong. Try again later',
+                                        })
+                                    }
+                                },
+                                error : function (e) {
+                                    console.log(e);
+                                }
+                            })
+                        }
+                    })
+                }else {
+                    $(this).parent().find('img').remove();
+                    $(this).parent().parent().find('input[type=file]').val('');
+                    $(this).parent().parent().find('input[type=file]').show();
+                }
             })
 
             $('.btn-submit').click(function (e) {
                 e.preventDefault();
                 if (checkRequired('add-form')) {
-                    $('#status').val(1);
+                    $('#publishStatus').val(1);
                     $('#add-form').submit();
                     $('.alert-common').hide();
                 }else{
@@ -348,7 +538,7 @@
             $('.btn-draft').click(function (e) {
                 e.preventDefault();
                 if (checkRequired('add-form')) {
-                    $('#status').val(0);
+                    $('#publishStatus').val(0);
                     $('#add-form').submit();
                     $('.alert-common').hide();
                 }else{
@@ -360,9 +550,10 @@
         function readURL(input, element) {
             if (input.files && input.files[0]) {
                 let reader = new FileReader();
-
+                element.find('img').remove();
+                let name = input.files[0].name;
                 reader.onload = function (e) {
-                    let html = '<img id="image" style="width: 100%" src="' + e.target.result + '" alt="your image" />';
+                    let html = '<img style="width: 100%" src="' + e.target.result + '"  title="name" alt="your image" />';
                     element.append(html);
                 }
                 reader.readAsDataURL(input.files[0]);
@@ -374,16 +565,20 @@
             $('#' + formId).find('.required').each(function () {
                 if ($(this).val().trim() === '') {
                     $(this).addClass('error');
-                    $(this).parents('.form-group').find('.error-message').text('This field cannot be null');
+                    $(this).parent().parent().find('.error-message').text('This field cannot be null');
                     valid = false;
                 } else {
                     $(this).removeClass('error');
-                    $(this).parents('.form-group').find('.error-message').text('');
+                    $(this).parent().parent().find('.error-message').text('');
                 }
             })
             if (CKEDITOR.instances.description.getData() == '') {
-                $(this).parents('.form-group').find('.error-message').text('This field cannot be null');
+                $('#description').parents('.form-group').find('.editor-wrapper').addClass('error');
+                $('#description').parents('.form-group').find('.error-message').text('This field cannot be null');
                 valid = false;
+            }else{
+                $('#description').parents('.form-group').find('.editor-wrapper').removeClass('error');
+                $('#description').parents('.form-group').find('.error-message').text('');
             }
             return valid;
         }
@@ -418,25 +613,23 @@
             if (val) {
                 if (validateFileUpload(val)) {
                     readURL(this, $(this).parent().find('.preview-image'));
-                    $('#file-error').text('');
+                    $(this).hide();
                 } else {
                     $('#file-error').text('File extension is not allow');
                     $('.preview-image img').remove();
-                    $(this).addClass('error');
+                    $(this).show();
                 }
             } else {
-                $('#file-error').text('This field cannot be null');
-                $(this).removeClass('error');
                 $('.preview-image img').remove();
             }
         })
 
         var type = `<tr>
                         <td>
-                            <input type="text" class="form-control" name="room_type[]">
+                            <input type="text" class="form-control" name="room_types[]">
                         </td>
                         <td>
-                            <input type="number" class="form-control" name="inventory[]">
+                            <input type="number" class="form-control" name="inventories[]">
                         </td>
                         <td style="width: 120px;vertical-align: middle">
                             <div class="action-wrapper">

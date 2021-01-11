@@ -15,6 +15,10 @@ class TermMetaRepository extends EloquentRepository {
         return TermMeta::class;
     }
 
+    public function getByCondition($condition) {
+        return $this->_model->where($condition)->first()->toArray();
+    }
+
     public function deleteByTermId($termId) {
         return $this->_model->where('term_id','=',$termId)->delete();
     }
@@ -26,5 +30,10 @@ class TermMetaRepository extends EloquentRepository {
     public function removeTermByCondition($condition) {
         return $this->_model->where($condition)->insert(['meta_value' => '']);
     }
+
+    public function updateByCondition($condition,$data) {
+        return $this->_model->where($condition)->update($data);
+    }
+
 }
 

@@ -12,7 +12,6 @@
             justify-content: flex-end;
         }
         .preview-image {
-            margin-bottom: 1rem;
             position: relative;
             overflow: hidden;
         }
@@ -74,32 +73,74 @@
                                         @enderror
                                     </p>
                                 </div>
-{{--                                <div class="form-group">--}}
-{{--                                    <label for="parent">Parent</label>--}}
-{{--                                    <select name="parent" class="form-control" id="parent">--}}
-{{--                                        <option value="-1">None</option>--}}
-{{--                                    </select>--}}
-{{--                                    <p style="font-style: italic; font-size: 12px">Categories can have a hierarchy. You--}}
-{{--                                        might have and Jazz category, and under that have children categories for Debop--}}
-{{--                                        and Big Band. Totally optional</p>--}}
-{{--                                </div>--}}
+
+                                <div class="form-group">
+                                    <label for="layout">Layout</label>
+                                    <select name="layout" class="form-control" id="layout">
+                                        @foreach(\App\Core\Glosary\TaxonomyType::getAll() as $value)
+                                            <option value="{{ $value['VALUE'] }}"> {{ $value['NAME'] }}</option>
+                                        @endforeach
+                                    </select>
+                                    <p style="font-style: italic; font-size: 12px">Choose layout to appear in Front. Default is Hotel,
+                                    Service will not have detail page</p>
+                                </div>
                                 <div class="form-group">
                                     <label for="file">Banner</label>
-                                    <div class="preview-image">
-                                        <div class="close">
-                                            <i class="dripicons-cross"></i>
-                                        </div>
-                                    </div>
-                                    <input type="file" style="padding: 3px 5px; overflow: hidden" class="form-control required" name="file" id="file" value="{{ old('file') }}" >
-                                    <p class="text-danger error-message" style="font-weight: bold" id="file-error">
-                                        @error('file')
-                                            {{ $message }}
-                                        @enderror
-                                    </p>
+                                    <table class="table table-bordered">
+                                        <tr>
+                                            <th style="vertical-align: center">Desktop</th>
+                                            <td>
+                                                <div class="preview-image">
+                                                    <div class="close">
+                                                        <i class="dripicons-cross"></i>
+                                                    </div>
+                                                </div>
+                                                <input type="file" style="padding: 3px 5px; overflow: hidden" class="form-control banner-image required" name="file[]">
+                                                <p class="text-danger error-message" style="font-weight: bold">
+                                                    @error('file')
+                                                    {{ $message }}
+                                                    @enderror
+                                                </p>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th style="vertical-align: center">Tablet</th>
+                                            <td>
+                                                <div class="preview-image">
+                                                    <div class="close">
+                                                        <i class="dripicons-cross"></i>
+                                                    </div>
+                                                </div>
+                                                <input type="file" style="padding: 3px 5px; overflow: hidden" class="form-control banner-image required" name="file[]">
+                                                <p class="text-danger error-message" style="font-weight: bold">
+                                                    @error('file')
+                                                    {{ $message }}
+                                                    @enderror
+                                                </p>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th style="vertical-align: center">Mobile</th>
+                                            <td>
+                                                <div class="preview-image">
+                                                    <div class="close">
+                                                        <i class="dripicons-cross"></i>
+                                                    </div>
+                                                </div>
+                                                <input type="file" style="padding: 3px 5px; overflow: hidden" class="form-control banner-image required" name="file[]">
+                                                <p class="text-danger error-message" style="font-weight: bold">
+                                                    @error('file')
+                                                    {{ $message }}
+                                                    @enderror
+                                                </p>
+                                            </td>
+                                        </tr>
+                                    </table>
+
                                 </div>
                                 <div class="form-group">
                                     <label for="title">Title</label>
-                                    <input name="title" id="title" class="form-control required" placeholder="Title" value="{{ old('title') }}">
+                                    <textarea name="title" id="title" class="form-control required" placeholder="Title">{{ old('title') }}</textarea>
                                     <p style="font-style: italic; font-size: 12px"></p>
                                     <p class="text-danger error-message" style="font-weight: bold"  id="title-error">
                                         @error('title')
@@ -134,7 +175,7 @@
                                         <tr>
                                             <th><input type="checkbox" name="" id="checkAll"></th>
                                             <th style="color:#1967a9;">Name</th>
-                                            <th style="color:#1967a9;">Description</th>
+                                            <th style="color:#1967a9;">Translation</th>
                                             <th style="color:#1967a9;">Slug</th>
                                             <th style="color:#1967a9;">Count</th>
                                             <th style="color:#1967a9; text-align: center">Action</th>
@@ -146,7 +187,7 @@
                                                 <tr>
                                                     <td><input type="checkbox" class="cate-check" data-id="{{ $value->term_id }}" name="" id=""></td>
                                                     <td><a href="#">{{ $value->name }}</a></td>
-                                                    <td>{{ $value->description }}</td>
+                                                    <td><a href="#" target="_blank"><i class="dripicons-web"></i> Make translation</a></td>
                                                     <td>{{ $value->slug }}</td>
                                                     <td></td>
                                                     <td>
@@ -182,9 +223,12 @@
                 if (val.trim() !== '') {
                     $(this).removeClass('error');
                     $('#name-error').text("");
+                    $('#slug').removeClass('error required');
+                    $('#slug-error').text('');
                 }else {
                     $(this).addClass('error');
                     $('#name-error').text("This field cannot be null");
+                    $('#slug').addClass('required');
                 }
             })
 
@@ -203,21 +247,23 @@
                 }
             })
             // Validate File Input
-            $("#file").change(function() {
+            $(".banner-image").change(function() {
                 let val = $(this).val();
                 if (val) {
                     if (validateFileUpload(val)) {
-                        readURL(this);
-                        $('#file-error').text('');
+                        readURL(this,$(this).parents('td').find('.preview-image'));
+                        $(this).parents('td').find('.error-message').text('');
+                        $(this).removeClass('required');
+                        $(this).hide();
                     }else{
-                        $('#file-error').text('File extension is not allow');
-                        $('.preview-image img').remove();
+                        $(this).parents('td').find('.error-message').text('File extension is not allow');
+                        $(this).parents('td').find('.preview-image img').remove();
                         $(this).addClass('error');
                     }
                 }else {
-                    $('#file-error').text('This field cannot be null');
+                    $(this).parents('td').find('.error-message').text('This field cannot be null');
                     $(this).removeClass('error');
-                    $('.preview-image img').remove();
+                    $(this).parents('td').find('.preview-image img').remove();
                 }
             });
 
@@ -235,13 +281,21 @@
             })
             $('.preview-image .close').click(function (){
                 $(this).parent().find('img').remove();
-                $('#file').val('');
+                $(this).parents('td').find('.banner-image').val('');
+                $(this).parents('td').find('.banner-image').show();
+                $(this).parents('td').find('.banner-image').addClass('required');
             })
 
             $('.btn-submit').click(function (e){
                 e.preventDefault();
                 if (checkRequired('add-form')) {
                     $('#add-form').submit();
+                }else{
+                    Swal.fire({
+                        type: 'warning',
+                        title: 'Oops... !',
+                        text: 'Some field need to required. Please check it again',
+                    })
                 }
             })
 
@@ -343,6 +397,7 @@
                     ids += $(this).data('id')+',';
                 }
             })
+            ids = ids.substr(0,ids.length-1);
             Swal.fire({
                 title: 'Do you want to delete these categories?',
                 text: "You won't be able to revert this!",
@@ -386,13 +441,15 @@
                 }
             })
         })
-        function readURL(input) {
+        function readURL(input,element) {
             if (input.files && input.files[0]) {
+                element.find('img').remove();
                 let reader = new FileReader();
+                let name = input.files[0].name;
+                reader.onload = function (e) {
 
-                reader.onload = function(e) {
-                    let html = '<img id="image" style="width: 100%" src="'+e.target.result+'" alt="your image" />';
-                    $('.preview-image').append(html);
+                    let html = '<img id="image" style="width: 100%" src="' + e.target.result + '" title="'+name+'" alt="your image" />';
+                    element.append(html);
                 }
                 reader.readAsDataURL(input.files[0]);
             }
@@ -403,11 +460,11 @@
             $('#'+formId).find('.required').each(function (){
                 if ($(this).val().trim() === '') {
                     $(this).addClass('error');
-                    $(this).parents('.form-group').find('.error-message').text('This field cannot be null');
+                    $(this).parent().find('.error-message').text('This field cannot be null');
                     valid = false;
                 }else{
                     $(this).removeClass('error');
-                    $(this).parents('.form-group').find('.error-message').text('');
+                    $(this).parent().find('.error-message').text('');
                 }
             })
 

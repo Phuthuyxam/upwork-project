@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateTermRelationshipsTable extends Migration
+class CreateSeoTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,12 @@ class CreateTermRelationshipsTable extends Migration
      */
     public function up()
     {
-        Schema::create('term_relationships', function (Blueprint $table) {
+        Schema::create('seo', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('object_id')->comment('example post id');
-            $table->bigInteger('term_taxonomy_id');
-            $table->integer('term_order')->nullable();
+            $table->bigInteger('object_id');
+            $table->string('seo_key')->unique();
+            $table->longText('seo_value')->nullable();
+            $table->string('seo_type');
             $table->timestamps();
         });
     }
@@ -29,6 +30,6 @@ class CreateTermRelationshipsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('term_relationships');
+        Schema::dropIfExists('seo');
     }
 }

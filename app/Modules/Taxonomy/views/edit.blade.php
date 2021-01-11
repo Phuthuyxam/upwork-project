@@ -39,6 +39,9 @@
             font-size: 14px;
             line-height: .4;
         }
+        .hidden {
+            display: none;
+        }
     </style>
 @endsection
 @section('heading')
@@ -85,22 +88,88 @@
                         {{--                                        and Big Band. Totally optional</p>--}}
                         {{--                                </div>--}}
                         <div class="form-group">
+                            <label for="layout">Layout</label>
+                            <select name="layout" class="form-control" id="layout">
+                                @foreach(\App\Core\Glosary\TaxonomyType::getAll() as $value)
+                                    <option value="{{ $value['VALUE'] }}" @if($value['VALUE'] == $taxonomy['taxonomy']) selected @endif> {{ $value['NAME'] }}</option>
+                                @endforeach
+                            </select>
+                            <p style="font-style: italic; font-size: 12px">Choose layout to appear in Front. Default is Hotel,
+                                Service will not have detail page</p>
+                        </div>
+                        <div class="form-group">
                             <label for="file">Banner</label>
-                            <div class="preview-image">
-                                <div class="close @if(!isset($result['file']) || empty($result['file'])) {{ 'deleted' }} @endif" data-id="{{ $result['id'] }}">
-                                    <i class="dripicons-cross"></i>
-                                </div>
-                                @if(isset($result['file']) && !empty($result['file']))
-                                    <img src="{{ asset('storage/categories/'.$result['file']) }}" alt="">
-                                @endif
-                            </div>
-                            <input type="file" style="padding: 3px 5px; overflow: hidden;" class="form-control  @if(isset($result['file']) && !empty($result['file'])) {{ 'd-none ' }} @else {{ 'required' }} @endif" name="file" id="file" value="{{ old('file') }}">
-                            <input type="hidden" name="fileName" value="{{ $result['file'] }}">
-                            <p class="text-danger error-message" style="font-weight: bold" id="file-error">
-                                @error('file')
-                                {{ $message }}
-                                @enderror
-                            </p>
+                            <table class="table table-bordered">
+                                @php
+                                    $banner = json_decode($result['file']);
+                                @endphp
+                                <tr>
+                                    <th style="vertical-align: middle">Desktop</th>
+                                    <td>
+                                        <div class="preview-image">
+                                            <div class="close @if(!isset($banner[0]) || empty($banner[0])) {{ 'deleted' }} @endif" data-id="{{ $result['id'] }}">
+                                                <i class="dripicons-cross"></i>
+                                            </div>
+                                            @if(isset($banner[0]) && !empty($banner[0]))
+                                                <img src="{{ asset($banner[0]) }}" alt="">
+                                            @endif
+                                        </div>
+                                        <input type="file" style="padding: 3px 5px; overflow: hidden;"
+                                               class="form-control banner-image @if($banner[0] != '') {{ 'hidden' }} @else {{ 'required' }} @endif"
+                                               name="files[]">
+                                        <input type="hidden" class="banner-link" name="banner[]" value="{{ $banner[0] }}">
+                                        <p class="text-danger error-message" style="font-weight: bold">
+                                            @error('file')
+                                            {{ $message }}
+                                            @enderror
+                                        </p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th style="vertical-align: middle">Tablet</th>
+                                    <td>
+                                        <div class="preview-image">
+                                            <div class="close @if(!isset($banner[1]) || empty($banner[1])) {{ 'deleted' }} @endif" data-id="{{ $result['id'] }}">
+                                                <i class="dripicons-cross"></i>
+                                            </div>
+                                            @if(isset($banner[1]) && !empty($banner[1]))
+                                                <img src="{{ asset($banner[1]) }}" alt="">
+                                            @endif
+                                        </div>
+                                        <input type="file" style="padding: 3px 5px; overflow: hidden;"
+                                               class="form-control banner-image @if($banner[1] != '') {{ 'hidden' }} @else {{ 'required' }} @endif"
+                                               name="files[]">
+                                        <input type="hidden" class="banner-link" name="banner[]"  value="{{ $banner[1] }}">
+                                        <p class="text-danger error-message" style="font-weight: bold">
+                                            @error('file')
+                                            {{ $message }}
+                                            @enderror
+                                        </p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th style="vertical-align: middle">Mobile</th>
+                                    <td>
+                                        <div class="preview-image">
+                                            <div class="close @if(!isset($banner[2]) || empty($banner[2])) {{ 'deleted' }} @endif" data-id="{{ $result['id'] }}">
+                                                <i class="dripicons-cross"></i>
+                                            </div>
+                                            @if(isset($banner[2]) && !empty($banner[2]))
+                                                <img src="{{ asset($banner[2]) }}" alt="">
+                                            @endif
+                                        </div>
+                                        <input type="file" style="padding: 3px 5px; overflow: hidden;"
+                                               class="form-control banner-image @if($banner[2] != '') {{ 'hidden' }} @else {{ 'required' }} @endif"
+                                               name="files[]">
+                                        <input type="hidden" class="banner-link" name="banner[]"  value="{{ $banner[2] }}">
+                                        <p class="text-danger error-message" style="font-weight: bold">
+                                            @error('file')
+                                            {{ $message }}
+                                            @enderror
+                                        </p>
+                                    </td>
+                                </tr>
+                            </table>
                         </div>
                         <div class="form-group">
                             <label for="title">Title</label>
@@ -128,9 +197,21 @@
                     </form>
                 </div>
             </div>
+
+            <div class="car">
+                <div class="card-body row">
+                    <div class="col-4">
+                        @include('Seo::seo',['objectId' => $result['id'] , 'seoType' => \App\Core\Glosary\SeoConfigs::SEOTYPE['SINGLE']['KEY'] ])
+                    </div>
+                </div>
+            </div>
+
         </div>
 
     </div>
+
+
+
 @endsection
 @section('script')
     <script>
@@ -143,9 +224,12 @@
                 if (val.trim() !== '') {
                     $(this).removeClass('error');
                     $('#name-error').text("");
+                    $('#slug').removeClass('error required');
+                    $('#slug-error').text('');
                 } else {
                     $(this).addClass('error');
                     $('#name-error').text("This field cannot be null");
+                    $('#slug').addClass('required');
                 }
             })
 
@@ -164,19 +248,22 @@
                 }
             })
             // Validate File Input
-            $("#file").change(function () {
+            $(".banner-image").change(function () {
                 let val = $(this).val();
                 if (val) {
                     if (validateFileUpload(val)) {
-                        readURL(this);
-                        $('#file-error').text('');
+                        readURL(this,$(this).parents('td').find('.preview-image'));
+                        $(this).removeClass('error');
+                        $(this).parents('td').find('.error-message').text('');
+                        $(this).removeClass('required');
+                        $(this).hide();
                     } else {
-                        $('#file-error').text('File extension is not allow');
+                        $(this).parents('td').find('.error-message').text('File extension is not allow');
                         $('.preview-image img').remove();
                         $(this).addClass('error');
                     }
                 } else {
-                    $('#file-error').text('This field cannot be null');
+                    $(this).parents('td').find('.error-message').text('This field cannot be null');
                     $(this).removeClass('error');
                     $('.preview-image img').remove();
                 }
@@ -197,6 +284,7 @@
             $('.preview-image .close').click(function () {
                 let self = $(this);
                 let termId = $(this).data('id');
+                let data = $(this).parents('td').find('.banner-link').val();
                 if (!self.hasClass('deleted')) {
                     Swal.fire({
                         title: 'Are you sure you want to delete ?',
@@ -213,7 +301,8 @@
                                 url: '{{ route('taxonomy.delete.image') }}',
                                 data: {
                                     _token: '{{ csrf_token() }}',
-                                    termId: termId
+                                    termId: termId,
+                                    data : data
                                 },
                                 success: function (response) {
                                     if (response == 200) {
@@ -223,8 +312,8 @@
                                             text: 'Category has been deleted.',
                                         }).then((result) => {
                                             self.parent().find('img').remove();
-                                            $('#file').val('');
-                                            $('#file').show();
+                                            self.parent().parent().find('input[type=file]').val('');
+                                            self.parent().parent().find('input[type=file]').show();
                                             self.addClass('deleted');
                                         })
                                     } else {
@@ -250,19 +339,20 @@
 
             $('.btn-submit').click(function (e) {
                 e.preventDefault();
-                console.log(checkRequired('add-form'))
                 if (checkRequired('add-form')) {
                     $('#add-form').submit();
                 }
             })
         })
-        function readURL(input) {
+        function readURL(input,element) {
             if (input.files && input.files[0]) {
+                element.find('img').remove();
                 let reader = new FileReader();
+                let name = input.files[0].name;
+                reader.onload = function (e) {
 
-                reader.onload = function(e) {
-                    let html = '<img id="image" style="width: 100%" src="'+e.target.result+'" alt="your image" />';
-                    $('.preview-image').append(html);
+                    let html = '<img id="image" style="width: 100%" src="' + e.target.result + '" title="'+name+'" alt="your image" />';
+                    element.append(html);
                 }
                 reader.readAsDataURL(input.files[0]);
             }

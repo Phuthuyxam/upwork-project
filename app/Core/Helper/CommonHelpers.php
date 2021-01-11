@@ -43,7 +43,88 @@ if(!function_exists('generatePrefixLanguage')) {
         }else {
             return '';
         }
+    }
+}
 
+if(!function_exists('generateSeoOption')) {
+    function generateSeoOption() {
 
+    }
+}
+
+if(!function_exists('getDataSeoOption')) {
+    function getDataSeoOption($objectId, $seoType, $defaultData = []) {
+        $seoRepository = \App\Modules\Seo\Repositories\SeoRepository::class;
+        $seoConfig = \App\Core\Glosary\SeoConfigs::getSeoKey();
+        $seoRepository = app()->make(
+            $seoRepository );
+        $seoDatas = $seoRepository->filter([ ['object_id' , $objectId] , ['seo_type', $seoType]]);
+        $resultData = [];
+        if($seoDatas->isNotEmpty()) {
+            foreach ($seoDatas as $seo) {
+                $resultData[$seo->seo_key] = $seo->seo_value;
+            }
+        }
+
+        $localBusiness = \Spatie\SchemaOrg\Schema::advertiserContentArticle()->name('blog name');
+        $localBusiness->description($resultData[$seoConfig['SEO']['DESC']]);
+        $localBusiness->knowsLanguage(app()->getLocale());
+        $localBusiness->url(url()->current());
+        $localBusiness->sameAs(['https://www.facebook.com/']);
+        $localBusiness->logo('logo');
+        $localBusiness->telephone('0344719081');
+
+        ob_start();
+        ?>
+        <title>
+            <?php echo ( isset($resultData[$seoConfig['SEO']['TITLE']]) && !empty($resultData[$seoConfig['SEO']['TITLE']]) ) ? $resultData[$seoConfig['SEO']['TITLE']] :
+                ( isset($defaultData[$seoConfig['SEO']['TITLE']]) ? $defaultData[$seoConfig['SEO']['TITLE']] : "" ) ?>
+        </title>
+        <meta name="description"
+              content="<?php echo ( isset($resultData[$seoConfig['SEO']['DESC']]) && !empty($resultData[$seoConfig['SEO']['DESC']]) ) ? $resultData[$seoConfig['SEO']['DESC']] :
+                  (isset($defaultData[$seoConfig['SEO']['DESC']]) ? $defaultData[$seoConfig['SEO']['DESC']] : "") ?>"/>
+        <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1, noarchive"/>
+        <meta name="robots" content="index, follow, max-video-preview:-1, noimageindex, noarchive, nosnippet"/>
+        <link rel="canonical"
+              href="<?php echo ( isset($resultData[$seoConfig['SEO']['CANONICAL_URL']]) && !empty($resultData[$seoConfig['SEO']['CANONICAL_URL']]) ) ? $resultData[$seoConfig['SEO']['CANONICAL_URL']] :
+                  (isset($defaultData[$seoConfig['SEO']['CANONICAL_URL']]) ? $defaultData[$seoConfig['SEO']['CANONICAL_URL']] : "")?>"/>
+        <meta property="og:locale" content="en_US"/>
+        <meta property="og:type" content="article"/>
+        <meta property="og:title"
+              content="<?php echo ( isset($resultData[$seoConfig['SOCIAL']['FACEBOOK']['TITLE']]) && !empty($resultData[$seoConfig['SOCIAL']['FACEBOOK']['TITLE']]) ) ? $resultData[$seoConfig['SOCIAL']['FACEBOOK']['TITLE']] :
+                  (isset($defaultData[$seoConfig['SOCIAL']['FACEBOOK']['TITLE']]) ? $defaultData[$seoConfig['SOCIAL']['FACEBOOK']['TITLE']] : "") ?>"/>
+        <meta property="og:description"
+              content="<?php echo ( isset($resultData[$seoConfig['SOCIAL']['FACEBOOK']['DESCRIPTION']]) && !empty($resultData[$seoConfig['SOCIAL']['FACEBOOK']['DESCRIPTION']]) ) ? $resultData[$seoConfig['SOCIAL']['FACEBOOK']['DESCRIPTION']] :
+                  (isset($defaultData[$seoConfig['SOCIAL']['FACEBOOK']['DESCRIPTION']]) ? $defaultData[$seoConfig['SOCIAL']['FACEBOOK']['DESCRIPTION']] : "" ) ?>"/>
+        <meta property="og:url" content="http://localhost/decor/day-la-bai-viet-moi-seo-slug/"/>
+        <meta property="og:site_name" content="Tshirt-shop"/>
+        <meta property="article:published_time" content="<?php echo isset($defaultData['published_time']) ? $defaultData['published_time'] : ""  ?>"/>
+        <meta property="article:modified_time" content="<?php echo isset($defaultData['modified_time']) ? $defaultData['modified_time'] : ""  ?>"/>
+        <meta property="og:image"
+              content="<?php echo ( isset($resultData[$seoConfig['SOCIAL']['FACEBOOK']['IMAGE']]) && !empty($resultData[$seoConfig['SOCIAL']['FACEBOOK']['IMAGE']]) ) ? $resultData[$seoConfig['SOCIAL']['FACEBOOK']['IMAGE']] :
+                  ( isset($defaultData[$seoConfig['SOCIAL']['FACEBOOK']['IMAGE']]) ? $defaultData[$seoConfig['SOCIAL']['FACEBOOK']['IMAGE']] : "" ) ?>"/>
+        <meta property="og:image:width" content="800"/>
+        <meta property="og:image:height" content="799"/>
+        <meta name="twitter:card" content="summary_large_image"/>
+        <meta name="twitter:title"
+              content="<?php echo ( isset($resultData[$seoConfig['SOCIAL']['TWITTER']['TITLE']]) && !empty($resultData[$seoConfig['SOCIAL']['TWITTER']['TITLE']]) ) ? $resultData[$seoConfig['SOCIAL']['TWITTER']['TITLE']] :
+                  (isset($defaultData[$seoConfig['SOCIAL']['TWITTER']['TITLE']]) ? $defaultData[$seoConfig['SOCIAL']['TWITTER']['TITLE']]  : "" ) ?>"/>
+        <meta name="twitter:description"
+              content="<?php echo ( isset($resultData[$seoConfig['SOCIAL']['TWITTER']['DESCRIPTION']]) && !empty($resultData[$seoConfig['SOCIAL']['TWITTER']['DESCRIPTION']]) ) ? $resultData[$seoConfig['SOCIAL']['TWITTER']['DESCRIPTION']] :
+                  (isset($defaultData[$seoConfig['SOCIAL']['TWITTER']['DESCRIPTION']]) ? $defaultData[$seoConfig['SOCIAL']['TWITTER']['DESCRIPTION']] : "") ?>"/>
+        <meta name="twitter:image"
+              content="<?php echo ( isset($resultData[$seoConfig['SOCIAL']['TWITTER']['IMAGE']]) && !empty($resultData[$seoConfig['SOCIAL']['TWITTER']['IMAGE']]) ) ? $resultData[$seoConfig['SOCIAL']['TWITTER']['IMAGE']] :
+                  ( isset($defaultData[$seoConfig['SOCIAL']['TWITTER']['IMAGE']]) ? $defaultData[$seoConfig['SOCIAL']['TWITTER']['IMAGE']] : "" ) ?>"/>
+        <meta name="twitter:label1" content="Written by">
+        <meta name="twitter:data1" content="admin">
+        <meta name="twitter:label2" content="Est. reading time">
+        <meta name="twitter:data2" content="0 minutes">
+
+        <?php echo $localBusiness->toScript() ?>
+
+        <?php
+        $content = ob_get_contents();
+        ob_get_clean();
+        return $content;
     }
 }

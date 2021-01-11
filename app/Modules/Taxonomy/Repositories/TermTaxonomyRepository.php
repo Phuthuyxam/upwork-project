@@ -22,4 +22,8 @@ class TermTaxonomyRepository extends EloquentRepository {
     public function updateByTermId($termId,$data) {
         return $this->_model->where('term_id','=',$termId)->update($data);
     }
+
+    public function getByTermId($termId) {
+        return $this->_model->where('term_id','=',$termId)->first();
+    }
 }
