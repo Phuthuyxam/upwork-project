@@ -23,7 +23,7 @@
                     </div>
                     <input type="file" style="padding: 3px 5px; overflow: hidden" class="form-control banner-image @if($value->image != '') {{ 'hidden' }} @else {{'required'}} @endif"
                            name="images[]">
-                    <input type="hidden" class="banner-link" name="imageMap[]" data-type="{{ \App\Core\Glosary\MetaKey::SERVICE_ITEM['VALUE'] }}" value="{{ $value->image }}">
+                    <input type="hidden" class="banner-link" name="imageMap[]" data-type="{{ \App\Core\Glosary\MetaKey::COMPLETE_ITEM['VALUE'] }}" value="{{ $value->image }}">
                     <p class="text-danger error-message" style="font-weight: bold" id="excerpt-error">
                     </p>
                 </td>

@@ -209,10 +209,14 @@
                                         </div>
                                     </div>
                                     <div class="tab-pane p-3" id="slide" role="tabpanel">
-                                        @if(isset($result[\App\Core\Glosary\MetaKey::SERVICE_ITEM['NAME']]) && !empty($result[\App\Core\Glosary\MetaKey::SERVICE_ITEM['NAME']]) && $result['page_template'] == \App\Core\Glosary\PageTemplateConfigs::SERVICE['VALUE'])
-                                            @include('Page::elements.service',['serviceItem' => $result[\App\Core\Glosary\MetaKey::SERVICE_ITEM['NAME']]])
-                                        @else
-                                            @include('Page::elements.service')
+                                        @if(isset($result[\App\Core\Glosary\MetaKey::COMPLETE_ITEM['NAME']]) && !empty($result[\App\Core\Glosary\MetaKey::COMPLETE_ITEM['NAME']]))
+                                            @if($result['page_template'] == \App\Core\Glosary\PageTemplateConfigs::SERVICE['VALUE'])
+                                                @include('Page::elements.service',['serviceItem' => $result[\App\Core\Glosary\MetaKey::COMPLETE_ITEM['NAME']]])
+                                            @endif
+
+                                            @if($result['page_template'] == \App\Core\Glosary\PageTemplateConfigs::ABOUT['VALUE'])
+                                                    @include('Page::elements.about',['indexItem' => $result[\App\Core\Glosary\MetaKey::INDEX_COMPLETE_ITEM['NAME']],'completeItem' => $result[\App\Core\Glosary\MetaKey::COMPLETE_ITEM['NAME']]])
+                                            @endif
                                         @endif
                                     </div>
                                 </div>
@@ -246,6 +250,7 @@
 @endsection
 @section('script')
     <script>
+        const maxFileSize = '{{ \App\Core\Glosary\MaxFileSize::IMAGE['VALUE'] }}';
         {{--const slugs = JSON.parse('{!! json_encode($slugs) !!}')--}}
         CKEDITOR.replace('description', {filebrowserImageBrowseUrl: '/file-manager/ckeditor'});
         $(document).ready(function () {
@@ -367,7 +372,7 @@
                 $(this).parent().find('img').remove();
                 $(this).parent().parent().find('input[type=file]').val('');
                 $(this).parent().parent().find('input[type=file]').show();
-
+                $(this).parent().parent().find('.banner-link').val('');
                 $(this).parents('td').find('.banner-image').addClass('required');
             })
 
@@ -460,11 +465,21 @@
             row.find('.banner-image').show();
             row.find('.banner-image').removeClass('hidden');
             row.find('.banner-image').addClass('required');
+            row.find('.banner-link').val('');
             row.find('textarea').val('');
             $(this).parents('tbody').append(row);
+
+            let count = parseInt($(this).parents('.section').find('.item-count').val());
+            count = count + 1;
+            $(this).parents('.section').find('.item-count').val(count);
         })
         $('body').on('click','.btn-delete-type',function (e){
             e.preventDefault();
+
+            let count = parseInt($(this).parents('.section').find('.item-count').val());
+            count = count - 1;
+            $(this).parents('.section').find('.item-count').val(count);
+
             $(this).parents('tr').remove();
         })
     </script>

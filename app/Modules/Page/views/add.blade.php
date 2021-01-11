@@ -17,13 +17,25 @@
             justify-content: flex-end;
         }
 
-        .preview-image {
+        .preview-image,
+        .preview-image-multiple .items{
             position: relative;
             overflow: hidden;
             /*width: 50%;*/
         }
+        .preview-image-multiple {
+            margin-bottom: 1rem;
+        }
 
-        .preview-image .close {
+        .preview-image-multiple .items {
+            padding: 0 10px;
+        }
+        .preview-image-multiple {
+            display: flex;
+            align-items: center;
+        }
+        .preview-image .close,
+        .preview-image-multiple .items .close{
             position: absolute;
             top: 5px;
             right: 5px;
@@ -37,6 +49,11 @@
             display: flex;
             align-items: center;
             justify-content: center;
+        }
+
+        .preview-image-multiple .items .close {
+            top: 0;
+            right: 0;
         }
 
         .preview-image .close i {
@@ -231,6 +248,7 @@
 @endsection
 @section('script')
     <script>
+        const maxFileSize = '{{ \App\Core\Glosary\MaxFileSize::IMAGE['VALUE'] }}';
         {{--const slugs = JSON.parse('{!! json_encode($slugs) !!}')--}}
         CKEDITOR.replace('description', {filebrowserImageBrowseUrl: '/file-manager/ckeditor'});
         $(document).ready(function () {
@@ -305,15 +323,18 @@
             $('body').on('change',".banner-image",function () {
                 let val = $(this).val();
                 if (val) {
-                    if (validateFileUpload(val)) {
+                    if (validateFileUpload(this)) {
                         readURL(this, $(this).parent().find('.preview-image'));
                         $(this).removeClass('error');
                         $(this).parents('td').find('.error-message').text('');
                         $(this).removeClass('required');
-                        $(this).hide();
+                        if (!$(this).hasClass('multiple')) {
+                            $(this).hide();
+                        }
                     } else {
-                        $(this).parents('td').find('.error-message').text('File extension is not allow');
+                        $(this).parents('td').find('.error-message').text('File must be JPG, GIF or PNG, less than 2MB');
                         $(this).parent().find('.preview-image img').remove();
+                        $(this).val('');
                         $(this).addClass('error');
                     }
                 } else {
@@ -322,6 +343,36 @@
                     $(this).parent().find('.preview-image img').remove();
                 }
             });
+
+            $('body').on('change','.banner-image-multiple',function (){
+                let val = $(this).val();
+                if (val) {
+                    if (validateFileUpload(this)) {
+                        readURLMultiple(this,$(this).parent().find('.preview-image-multiple'));
+                        $(this).removeClass('error');
+                        $(this).removeClass('required');
+                        $(this).parents('td').find('.error-message').text('');
+
+                        let count = $(this).parent().find('.number-image').val() === "" ? 0 :parseInt($(this).parent().find('.number-image').val());
+                        count = $(this).prop('files').length;
+                        $(this).parent().find('.number-image').val(count);
+                    } else{
+                        $(this).parents('td').find('.error-message').text('File must be JPG, GIF or PNG, less than 2MB. Please choose again');
+                        $(this).val('');
+                        $(this).addClass('error');
+                        $(this).addClass('required');
+                        $(this).parent().find('.preview-image-multiple').empty();
+                        $(this).parent().find('.number-image').val(0);
+                    }
+                }else{
+                    $(this).parents('td').find('.error-message').text('This field cannot be null');
+                    $(this).addClass('error');
+                    $(this).addClass('required');
+                    $(this).parent().find('.preview-image-multiple').empty();
+                    $(this).parent().find('.number-image').val(0);
+                }
+            })
+
 
             $('#tax').on('change',function () {
                 if ($(this).val() == '') {
@@ -368,16 +419,16 @@
                 }
             })
 
-            $('body').on('change','.required',function (){
-                let value = $(this).val();
-                if (value.trim() === '') {
-                    $(this).addClass('error');
-                    $(this).parent().find('.error-message').text('This field cannot be null');
-                }else{
-                    $(this).removeClass('error');
-                    $(this).parent().find('.error-message').text('');
-                }
-            })
+            // $('body').on('change','.required',function (){
+            //     let value = $(this).val();
+            //     if (value.trim() === '') {
+            //         $(this).addClass('error');
+            //         $(this).parent().find('.error-message').text('This field cannot be null');
+            //     }else{
+            //         $(this).removeClass('error');
+            //         $(this).parent().find('.error-message').text('');
+            //     }
+            // })
 
             $('.btn-draft').click(function (e) {
                 e.preventDefault();
@@ -394,19 +445,6 @@
             })
         })
 
-        function readURL(input, element) {
-            if (input.files && input.files[0]) {
-                element.find('img').remove();
-                let reader = new FileReader();
-                let name = input.files[0].name;
-                reader.onload = function (e) {
-
-                    let html = '<img id="image" style="width: 100%" src="' + e.target.result + '" title="'+name+'" alt="your image" />';
-                    element.append(html);
-                }
-                reader.readAsDataURL(input.files[0]);
-            }
-        }
 
         function checkRequired(formId) {
             let valid = true;
@@ -431,6 +469,7 @@
             return valid;
         }
 
+        let rowCount = 1;
         $('body').on('click','.btn-add-type',function (e){
             e.preventDefault();
             let row = $(this).parents('tr').clone();
@@ -440,10 +479,26 @@
             row.find('.banner-image').val('');
             row.find('.banner-image').show();
             row.find('textarea').val('');
+
+            // multiple image
+            rowCount = rowCount + 1;
+            row.find('.banner-image-multiple').val('');
+            row.find('.banner-image-multiple').attr('name','row'+rowCount+'[]');
+            row.find('.preview-image-multiple').empty();
+            row.find('.number-image').val(0);
+
+
             $(this).parents('tbody').append(row);
+
+            let count = parseInt($(this).parents('.section').find('.item-count').val());
+            count = count + 1;
+            $(this).parents('.section').find('.item-count').val(count);
         })
         $('body').on('click','.btn-delete-type',function (e){
             e.preventDefault();
+            let count = parseInt($(this).parents('.section').find('.item-count').val());
+            count = count - 1;
+            $(this).parents('.section').find('.item-count').val(count);
             $(this).parents('tr').remove();
         })
     </script>

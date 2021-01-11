@@ -228,15 +228,16 @@
                                                     <tr>
                                                         <td>
                                                             <div class="preview-image">
-                                                                <div class="close @if($value == '') {{ 'deleted' }} @endif">
+                                                                <div class="close">
                                                                     <i class="dripicons-cross"></i>
                                                                 </div>
                                                                 @if($value != '')
                                                                     <img src="{{ asset($value) }}" alt="">
                                                                 @endif
                                                             </div>
-                                                            <input type="file" style="padding: 3px 5px; overflow: hidden;" class="form-control input-image @if($value != '') {{ 'hidden' }} @endif" name="images[]">
+                                                            <input type="file" style="padding: 3px 5px; overflow: hidden;" class="form-control input-image @if($value != '') {{ 'hidden' }} @else {{'required'}} @endif" name="images[]">
                                                             <input type="hidden" class="banner-link" data-type="{{ \App\Core\Glosary\MetaKey::SLIDE['VALUE'] }}" value="{{ $value }}" name="imageMap[]">
+                                                            <p class="text-danger error-message" style="font-weight: bold"></p>
                                                         </td>
                                                         <td style="width: 120px; vertical-align: middle">
                                                             <div class="action-wrapper">
@@ -260,6 +261,7 @@
 
                                                         </div>
                                                         <input type="file" style="padding: 3px 5px; overflow: hidden;" class="form-control input-image " name="images[]">
+                                                        <p class="text-danger error-message" style="font-weight: bold" id="title-error"></p>
                                                     </td>
                                                     <td style="width: 120px; vertical-align: middle">
                                                         <div class="action-wrapper">
@@ -289,16 +291,16 @@
                                                 @foreach($types as $key => $value)
                                                 <tr>
                                                     <td>
-                                                        <input type="text" class="form-control" name="room_types[]" value="{{ $value->type }}">
+                                                        <input type="text" class="form-control input-type" name="room_types[]" value="{{ $value->type }}">
                                                     </td>
                                                     <td>
-                                                        <input type="number" class="form-control" name="inventories[]" value="{{ $value->inven }}">
+                                                        <input type="number" class="form-control input-type" name="inventories[]" value="{{ $value->inven }}">
                                                     </td>
                                                     <td style="width: 120px; vertical-align: middle">
                                                         <div class="action-wrapper">
-                                                            <button class="btn btn-success btn-add-type"><i class="dripicons-plus"></i></button>
+                                                            <button class="btn btn-success btn-add"><i class="dripicons-plus"></i></button>
                                                             @if($key > 0)
-                                                                <button class="btn btn-danger btn-delete-type"><i class="dripicons-minus"></i></button>
+                                                                <button class="btn btn-danger btn-delete"><i class="dripicons-minus"></i></button>
                                                             @endif
                                                         </div>
                                                     </td>
@@ -324,13 +326,13 @@
                                                     @foreach($facilities as $key => $value)
                                                         <tr>
                                                             <td>
-                                                                <input type="text" class="form-control" name="facilities[]" value="{{ $value }}">
+                                                                <input type="text" class="form-control input-type" name="facilities[]" value="{{ $value }}">
                                                             </td>
                                                             <td style="width: 120px; vertical-align: middle">
                                                                 <div class="action-wrapper">
-                                                                    <button class="btn btn-success btn-add-facility"><i class="dripicons-plus"></i></button>
+                                                                    <button class="btn btn-success btn-add"><i class="dripicons-plus"></i></button>
                                                                     @if($key > 0)
-                                                                        <button class="btn btn-danger btn-delete-facility"><i class="dripicons-minus"></i></button>
+                                                                        <button class="btn btn-danger btn-delete"><i class="dripicons-minus"></i></button>
                                                                     @endif
                                                                 </div>
                                                             </td>
@@ -369,7 +371,7 @@
                                             <option value="{{ $value['id'] }}" {{ $value['id'] == $term_id['term_taxonomy_id'] ? 'selected':'' }}>{{ $value['name'] }}</option>
                                         @endforeach
                                     </select>
-                                    <p class="text-danger error-message" style="font-weight: bold" id="title-error">
+                                    <p class="text-danger error-message" style="font-weight: bold">
                                         @error('post_title')
                                         {{ $message }}
                                         @enderror
@@ -389,6 +391,7 @@
 @endsection
 @section('script')
     <script>
+        const maxFileSize = '{{ \App\Core\Glosary\MaxFileSize::IMAGE['VALUE'] }}';
         const slugs = JSON.parse('{!! json_encode($slugs) !!}')
         CKEDITOR.replace('description', {filebrowserImageBrowseUrl: '/file-manager/ckeditor'});
         $(document).ready(function () {
@@ -426,14 +429,17 @@
             $(".banner-image").change(function () {
                 let val = $(this).val();
                 if (val) {
-                    if (validateFileUpload(val)) {
+                    if (validateFileUpload(this)) {
                         readURL(this, $(this).parent().find('.preview-image'));
+                        $(this).removeClass('error');
                         $(this).parents('td').find('.error-message').text('');
+                        $(this).removeClass('required');
                         $(this).hide();
                     } else {
-                        $(this).parents('td').find('.error-message').text('File extension is not allow');
+                        $(this).parents('td').find('.error-message').text('File must be JPG, GIF or PNG, less than 2MB. Please choose again');
                         $(this).parent().find('.preview-image img').remove();
                         $(this).addClass('error');
+                        $(this).val('');
                     }
                 } else {
                     $(this).parents('td').find('.error-message').text('This field cannot be null');
@@ -465,63 +471,11 @@
             })
 
             $('body').on('click', '.preview-image .close', function () {
-                let self = $(this);
-                let data = $(this).parent().parent().find('.banner-link').val();
-                let type = $(this).parent().parent().find('.banner-link').data('type');
-                let id = $('#postId').val();
-                if (!self.hasClass('deleted')) {
-                    Swal.fire({
-                        title: 'Are you sure you want to delete ?',
-                        text: "You won't be able to revert this!",
-                        type: 'warning',
-                        showCancelButton: true,
-                        confirmButtonColor: '#3085d6',
-                        cancelButtonColor: '#d33',
-                        confirmButtonText: 'Yes, delete it!'
-                    }).then((result) => {
-                        if (result.value) {
-                            $('#loading').show();
-                            $.ajax({
-                                url : '{{ route('post.delete.image') }}',
-                                type : 'POST',
-                                data : {
-                                    _token : '{{ csrf_token() }}',
-                                    data : data,
-                                    type : type,
-                                    id : id
-                                },
-                                success : function (response){
-                                    $('#loading').hide();
-                                    if (response == 200) {
-                                        Swal.fire({
-                                            type: 'success',
-                                            title: 'Deleted !',
-                                            text: 'Category has been deleted.',
-                                        }).then((result) => {
-                                            self.parent().find('img').remove();
-                                            self.parent().parent().find('input[type=file]').val('');
-                                            self.parent().parent().find('input[type=file]').show();
-                                            self.addClass('deleted');
-                                        })
-                                    }else{
-                                        Swal.fire({
-                                            type: 'error',
-                                            title: 'Oops... !',
-                                            text: 'Something went wrong. Try again later',
-                                        })
-                                    }
-                                },
-                                error : function (e) {
-                                    console.log(e);
-                                }
-                            })
-                        }
-                    })
-                }else {
-                    $(this).parent().find('img').remove();
-                    $(this).parent().parent().find('input[type=file]').val('');
-                    $(this).parent().parent().find('input[type=file]').show();
-                }
+                $(this).parents('td').find('img').remove();
+                $(this).parents('td').parent().find('input[type=file]').val('');
+                $(this).parents('td').find('input[type=file]').show();
+                $(this).parents('td').find('.input-image').addClass('required');
+                $(this).parents('td').find('.banner-link').val('');
             })
 
             $('.btn-submit').click(function (e) {
@@ -545,8 +499,55 @@
                     $('.alert-common').show();
                 }
             })
-        })
 
+            $('body').on('click', '.btn-add', function (e) {
+                e.preventDefault();
+                let row = $(this).parents('tr').clone();
+
+                $(this).parents('tbody').append(row);
+                row.find('img').remove();
+                row.find('.input-image').val('');
+                row.find('.input-image').show();
+                row.find('.input-image').addClass('required');
+                row.find('.banner-link').val('');
+                row.find('.action-wrapper').empty();
+                row.find('.action-wrapper').append('<button class="btn btn-success btn-add"><i class="dripicons-plus"></i></button><button class="btn btn-danger btn-delete"><i class="dripicons-minus"></i></button>');
+
+                // type
+                row.find('.input-type').val('');
+
+            })
+            $('body').on('click', '.btn-delete', function (e) {
+                e.preventDefault();
+                $(this).parents('tr').remove();
+            })
+
+            $('body').on('change', '.input-image', function () {
+                let val = $(this).val();
+                if (val) {
+                    if (validateFileUpload(this)) {
+                        readURL(this, $(this).parent().find('.preview-image'));
+                        $(this).parent().find('.error-message').text('');
+                        $(this).removeClass('error');
+                        $(this).removeClass('required');
+                        $(this).hide();
+                    } else {
+                        $(this).parent().find('.error-message').text('File must be JPG, GIF or PNG, less than 2MB');
+                        $('.preview-image img').remove();
+                        $(this).addClass('error');
+                        $(this).addClass('required');
+                        $(this).val('');
+                        $(this).show();
+                    }
+                } else {
+                    $(this).parent().find('.error-message').text('This field cannot be null');
+                    $(this).addClass('error');
+                    $(this).addClass('required');
+                    $('.preview-image img').remove();
+                    $(this).show();
+                }
+            })
+        })
         function readURL(input, element) {
             if (input.files && input.files[0]) {
                 let reader = new FileReader();
@@ -583,89 +584,7 @@
             return valid;
         }
 
-        var html = '<tr>\n' +
-            '<td>' +
-            ' <div class="preview-image">\n' +
-            ' <div class="close">\n' +
-            ' <i class="dripicons-cross"></i>\n' +
-            '  </div>\n' +
-            ' </div>\n' +
-            '<input type="file" name="images[]" class="input-image">\n' +
-            '</td>\n' +
-            '<td style="width: 120px;vertical-align: middle">\n' +
-            '<div class="action-wrapper">\n' +
-            '<button class="btn btn-success btn-add"><i class="dripicons-plus"></i></button>\n' +
-            '<button class="btn btn-danger btn-delete"><i class="dripicons-minus"></i></button>\n' +
-            '</div>\n' +
-            '</td>\n' +
-            ' </tr>'
-        $('body').on('click', '.btn-add', function (e) {
-            e.preventDefault();
-            $(this).parents('tbody').append(html);
-        })
-        $('body').on('click', '.btn-delete', function (e) {
-            e.preventDefault();
-            $(this).parents('tr').remove();
-        })
 
-        $('body').on('change', '.input-image', function () {
-            let val = $(this).val();
-            if (val) {
-                if (validateFileUpload(val)) {
-                    readURL(this, $(this).parent().find('.preview-image'));
-                    $(this).hide();
-                } else {
-                    $('#file-error').text('File extension is not allow');
-                    $('.preview-image img').remove();
-                    $(this).show();
-                }
-            } else {
-                $('.preview-image img').remove();
-            }
-        })
-
-        var type = `<tr>
-                        <td>
-                            <input type="text" class="form-control" name="room_types[]">
-                        </td>
-                        <td>
-                            <input type="number" class="form-control" name="inventories[]">
-                        </td>
-                        <td style="width: 120px;vertical-align: middle">
-                            <div class="action-wrapper">
-                                <button class="btn btn-success btn-add-type"><i class="dripicons-plus"></i></button>
-                                <button class="btn btn-danger btn-delete-type"><i class="dripicons-minus"></i></button>
-                            </div>
-                        </td>
-                    </tr>`;
-        $('body').on('click', '.btn-add-type', function (e) {
-            e.preventDefault();
-            $(this).parents('tbody').append(type);
-        })
-        $('body').on('click', '.btn-delete-type', function (e) {
-            e.preventDefault();
-            $(this).parents('tr').remove();
-        })
-
-        var facility = `<tr>
-                        <td>
-                            <input type="text" class="form-control" name="facilities[]">
-                        </td>
-                        <td style="width: 120px;vertical-align: middle">
-                            <div class="action-wrapper">
-                                <button class="btn btn-success btn-add-facility"><i class="dripicons-plus"></i></button>
-                                <button class="btn btn-danger btn-delete-facility"><i class="dripicons-minus"></i></button>
-                            </div>
-                        </td>
-                    </tr>`;
-        $('body').on('click', '.btn-add-facility', function (e) {
-            e.preventDefault();
-            $(this).parents('tbody').append(facility);
-        })
-        $('body').on('click', '.btn-delete-facility', function (e) {
-            e.preventDefault();
-            $(this).parents('tr').remove();
-        })
     </script>
 @endsection
 

@@ -30,7 +30,23 @@
                         </a>
                     </li>
                 @endif
-                @if(PermissionHelpers::canAccess(route('post.add',\App\Core\Glosary\PostType::POST['NAME']))
+                @if(PermissionHelpers::canAccess(route('page.index')))
+                    <li>
+                        <a href="javascript: void(0);" class="waves-effect has-arrow">
+                            <i class="dripicons-checklist"></i>
+                            <span> Pages </span>
+                        </a>
+                        <ul class="sub-menu" aria-expanded="false">
+                            @if(PermissionHelpers::canAccess(route('page.add')))
+                                <li><a href="{{ route('page.add') }}">Create</a></li>
+                            @endif
+                            @if(PermissionHelpers::canAccess(route('page.index')))
+                                <li><a href="{{ route('page.index') }}">All Pages</a></li>
+                            @endif
+                        </ul>
+                    </li>
+                @endif
+                @if(PermissionHelpers::canAccess(route('post.add'))
                     || PermissionHelpers::canAccess(route('post.index')) )
                 <li>
                     <a href="javascript: void(0);" class="has-arrow waves-effect">
@@ -38,8 +54,8 @@
                         <span> Hotels </span>
                     </a>
                     <ul class="sub-menu" aria-expanded="false">
-                        @if(PermissionHelpers::canAccess(route('post.add',\App\Core\Glosary\PostType::POST['NAME'])))
-                        <li><a href="{{ route('post.add',\App\Core\Glosary\PostType::POST['NAME']) }}">Create</a></li>
+                        @if(PermissionHelpers::canAccess(route('post.add')))
+                        <li><a href="{{ route('post.add') }}">Create</a></li>
                         @endif
                         @if(PermissionHelpers::canAccess(route('post.index')))
                             <li><a href="{{ route('post.index') }}">All Hotels</a></li>

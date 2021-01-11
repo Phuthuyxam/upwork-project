@@ -90,7 +90,7 @@
                                             <label for="title">Title</label>
                                             <input type="text" class="form-control required" name="post_title" id="title"
                                                    placeholder="Title"
-                                                   value="{{ old('post_name') }}">
+                                                   value="{{ old('post_title') }}">
                                             <p style="font-style: italic; font-size: 12px">The name is how it appears on your
                                                 website</p>
                                             <p class="text-danger error-message" style="font-weight: bold" id="title-error">
@@ -179,7 +179,7 @@
                                             <div class="editor-wrapper">
                                                 <textarea name="post_content" id="description" class="form-control"
                                                           style="width: 100%; height: 90px"
-                                                          placeholder="Description"></textarea>
+                                                          placeholder="Description">{{ old('description') }}</textarea>
                                             </div>
                                             <p class="text-danger error-message" style="font-weight: bold"
                                                id="description-error">
@@ -205,7 +205,8 @@
                                                             <i class="dripicons-cross"></i>
                                                         </div>
                                                     </div>
-                                                    <input type="file" name="images[]" class="input-image">
+                                                    <input type="file" name="images[]" style="padding: 3px 5px;overflow: hidden;" class="input-image required form-control">
+                                                    <p class="text-danger error-message" style="font-weight: bold"></p>
                                                 </td>
                                                 <td style="width: 120px; vertical-align: middle">
                                                     <div class="action-wrapper">
@@ -227,21 +228,8 @@
                                             </tr>
                                             </thead>
                                             <tbody>
-                                            <tr>
-                                                <td>
-                                                    <input type="text" class="form-control" name="room_types[]">
-                                                </td>
-                                                <td>
-                                                    <input type="number" class="form-control" name="inventories[]">
-                                                </td>
-                                                <td style="width: 120px; vertical-align: middle">
-                                                    <div class="action-wrapper">
-                                                        <button class="btn btn-success btn-add-type"><i class="dripicons-plus"></i></button>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                            @if(old('room_types[]') && old('inventories[]'))
-                                                @foreach(old('room_types[]') as $key => $value)
+                                            @if(old('room_types') && old('inventories'))
+                                                @foreach(old('room_types') as $key => $value)
                                                     <tr>
                                                         <td>
                                                             <input type="text" class="form-control" name="room_types[]" value="{{ $value }}">
@@ -251,11 +239,28 @@
                                                         </td>
                                                         <td style="width: 120px; vertical-align: middle">
                                                             <div class="action-wrapper">
-                                                                <button class="btn btn-success btn-add-type"><i class="dripicons-plus"></i></button>
+                                                                <button class="btn btn-success btn-add"><i class="dripicons-plus"></i></button>
+                                                                @if($key > 0)
+                                                                    <button class="btn btn-danger btn-delete"><i class="dripicons-minus"></i></button>
+                                                                @endif
                                                             </div>
                                                         </td>
                                                     </tr>
                                                 @endforeach
+                                            @else
+                                                <tr>
+                                                    <td>
+                                                        <input type="text" class="form-control input-type" name="room_types[]">
+                                                    </td>
+                                                    <td>
+                                                        <input type="number" class="form-control input-type" name="inventories[]">
+                                                    </td>
+                                                    <td style="width: 120px; vertical-align: middle">
+                                                        <div class="action-wrapper">
+                                                            <button class="btn btn-success btn-add"><i class="dripicons-plus"></i></button>
+                                                        </div>
+                                                    </td>
+                                                </tr>
                                             @endif
                                             </tbody>
                                         </table>
@@ -269,16 +274,35 @@
                                             </tr>
                                             </thead>
                                             <tbody>
-                                            <tr>
-                                                <td>
-                                                    <input type="text" class="form-control" name="facilities[]">
-                                                </td>
-                                                <td style="width: 120px; vertical-align: middle">
-                                                    <div class="action-wrapper">
-                                                        <button class="btn btn-success btn-add-facility"><i class="dripicons-plus"></i></button>
-                                                    </div>
-                                                </td>
-                                            </tr>
+                                            @if(old('facilities'))
+                                                @foreach(old('facilities') as $key => $value)
+                                                    <tr>
+                                                        <td>
+                                                            <input type="text" class="form-control input-type" name="facilities[]" value="$value">
+                                                        </td>
+                                                        <td style="width: 120px; vertical-align: middle">
+                                                            <div class="action-wrapper">
+                                                                <button class="btn btn-success btn-add"><i class="dripicons-plus"></i></button>
+                                                                @if($key > 0)
+                                                                    <button class="btn btn-danger btn-delete"><i class="dripicons-minus"></i></button>
+                                                                @endif
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                @endforeach
+                                            @else
+                                                <tr>
+                                                    <td>
+                                                        <input type="text" class="form-control input-type" name="facilities[]">
+                                                    </td>
+                                                    <td style="width: 120px; vertical-align: middle">
+                                                        <div class="action-wrapper">
+                                                            <button class="btn btn-success btn-add"><i class="dripicons-plus"></i></button>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            @endif
+
                                             </tbody>
                                         </table>
                                     </div>
@@ -300,6 +324,23 @@
                             <button type="submit" class="btn btn-primary btn-submit waves-effect waves-light">Publish</button>
                         </div>
                     </div>
+                    <div class="card">
+                        <h5 class="card-header mt-0 font-size-16">Select Category</h5>
+                        <div class="card-body">
+                            <div class="form-group">
+                                <select name="taxonomy" id="tax" class="form-control required">
+                                    <option value="">Select Category</option>
+                                    @foreach($taxonomy as $value)
+                                        <option value="{{ $value['id'] }}">{{ $value['name'] }}</option>
+                                    @endforeach
+                                </select>
+                                <p class="text-danger error-message" style="font-weight: bold" >
+                                    @error('post_title')
+                                    {{ $message }}
+                                    @enderror
+                                </p>
+                            </div>
+                        </div>
                 </div>
             </div>
             </form>
@@ -311,6 +352,7 @@
 @endsection
 @section('script')
     <script>
+        const maxFileSize = '{{ \App\Core\Glosary\MaxFileSize::IMAGE['VALUE'] }}';
         const slugs = JSON.parse('{!! json_encode($slugs) !!}')
         CKEDITOR.replace('description', {filebrowserImageBrowseUrl: '/file-manager/ckeditor'});
         $(document).ready(function () {
@@ -348,16 +390,17 @@
             $(".banner-image").change(function () {
                 let val = $(this).val();
                 if (val) {
-                    if (validateFileUpload(val)) {
+                    if (validateFileUpload(this)) {
                         readURL(this, $(this).parent().find('.preview-image'));
                         $(this).removeClass('error');
                         $(this).parents('td').find('.error-message').text('');
                         $(this).removeClass('required');
                         $(this).hide();
                     } else {
-                        $(this).parents('td').find('.error-message').text('File extension is not allow');
+                        $(this).parents('td').find('.error-message').text('File must be JPG, GIF or PNG, less than 2MB. Please choose again');
                         $(this).parent().find('.preview-image img').remove();
                         $(this).addClass('error');
+                        $(this).val('');
                     }
                 } else {
                     $(this).parents('td').find('.error-message').text('This field cannot be null');
@@ -402,14 +445,12 @@
                 if (checkRequired('add-form')) {
                     $('#publishStatus').val(1);
                     $('#add-form').submit();
-                    $('#commonTab').css('background','');
                 }else{
                     Swal.fire({
                         type: 'warning',
                         title: 'Oops... !',
                         text: 'Some field need to required. Please check it again',
                     });
-                    $('#commonTab').css('background','#FF7575');
                 }
             })
 
@@ -418,14 +459,58 @@
                 if (checkRequired('add-form')) {
                     $('#publishStatus').val(0);
                     $('#add-form').submit();
-                    $('#commonTab').css('background','');
                 }else{
                     Swal.fire({
                         type: 'warning',
                         title: 'Oops... !',
                         text: 'Some field need to required. Please check it again',
                     });
-                    $('#commonTab').css('background','#FF7575');
+                }
+            })
+
+            $('body').on('click', '.btn-add', function (e) {
+                e.preventDefault();
+                let row = $(this).parents('tr').clone();
+                row.find('img').remove();
+                row.find('.input-image').val('');
+                row.find('.input-image').show();
+                row.find('.input-image').addClass('required');
+                row.find('.action-wrapper').empty();
+                row.find('.action-wrapper').append('<button class="btn btn-success btn-add"><i class="dripicons-plus"></i></button><button class="btn btn-danger btn-delete"><i class="dripicons-minus"></i></button>');
+
+                // type
+                row.find('.input-type').val('');
+
+                $(this).parents('tbody').append(row);
+            })
+            $('body').on('click', '.btn-delete', function (e) {
+                e.preventDefault();
+                $(this).parents('tr').remove();
+            })
+
+            $('body').on('change', '.input-image', function () {
+                let val = $(this).val();
+                if (val) {
+                    if (validateFileUpload(this)) {
+                        readURL(this, $(this).parent().find('.preview-image'));
+                        $(this).parent().find('.error-message').text('');
+                        $(this).removeClass('error');
+                        $(this).removeClass('required');
+                        $(this).hide();
+                    } else {
+                        $(this).parent().find('.error-message').text('File must be JPG, GIF or PNG, less than 2MB');
+                        $('.preview-image img').remove();
+                        $(this).addClass('error');
+                        $(this).addClass('required');
+                        $(this).val('');
+                        $(this).show();
+                    }
+                } else {
+                    $(this).parent().find('.error-message').text('This field cannot be null');
+                    $(this).addClass('error');
+                    $(this).addClass('required');
+                    $('.preview-image img').remove();
+                    $(this).show();
                 }
             })
         })
@@ -467,90 +552,7 @@
             return valid;
         }
 
-        var html = '<tr>\n' +
-            '<td>' +
-            ' <div class="preview-image">\n' +
-            ' <div class="close">\n' +
-            ' <i class="dripicons-cross"></i>\n' +
-            '  </div>\n' +
-            ' </div>\n' +
-            '<input type="file" name="images[]" class="input-image">\n' +
-            '</td>\n' +
-            '<td style="width: 120px;vertical-align: middle">\n' +
-            '<div class="action-wrapper">\n' +
-            '<button class="btn btn-success btn-add"><i class="dripicons-plus"></i></button>\n' +
-            '<button class="btn btn-danger btn-delete"><i class="dripicons-minus"></i></button>\n' +
-            '</div>\n' +
-            '</td>\n' +
-            ' </tr>'
-        $('body').on('click', '.btn-add', function (e) {
-            e.preventDefault();
-            $(this).parents('tbody').append(html);
-        })
-        $('body').on('click', '.btn-delete', function (e) {
-            e.preventDefault();
-            $(this).parents('tr').remove();
-        })
 
-        $('body').on('change', '.input-image', function () {
-            let val = $(this).val();
-            if (val) {
-                if (validateFileUpload(val)) {
-                    readURL(this, $(this).parent().find('.preview-image'));
-                    $('#file-error').text('');
-                } else {
-                    $('#file-error').text('File extension is not allow');
-                    $('.preview-image img').remove();
-                    $(this).addClass('error');
-                }
-            } else {
-                $('#file-error').text('This field cannot be null');
-                $(this).removeClass('error');
-                $('.preview-image img').remove();
-            }
-        })
 
-        var type = `<tr>
-                        <td>
-                            <input type="text" class="form-control" name="room_types[]">
-                        </td>
-                        <td>
-                            <input type="number" class="form-control" name="inventories[]">
-                        </td>
-                        <td style="width: 120px;vertical-align: middle">
-                            <div class="action-wrapper">
-                                <button class="btn btn-success btn-add-type"><i class="dripicons-plus"></i></button>
-                                <button class="btn btn-danger btn-delete-type"><i class="dripicons-minus"></i></button>
-                            </div>
-                        </td>
-                    </tr>`;
-        $('body').on('click', '.btn-add-type', function (e) {
-            e.preventDefault();
-            $(this).parents('tbody').append(type);
-        })
-        $('body').on('click', '.btn-delete-type', function (e) {
-            e.preventDefault();
-            $(this).parents('tr').remove();
-        })
-
-        var facility = `<tr>
-                        <td>
-                            <input type="text" class="form-control" name="facilities[]">
-                        </td>
-                        <td style="width: 120px;vertical-align: middle">
-                            <div class="action-wrapper">
-                                <button class="btn btn-success btn-add-facility"><i class="dripicons-plus"></i></button>
-                                <button class="btn btn-danger btn-delete-facility"><i class="dripicons-minus"></i></button>
-                            </div>
-                        </td>
-                    </tr>`;
-        $('body').on('click', '.btn-add-facility', function (e) {
-            e.preventDefault();
-            $(this).parents('tbody').append(facility);
-        })
-        $('body').on('click', '.btn-delete-facility', function (e) {
-            e.preventDefault();
-            $(this).parents('tr').remove();
-        })
     </script>
 @endsection

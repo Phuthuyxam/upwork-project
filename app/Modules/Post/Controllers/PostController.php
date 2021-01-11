@@ -38,7 +38,7 @@ class PostController extends Controller
         return view('Post::index',compact('posts'));
     }
 
-    public function add(Request $request,$postType)
+    public function add(Request $request)
     {
         if ($request->isMethod('get')) {
             $taxonomy = $this->termRepository->getAll()->toArray();
@@ -51,6 +51,7 @@ class PostController extends Controller
                 'file.*' => 'required|mimes:jpg,png,gif',
                 'post_content' => 'required',
                 'images.*' => 'mimes:jpg,png,gif',
+                'taxonomy' => 'required'
             ]);
             $post_title = $request->input('post_title');
             $status = $request->input('status') == 0 ? PostStatus::DRAFT['VALUE'] : PostStatus::PUBLIC['VALUE'];
@@ -135,7 +136,17 @@ class PostController extends Controller
                     $result = true;
                 }
 
+                // Save term relation
+                $dataTermRelation = [
+                    'object_id' => $postId,
+                    'term_taxonomy_id' => $request->input('taxonomy')
+                ];
+                if ($this->termRelationRepository->create($dataTermRelation)) {
+                    $result = true;
+                }
             }
+
+
 
             if ($result) {
                 Log::info('user '.Auth::id().' has create post '. $postId);
@@ -185,23 +196,31 @@ class PostController extends Controller
             ];
 
             if ($this->posRepository->update($id,$dataPost)) {
-                $result = true;
+                $result = false;
+                $images = $request->file('images');
+
+                $condition = [['post_id','=',$id],['meta_key' ,'=', MetaKey::SLIDE['VALUE']]];
+                $postMeta = $this->postMetaRepository->getMetaValueByCondition($condition);
 
                 //Save Slider
-                $images = $request->file('images');
                 if ($request->hasFile('images')) {
-                    // add or edit slide
-                    $postMeta = $this->postMetaRepository->getMetaValueByCondition([['post_id', '=', $id], ['meta_key', '=', MetaKey::SLIDE['VALUE']]]);
-                    $slideMeta = json_decode($postMeta['meta_value']);
-                    foreach ($images as $key => $value) {
-                        $value->storeAs('public/posts/' . $id . '_' . $post_title . '/slides', $value->getClientOriginalName());
-                        $slideMeta[$key] = 'storage/posts/' . $id . '_' . $post_title . '/slides/' . $value->getClientOriginalName();
-                    }
-                    $condition = [['post_id','=',$id],['meta_key' ,'=', MetaKey::SLIDE['VALUE']]];
-                    $dataPostMeta = [
-                        'meta_value' => json_encode($slideMeta)
-                    ];
+                    $imageMap = $request->input('imageMap');
+                    $imageMeta = json_decode($postMeta['meta_value']);
+                    $itemMap = [];
 
+                    foreach ($imageMap as $key => $value) {
+                        if ($value == '') {
+                            $images[$key]->storeAs('public/pages/' . $id . '_' . $request->input('post_title') . '/slides', $images[$key]->getClientOriginalName());
+                            $itemMap[$key] = 'storage/pages/' . $id . '_' . $request->input('post_title') . '/slides/' . $images[$key]->getClientOriginalName();
+                        }else{
+                            if ($imageMap >= $images) {
+                                $itemMap[$key] = $imageMeta[$key];
+                            }
+                        }
+                    }
+                    $dataPostMeta = [
+                        'meta_value' => json_encode($itemMap)
+                    ];
                     if ($this->postMetaRepository->updateByCondition($condition,$dataPostMeta)) {
                         $result = true;
                     }

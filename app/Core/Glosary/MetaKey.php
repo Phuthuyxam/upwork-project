@@ -17,12 +17,12 @@ class MetaKey extends BasicEnum
     const FACILITY = ['VALUE' => 5, 'NAME' => 'facility'];
     const PAGE_TEMPLATE = ['VALUE' => 7,'NAME' => 'page_template'];
 
-    // Service
-    const SERVICE_ITEM = ['VALUE' => 6,'NAME' => 'service_item'];
 
-    // About
-    const ABOUT_ITEM = ['VALUE' => 7, 'NAME' => 'about_item'];
-    const ABOUT_IMAGE = ['VALUE' => 8, 'NAME' =>'about_image'];
+    const COMPLETE_ITEM = ['VALUE' => 6,'NAME' => 'item'];
+    const IMAGE_ITEM = ['VALUE' => 7, 'NAME' => 'images'];
+
+    const INDEX_COMPLETE_ITEM = ['VALUE' => 8 ,'NAME' => 'index_item'];
+    const INDEX_IMAGE_ITEM = ['VALUE' => 9 ,'NAME' => 'index_image'];
 
     public static function display($value) {
         $oClass = new \ReflectionClass(__CLASS__);

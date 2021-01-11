@@ -38,10 +38,7 @@ class TaxonomyController extends Controller
         $validate = $request->validate([
             'name' => 'required|max:191',
             'slug' => 'required|unique:terms',
-            'file.*' => 'required|mimes:jpg,png,gif',
-            'title' => 'required',
-            'description' => 'required',
-            'layout' => 'required'
+            'description' => 'required'
         ]);
 
         $dataTerm = [
@@ -51,44 +48,13 @@ class TaxonomyController extends Controller
 
         $termId = $this->termRepository->create($dataTerm)->id;
         if ($termId) {
-            $files = [];
-            $file = $request->file('file');
-            if ($request->hasFile('file')) {
-                foreach ($file as $value) {
-                    $fileName = $value->getClientOriginalName();
-                    $value->storeAs('public/categories/'.$termId.'_'.$request->input('name'), $fileName);
-                    $files[] = 'storage/categories/'.$termId.'_'.$request->input('name').'/'.$fileName;
-                }
-            }
-
-            $taxonomy = $request->input('layout');
             $dataTermTax = [
                 'term_id' => $termId,
-                'taxonomy' => $taxonomy,
+                'taxonomy' => 0,
                 'description' => $request->input('description'),
-                'parent' => $request->input('parent') < 0 ? null : $request->input('parent')
             ];
-            $metaList = [
-                [
-                    'term_id' => $termId,
-                    'meta_key' => MetaKey::BANNER['VALUE'],
-                    'meta_value' => json_encode($files),
-                    'created_at' => date('Y-m-d H:i:s')
-                ],
-                [
-                    'term_id' => $termId,
-                    'meta_key' => MetaKey::TITLE['VALUE'],
-                    'meta_value' => $request->input('title'),
-                    'created_at' => date('Y-m-d H:i:s')
-                ],
-                [
-                    'term_id' => $termId,
-                    'meta_key' => MetaKey::DESCRIPTION['VALUE'],
-                    'meta_value' => $request->input('description'),
-                    'created_at' => date('Y-m-d H:i:s')
-                ],
-            ];
-            if ($this->termTaxonomyRepository->create($dataTermTax) && $this->termMetaRepository->insert($metaList)) {
+
+            if ($this->termTaxonomyRepository->create($dataTermTax)) {
                 return redirect()->back()->with('message', 'success|Successfully add "' . $request->input('name') . '" category');
             } else {
                 return redirect()->back()->with('message', 'danger|Something wrong try again!');
@@ -117,15 +83,11 @@ class TaxonomyController extends Controller
 
         if ($request->isMethod('get')) {
             $term = $this->termRepository->find($id);
-            $termMeta = $term->termMeta->toArray();
             $result = [
                 'id' => $term->id,
                 'name' => $term->name,
                 'slug' => $term->slug,
             ];
-            foreach ($termMeta as $value) {
-                $result[MetaKey::display($value['meta_key'])] = $value['meta_value'];
-            }
             $taxonomy = $this->termTaxonomyRepository->getByTermId($id);
             $slugs = $this->termRepository->getAllSlug();
             return view('Taxonomy::edit',compact('slugs','result','taxonomy'));
@@ -133,44 +95,10 @@ class TaxonomyController extends Controller
             $validate = $request->validate([
                 'name' => 'required|max:191',
                 'slug' => 'required|unique:terms,slug,'. $id,
-                'file' => 'mimes:jpg,png,gif',
-                'title' => 'required',
                 'description' => 'required',
-                'layout' => 'required'
             ]);
 
             $name = $request->input('name');
-            $result = false;
-            $file = $request->file('files');
-            if ($request->hasFile('files')) {
-                $condition = [['term_id','=',$id],['meta_key' ,'=', MetaKey::BANNER['VALUE']]];
-                $termMeta = $this->termMetaRepository->getByCondition($condition);
-                $slideMeta = json_decode($termMeta['meta_value']);
-
-                foreach ($file as $key => $value) {
-                    $value->storeAs('public/categories/' . $id . '_' . $name . '/slides', $value->getClientOriginalName());
-                    $slideMeta[$key] = 'storage/categories/' . $id . '_' . $name . '/slides/' . $value->getClientOriginalName();
-                }
-                $dataTermMeta = [
-                    'meta_value' => json_encode($slideMeta)
-                ];
-
-                if ($this->termMetaRepository->updateByCondition($condition,$dataTermMeta)) {
-                    $result = true;
-                }
-            }else{
-                $imageMap = $request->input('banner');
-                if (!empty($imageMap)) {
-                    $condition = [['term_id','=',$id],['meta_key' ,'=', MetaKey::SLIDE['VALUE']]];
-                    $dataPostMeta = [
-                        'meta_value' => json_encode($imageMap)
-                    ];
-
-                    if ($this->termMetaRepository->updateByCondition($condition,$dataPostMeta)) {
-                        $result = true;
-                    }
-                }
-            }
 
             $dataTerm = [
                 'name' => $request->input('name'),
@@ -179,29 +107,11 @@ class TaxonomyController extends Controller
 
             if ($this->termRepository->update($id,$dataTerm)) {
                 $result = false;
-                $taxonomy = $request->input('layout');
                 $dataTermTax = [
-                    'taxonomy' => $taxonomy,
                     'description' => $request->input('description'),
-                    'parent' => $request->input('parent') < 0 ? null : $request->input('parent')
                 ];
                 if ($this->termTaxonomyRepository->updateByTermId($id,$dataTermTax)) {
                     $result = true;
-                }
-                $metaList = [
-                    [
-                        'meta_key' => MetaKey::TITLE['VALUE'],
-                        'meta_value' => $request->input('title'),
-                    ],
-                    [
-                        'meta_key' => MetaKey::DESCRIPTION['VALUE'],
-                        'meta_value' => $request->input('description'),
-                    ],
-                ];
-                foreach ($metaList as $value) {
-                    if ($this->termMetaRepository->updateByTermId($id,$value)) {
-                        $result = true;
-                    }
                 }
                 if ($result) {
                     return redirect()->back()->with('message', 'success|Successfully update "' . $request->input('name') . '" category');
@@ -214,37 +124,6 @@ class TaxonomyController extends Controller
         }
     }
 
-    public function deleteImage(Request $request) {
-        $termId = $request->input('termId');
-        $data = $request->input('data');
-        $result = false;
-        if ($termId && $termId != '' && $data && $data != '') {
-
-            $condition = [
-                ['term_id' ,'=', $termId],
-                ['meta_key','=', MetaKey::BANNER['VALUE']]
-            ];
-            $termMeta = $this->termMetaRepository->getByCondition($condition);
-            $metaValue = json_decode($termMeta['meta_value']);
-
-            $key = array_search($data, $metaValue);
-            if ($key !== false) {
-                $metaValue[$key] = "";
-                if ($this->termMetaRepository->update($termMeta['id'],['meta_value' => json_encode($metaValue)])) {
-                    $result = true;
-                }
-            }
-
-            if ($result) {
-                return response(ResponeCode::SUCCESS['CODE']);
-            }else{
-                return response(ResponeCode::SERVERERROR['CODE']);
-            }
-        }else {
-            return response(ResponeCode::SERVERERROR['CODE']);
-        }
-    }
-
     public function deleteMany(Request $request) {
         $data = $request->input('ids');
         if ($data != '') {
@@ -252,7 +131,6 @@ class TaxonomyController extends Controller
             $ids = explode(',',$data);
             if ($this->termRepository->deleteMany('id',$ids)) $valid = true;
             if ($this->termTaxonomyRepository->deleteMany('term_id',$ids)) $valid = true;
-            if ($this->termMetaRepository->deleteMany('term_id',$ids)) $valid = true;
             if ($valid) {
                 return response(ResponeCode::SUCCESS['CODE']);
             }else{

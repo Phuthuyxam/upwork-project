@@ -75,80 +75,6 @@
                                 </div>
 
                                 <div class="form-group">
-                                    <label for="layout">Layout</label>
-                                    <select name="layout" class="form-control" id="layout">
-                                        @foreach(\App\Core\Glosary\TaxonomyType::getAll() as $value)
-                                            <option value="{{ $value['VALUE'] }}"> {{ $value['NAME'] }}</option>
-                                        @endforeach
-                                    </select>
-                                    <p style="font-style: italic; font-size: 12px">Choose layout to appear in Front. Default is Hotel,
-                                    Service will not have detail page</p>
-                                </div>
-                                <div class="form-group">
-                                    <label for="file">Banner</label>
-                                    <table class="table table-bordered">
-                                        <tr>
-                                            <th style="vertical-align: center">Desktop</th>
-                                            <td>
-                                                <div class="preview-image">
-                                                    <div class="close">
-                                                        <i class="dripicons-cross"></i>
-                                                    </div>
-                                                </div>
-                                                <input type="file" style="padding: 3px 5px; overflow: hidden" class="form-control banner-image required" name="file[]">
-                                                <p class="text-danger error-message" style="font-weight: bold">
-                                                    @error('file')
-                                                    {{ $message }}
-                                                    @enderror
-                                                </p>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <th style="vertical-align: center">Tablet</th>
-                                            <td>
-                                                <div class="preview-image">
-                                                    <div class="close">
-                                                        <i class="dripicons-cross"></i>
-                                                    </div>
-                                                </div>
-                                                <input type="file" style="padding: 3px 5px; overflow: hidden" class="form-control banner-image required" name="file[]">
-                                                <p class="text-danger error-message" style="font-weight: bold">
-                                                    @error('file')
-                                                    {{ $message }}
-                                                    @enderror
-                                                </p>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <th style="vertical-align: center">Mobile</th>
-                                            <td>
-                                                <div class="preview-image">
-                                                    <div class="close">
-                                                        <i class="dripicons-cross"></i>
-                                                    </div>
-                                                </div>
-                                                <input type="file" style="padding: 3px 5px; overflow: hidden" class="form-control banner-image required" name="file[]">
-                                                <p class="text-danger error-message" style="font-weight: bold">
-                                                    @error('file')
-                                                    {{ $message }}
-                                                    @enderror
-                                                </p>
-                                            </td>
-                                        </tr>
-                                    </table>
-
-                                </div>
-                                <div class="form-group">
-                                    <label for="title">Title</label>
-                                    <textarea name="title" id="title" class="form-control required" placeholder="Title">{{ old('title') }}</textarea>
-                                    <p style="font-style: italic; font-size: 12px"></p>
-                                    <p class="text-danger error-message" style="font-weight: bold"  id="title-error">
-                                        @error('title')
-                                            {{ $message }}
-                                        @enderror
-                                    </p>
-                                </div>
-                                <div class="form-group">
                                     <label for="description">Description</label>
                                     <textarea name="description" id="description" class="form-control required"
                                               style="width: 100%; height: 90px" placeholder="Description">{{ old('description') }}</textarea>
@@ -247,43 +173,11 @@
                 }
             })
             // Validate File Input
-            $(".banner-image").change(function() {
-                let val = $(this).val();
-                if (val) {
-                    if (validateFileUpload(val)) {
-                        readURL(this,$(this).parents('td').find('.preview-image'));
-                        $(this).parents('td').find('.error-message').text('');
-                        $(this).removeClass('required');
-                        $(this).hide();
-                    }else{
-                        $(this).parents('td').find('.error-message').text('File extension is not allow');
-                        $(this).parents('td').find('.preview-image img').remove();
-                        $(this).addClass('error');
-                    }
-                }else {
-                    $(this).parents('td').find('.error-message').text('This field cannot be null');
-                    $(this).removeClass('error');
-                    $(this).parents('td').find('.preview-image img').remove();
-                }
-            });
-
-            $('#title').on('change',function () {
-                if ($(this).val().trim() !== '') {
-                    $(this).removeClass('error');
-                    $('#title-error').text('')
-                }
-            })
             $('#description').on('change',function () {
                 if ($(this).val().trim() !== '') {
                     $(this).removeClass('error');
                     $('#description-error').text('')
                 }
-            })
-            $('.preview-image .close').click(function (){
-                $(this).parent().find('img').remove();
-                $(this).parents('td').find('.banner-image').val('');
-                $(this).parents('td').find('.banner-image').show();
-                $(this).parents('td').find('.banner-image').addClass('required');
             })
 
             $('.btn-submit').click(function (e){
@@ -441,19 +335,6 @@
                 }
             })
         })
-        function readURL(input,element) {
-            if (input.files && input.files[0]) {
-                element.find('img').remove();
-                let reader = new FileReader();
-                let name = input.files[0].name;
-                reader.onload = function (e) {
-
-                    let html = '<img id="image" style="width: 100%" src="' + e.target.result + '" title="'+name+'" alt="your image" />';
-                    element.append(html);
-                }
-                reader.readAsDataURL(input.files[0]);
-            }
-        }
 
         function checkRequired(formId) {
             let valid = true;
