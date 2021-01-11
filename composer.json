@@ -48,7 +48,8 @@
             "app/Core/Helper/CommonHelpers.php"
         ],
         "classmap": [
-            "app/Core/Repositories"
+            "app/Core/Repositories",
+            "app/Core/Helper"
         ]
     },
     "autoload-dev": {

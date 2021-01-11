@@ -4,13 +4,12 @@
 namespace App\Modules\User\Controllers;
 
 
-use App\Core\Glosary\PaginationConfigs;
 use App\Core\Glosary\RoleConfigs;
 use App\Core\Glosary\UserMetaKey;
 use App\Http\Controllers\Controller;
-use App\Models\User;
 use App\Modules\Permission\Repositories\RoleRepository;
 use App\Modules\User\Model\UserMeta;
+use App\Modules\User\Repositories\UserMetaRepository;
 use App\Modules\User\Repositories\UserRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -21,7 +20,7 @@ class UserManageController extends Controller
     protected $userRepository;
     protected $userMetaRepository;
 
-    public function __construct(UserRepository $userRepository , RoleRepository $roleRepository, UserRepository $userMetaRepository){
+    public function __construct(UserRepository $userRepository , RoleRepository $roleRepository, UserMetaRepository $userMetaRepository){
         $this->userRepository = $userRepository;
         $this->roleRepository = $roleRepository;
         $this->userMetaRepository = $userMetaRepository;
@@ -92,7 +91,13 @@ class UserManageController extends Controller
             ];
 
             $this->userRepository->update($id, $dataSave);
-            $this->userRepository->find($id)->userMeta()->where('meta_key','user_phone')->first()->update($metaSave);
+            $userMeta = $this->userRepository->find($id)->userMeta()->where('meta_key','user_phone')->first();
+            if(is_null($userMeta)){
+                $this->userMetaRepository->create(['user_id' => $id, 'meta_key' => 'user_phone','meta_value' => $request->phone ]);
+            } else{
+                $userMeta->update($metaSave);
+            }
+
             return redirect()->back()->with('message', 'success|Successfully edit the user');
 
         } catch (\Throwable $th) {
