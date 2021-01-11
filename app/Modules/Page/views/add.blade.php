@@ -359,14 +359,12 @@
                 if (checkRequired('add-form')) {
                     $('#publishStatus').val(1);
                     $('#add-form').submit();
-                    $('#commonTab').css('background','');
                 }else{
                     Swal.fire({
                         type: 'warning',
                         title: 'Oops... !',
                         text: 'Some field need to required. Please check it again',
                     });
-                    $('#commonTab').css('background','#FF7575');
                 }
             })
 
@@ -386,14 +384,12 @@
                 if (checkRequired('add-form')) {
                     $('#publishStatus').val(0);
                     $('#add-form').submit();
-                    $('#commonTab').css('background','');
                 }else{
                     Swal.fire({
                         type: 'warning',
                         title: 'Oops... !',
                         text: 'Some field need to required. Please check it again',
                     });
-                    $('#commonTab').css('background','#FF7575');
                 }
             })
         })

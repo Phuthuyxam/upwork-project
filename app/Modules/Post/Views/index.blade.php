@@ -25,7 +25,7 @@
             <div class="card">
                 <div class="card-body">
                     <div class="action-wrapper">
-                        <a href="{{ route('post.add',\App\Core\Glosary\PostType::HOTEL['VALUE']) }}" style="margin-right: 1rem" class="btn btn-success">Add post</a>
+                        <a href="{{ route('post.add',\App\Core\Glosary\PostType::POST['VALUE']) }}" style="margin-right: 1rem" class="btn btn-success">Add post</a>
                         <button class="btn btn-warning btn-delete-many" disabled>Delete Selected</button>
                     </div>
 

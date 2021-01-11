@@ -209,8 +209,10 @@
                                         </div>
                                     </div>
                                     <div class="tab-pane p-3" id="slide" role="tabpanel">
-                                        @if($result['page_template'] == \App\Core\Glosary\PageTemplateConfigs::SERVICE['VALUE'])
-                                            @include('Page::elements.service',['result' => $result[\App\Core\Glosary\MetaKey::SERVICE_ITEM['NAME']]])
+                                        @if(isset($result[\App\Core\Glosary\MetaKey::SERVICE_ITEM['NAME']]) && !empty($result[\App\Core\Glosary\MetaKey::SERVICE_ITEM['NAME']]) && $result['page_template'] == \App\Core\Glosary\PageTemplateConfigs::SERVICE['VALUE'])
+                                            @include('Page::elements.service',['serviceItem' => $result[\App\Core\Glosary\MetaKey::SERVICE_ITEM['NAME']]])
+                                        @else
+                                            @include('Page::elements.service')
                                         @endif
                                     </div>
                                 </div>
@@ -221,7 +223,7 @@
                         <div class="card">
                             <h5 class="card-header mt-0 font-size-16">Template</h5>
                             <div class="card-body">
-                                <select name="template" class="form-control" id="template">
+                                <select name="template" data-id="{{ $result['id'] }}" class="form-control" id="template">
                                     @foreach(\App\Core\Glosary\PageTemplateConfigs::getAll() as $value)
                                         <option value="{{ $value['VALUE'] }}" @if($result['page_template'] == $value['VALUE']) selected @endif>{{ $value['NAME'] }}</option>
                                     @endforeach
@@ -250,6 +252,7 @@
 
             $('#template').on('change',function (){
                 let value = $(this).val();
+                let postId = $(this).data('id');
                 $('#loading').show();
                 $.ajax({
                     url : '{{ route('page.template') }}',
@@ -258,6 +261,7 @@
                     data : {
                         _token : '{{ csrf_token() }}',
                         template : value,
+                        postId: postId
                     },
                     success : function (response){
                         $('#loading').hide();
@@ -388,14 +392,12 @@
                 if (checkRequired('add-form')) {
                     $('#publishStatus').val(0);
                     $('#add-form').submit();
-                    $('#commonTab').css('background','');
                 }else{
                     Swal.fire({
                         type: 'warning',
                         title: 'Oops... !',
                         text: 'Some field need to required. Please check it again',
                     });
-                    $('#commonTab').css('background','#FF7575');
                 }
             })
 
@@ -456,6 +458,8 @@
             row.find('.preview-image img').remove();
             row.find('.banner-image').val('');
             row.find('.banner-image').show();
+            row.find('.banner-image').removeClass('hidden');
+            row.find('.banner-image').addClass('required');
             row.find('textarea').val('');
             $(this).parents('tbody').append(row);
         })

@@ -19,7 +19,7 @@ class PostMetaRepository extends EloquentRepository {
     }
 
     public function getMetaValueByCondition($condition){
-        return $this->_model->where($condition)->first()->toArray();
+        return $this->_model->where($condition)->first();
     }
 
     public function updateByCondition($condition,$data) {

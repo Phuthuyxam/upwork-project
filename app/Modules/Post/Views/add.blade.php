@@ -63,7 +63,7 @@
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
                 Some fields need to required. Please check it again !
             </div>
-            <form action="{{ route('post.add') }}" id="add-form" method="post" role="form" enctype="multipart/form-data">
+            <form action="{{ route('post.add',\App\Core\Glosary\PostType::POST['VALUE']) }}" id="add-form" method="post" role="form" enctype="multipart/form-data">
                 <div class="row">
                 <div class="col-9">
                     <div class="card">
