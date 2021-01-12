@@ -64,7 +64,7 @@
 @section('content')
     <div class="content-wrapper">
         <div class="container-fluid">
-            {!! displayAlert(Session::get('message'))  !!}
+
 
             <div class="row">
                 <div class="col-3">
@@ -86,6 +86,7 @@
                 <div class="col-9">
                     <div class="card">
                         <div class="card-body">
+                            {!! displayAlert(Session::get('message'))  !!}
                             <form action="{{ route('option.save', ['key' => $key]) }}" method="POST">
                                 @csrf
                                 @include('Setting::elements.'.$key)

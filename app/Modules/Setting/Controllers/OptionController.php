@@ -20,7 +20,9 @@ class OptionController extends Controller
     public function index($key = null) {
         $allOption = OptionMetaKey::getAll();
         if(is_null($key)) $key = OptionMetaKey::MENU['VALUE'];
-        return view('Setting::index', compact('allOption', 'key'));
+        $dataMenu = $this->optionRepository->filter([['option_key', OptionMetaKey::MENU['VALUE']]]);
+        $dataFooter = $this->optionRepository->filter([['option_key', OptionMetaKey::FOOTER['VALUE']]]);
+        return view('Setting::index', compact('allOption', 'key', 'dataMenu', 'dataFooter'));
     }
     public function save($key = null, Request $request) {
         if(is_null($key)) $key = OptionMetaKey::MENU['VALUE'];
@@ -38,23 +40,46 @@ class OptionController extends Controller
         }
 
         if(!empty($menuData)){
-            $findData = $this->optionRepository->getInstantModel()->where('option_key', OptionMetaKey::MENU['VALUE'])->get();
-            if($findData->isNotEmpty()) {
-                $this->optionRepository->getInstantModel()->where('option_key', OptionMetaKey::MENU['VALUE'])->update(['option_value' => json_encode($menuData)]);
-            }else {
-                $this->optionRepository->create(['option_key' => OptionMetaKey::MENU['VALUE'], 'option_value' => json_encode($menuData) ]);
+            try {
+                $findData = $this->optionRepository->getInstantModel()->where('option_key', OptionMetaKey::MENU['VALUE'])->get();
+                if($findData->isNotEmpty()) {
+                    $this->optionRepository->getInstantModel()->where('option_key', OptionMetaKey::MENU['VALUE'])->update(['option_value' => json_encode($menuData)]);
+                }else {
+                    $this->optionRepository->create(['option_key' => OptionMetaKey::MENU['VALUE'], 'option_value' => json_encode($menuData) ]);
+                }
+                return redirect()->back()->with('message', 'success|Menu save success.');
+            } catch (\Throwable $th) {
+                return redirect()->back()->with('message', 'danger|Menu save something wrong try again!');
             }
+
         }
 
         // save footer
 
+        $footerData = [];
+        if(isset($request->copyright_text) && !empty($request->copyright_text)){
+            $footerData['copyright_text'] = $request->copyright_text;
+        }
+        if(isset($request->develop_text) && !empty($request->develop_text)){
+            $footerData['develop_text'] = $request->develop_text;
+        }
 
+        if(!empty($footerData)){
+            try {
+                $findData = $this->optionRepository->getInstantModel()->where('option_key', OptionMetaKey::FOOTER['VALUE'])->get();
+                if($findData->isNotEmpty()) {
+                    $this->optionRepository->getInstantModel()->where('option_key', OptionMetaKey::FOOTER['VALUE'])->update(['option_value' => json_encode($footerData)]);
+                }else {
+                    $this->optionRepository->create(['option_key' => OptionMetaKey::FOOTER['VALUE'], 'option_value' => json_encode($footerData) ]);
+                }
+                return redirect()->back()->with('message', 'success|Menu save success.');
+            } catch (\Throwable $th) {
+                return redirect()->back()->with('message', 'danger|Menu save something wrong try again!');
+            }
 
+        }
 
-
-//        $allOption = OptionMetaKey::getAll();
-//        if(is_null($key)) $key = OptionMetaKey::MENU['VALUE'];
-//        return view('Setting::index', compact('allOption', 'key'));
+        return redirect()->back();
     }
 
 }
