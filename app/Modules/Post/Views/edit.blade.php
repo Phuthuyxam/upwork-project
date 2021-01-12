@@ -363,9 +363,9 @@
                                         <table class="table table-bordered">
                                             <thead>
                                                 <tr>
-                                                    <th rowspan="2" style="text-align: center">Image</th>
-                                                    <th rowspan="2" style="text-align: center">Address</th>
-                                                    <th colspan="2" style="text-align: center">Location</th>
+                                                    <th rowspan="2" style="text-align: center; vertical-align: middle">Image</th>
+                                                    <th rowspan="2" style="text-align: center; vertical-align: middle">Address</th>
+                                                    <th colspan="2" style="text-align: center; vertical-align: middle">Location</th>
                                                 </tr>
                                                 <tr>
                                                     <th style="text-align: center">Lat</th>
