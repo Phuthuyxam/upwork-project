@@ -33,9 +33,6 @@
                             @if(PermissionHelpers::canAccess(route('page.add')))
                                 <li><a href="{{ route('page.add') }}">Create</a></li>
                             @endif
-                            @if(PermissionHelpers::canAccess(route('taxonomy.index')))
-                                <li><a href="{{ route('taxonomy.index') }}" class="waves-effect">Brands</a></li>
-                            @endif
                             @if(PermissionHelpers::canAccess(route('page.index')))
                                 <li><a href="{{ route('page.index') }}">All Pages</a></li>
                             @endif
@@ -51,7 +48,10 @@
                     </a>
                     <ul class="sub-menu" aria-expanded="false">
                         @if(PermissionHelpers::canAccess(route('post.add')))
-                        <li><a href="{{ route('post.add') }}">Create</a></li>
+                            <li><a href="{{ route('post.add') }}">Create</a></li>
+                        @endif
+                        @if(PermissionHelpers::canAccess(route('taxonomy.index')))
+                            <li><a href="{{ route('taxonomy.index') }}" class="waves-effect">Brands</a></li>
                         @endif
                         @if(PermissionHelpers::canAccess(route('post.index')))
                             <li><a href="{{ route('post.index') }}">All Hotels</a></li>
