@@ -19,7 +19,7 @@
         .preview-image .close {
             position: absolute;
             top: 5px;
-            right: 5px;
+            left: 5px;
             cursor: pointer;
             background: #9C9C9C;
             border-radius: 100%;
@@ -122,6 +122,10 @@
         row.find('.action-wrapper').append('<button type="button" class="btn btn-success btn-add-type" style="margin-right: 30px"><i class="dripicons-plus"></i></button><button type="button" class="btn btn-danger btn-delete-type"><i class="dripicons-minus"></i></button>');
         row.find('.option-menu-title').val('');
         row.find('.option-menu-url').val('');
+        row.find('.option-home-slider-desc').val('');
+        row.find('.option-home-slider-url').val('');
+        row.find('.home-slider-image').val('');
+        row.find('.image-preview-container').html("");
         $(this).parents('tbody').append(row);
     })
     $('body').on('click','.btn-delete-type',function (e){

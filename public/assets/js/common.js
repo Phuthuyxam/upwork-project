@@ -81,3 +81,30 @@ function readURL(input, element) {
         reader.readAsDataURL(input.files[0]);
     }
 }
+
+
+// load image media manager
+function openMediaManager(btnElm) {
+    window.open('/file-manager/fm-button', 'fm', 'width=1400,height=800');
+    // input
+    inputElement = btnElm;
+}
+// set file link
+let inputElement = '';
+function fmSetLink($url) {
+    findParent(inputElement, 'media-load-image').querySelector('.home-slider-image').value = $url;
+    addPreviewImage($url,findParent(inputElement, 'media-load-image').querySelector('.image-preview-container') );
+}
+function findParent(el, clas) {
+    while ((el = el.parentNode) &&
+    el.className.indexOf(clas) < 0);
+    return el;
+}
+function addPreviewImage($url, $elm) {
+    let htmlTemp = `<img class="image-preview" style="width: 20%" src="`+ $url +`" alt="your image">`;
+    $elm.innerHTML = htmlTemp;
+}
+function deleteImagePreview(thisElm) {
+    findParent(thisElm, 'media-load-image').querySelector('.home-slider-image').value = "";
+    findParent(thisElm, 'media-load-image').querySelector('.image-preview-container').innerHTML = "";
+}
