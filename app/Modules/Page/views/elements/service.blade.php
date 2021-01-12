@@ -32,7 +32,7 @@
                     <p class="text-danger error-message" style="font-weight: bold">
                     </p>
                 </td>
-                <td style="vertical-align: middle">
+                <td style="vertical-align: middle;width: 50px">
                     <div class="action-wrapper">
                         <button class="btn btn-success btn-add-type"><i class="dripicons-plus"></i></button>
                         @if($key > 0)
@@ -60,7 +60,7 @@
                 <p class="text-danger error-message" style="font-weight: bold">
                 </p>
             </td>
-            <td style="vertical-align: middle">
+            <td style="vertical-align: middle;width: 50px">
                 <div class="action-wrapper">
                     <button class="btn btn-success btn-add-type"><i class="dripicons-plus"></i></button>
                 </div>

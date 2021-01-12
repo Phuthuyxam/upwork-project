@@ -43,18 +43,30 @@
             font-size: 14px;
             line-height: .4;
         }
-
-        .action-wrapper {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
+        .action-wrapper button{
+            display: block;
+            margin-bottom: 10px;
         }
+        /*.action-wrapper {*/
+        /*    display: flex;*/
+        /*    align-items: center;*/
+        /*    justify-content: space-between;*/
+        /*}*/
 
-        .action-wrapper .btn-add {
-            margin-right: 10px;
-        }
+        /*.action-wrapper .btn-add {*/
+        /*    margin-right: 10px;*/
+        /*}*/
+
         .hidden {
             display: none;
+        }
+        .preview-image-multiple .items {
+            padding: 0 10px;
+        }
+        .preview-image-multiple {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
         }
     </style>
 @endsection
@@ -66,20 +78,25 @@
         <div class="container-fluid">
             {!! displayAlert(Session::get('message'))  !!}
             <div class="alert alert-danger alert-common" style="display: none;">
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
+                        aria-hidden="true">×</span></button>
                 Some fields need to required. Please check it again !
             </div>
-            <form action="{{ route('page.edit',$result['id']) }}" id="add-form" method="post" role="form" enctype="multipart/form-data">
+            <form action="{{ route('page.edit',$result['id']) }}" id="add-form" method="post" role="form"
+                  enctype="multipart/form-data">
                 <div class="row">
                     <div class="col-9">
                         <div class="card">
                             <div class="card-body">
                                 <ul class="nav nav-tabs" role="tablist">
                                     <li class="nav-item" id="commonTab">
-                                        <a class="nav-link active" id="commonTab" data-toggle="tab" href="#common" role="tab">Common</a>
+                                        <a class="nav-link active" id="commonTab" data-toggle="tab" href="#common"
+                                           role="tab">Common</a>
                                     </li>
-                                    <li class="nav-item" id="customTab" @if ($result['page_template'] == \App\Core\Glosary\PageTemplateConfigs::HOTEL['VALUE']) style="display: none" @endif>
-                                        <a class="nav-link " data-toggle="tab" href="#slide" role="tab">Custom Setting</a>
+                                    <li class="nav-item" id="customTab"
+                                        @if ($result['page_template'] == \App\Core\Glosary\PageTemplateConfigs::HOTEL['VALUE']) style="display: none" @endif>
+                                        <a class="nav-link " data-toggle="tab" href="#slide" role="tab">Custom
+                                            Setting</a>
                                     </li>
                                 </ul>
                                 <div class="tab-content">
@@ -87,12 +104,15 @@
                                     <div class="tab-pane active p-3" id="common" role="tabpanel">
                                         <div class="form-group">
                                             <label for="title">Title</label>
-                                            <input type="text" class="form-control required" name="post_title" id="title"
+                                            <input type="text" class="form-control required" name="post_title"
+                                                   id="title"
                                                    placeholder="Title"
                                                    value="{{ old('post_title') ? old('post_title') : $result['post_title']  }}">
-                                            <p style="font-style: italic; font-size: 12px">The name is how it appears on your
+                                            <p style="font-style: italic; font-size: 12px">The name is how it appears on
+                                                your
                                                 website</p>
-                                            <p class="text-danger error-message" style="font-weight: bold" id="title-error">
+                                            <p class="text-danger error-message" style="font-weight: bold"
+                                               id="title-error">
                                                 @error('post_title')
                                                 {{ $message }}
                                                 @enderror
@@ -103,10 +123,13 @@
                                             <input type="text" class="form-control required" name="post_name" id="slug"
                                                    placeholder="Slug"
                                                    value="{{ old('post_name') ? old('post_name') : $result['post_name'] }}">
-                                            <p style="font-style: italic; font-size: 12px">The "slug" is the URL-friendly of the
-                                                name. It is usually all lower case and contains only letters, numbers, and
+                                            <p style="font-style: italic; font-size: 12px">The "slug" is the
+                                                URL-friendly of the
+                                                name. It is usually all lower case and contains only letters, numbers,
+                                                and
                                                 hyphens and must be unique</p>
-                                            <p class="text-danger error-message" style="font-weight: bold" id="slug-error">
+                                            <p class="text-danger error-message" style="font-weight: bold"
+                                               id="slug-error">
                                                 @error('post_name')
                                                 {{ $message }}
                                                 @enderror
@@ -114,10 +137,12 @@
                                         </div>
                                         <div class="form-group">
                                             <label for="excerpt">Title</label>
-                                            <input type="text" class="form-control required" name="post_excerpt" id="excerpt"
+                                            <input type="text" class="form-control required" name="post_excerpt"
+                                                   id="excerpt"
                                                    placeholder="Excerpt"
                                                    value="{{ old('post_excerpt') ? old('post_excerpt') : $result['post_excerpt'] }}">
-                                            <p class="text-danger error-message" style="font-weight: bold" id="excerpt-error">
+                                            <p class="text-danger error-message" style="font-weight: bold"
+                                               id="excerpt-error">
                                                 @error('post_excerpt')
                                                 {{ $message }}
                                                 @enderror
@@ -148,15 +173,19 @@
                                                     <th style="vertical-align: middle; width: 100px">Desktop</th>
                                                     <td>
                                                         <div class="preview-image">
-                                                            <div class="close  @if($banner[0] == '') {{ 'deleted' }} @endif">
+                                                            <div
+                                                                class="close  @if($banner[0] == '') {{ 'deleted' }} @endif">
                                                                 <i class="dripicons-cross"></i>
                                                             </div>
-                                                            <img src="{{ asset($banner[0]) }}" style="width: 100%" alt="">
+                                                            <img src="{{ asset($banner[0]) }}" style="width: 100%"
+                                                                 alt="">
                                                         </div>
                                                         <input type="file" style="padding: 3px 5px; overflow: hidden"
                                                                class="form-control banner-image @if($banner[0] != '') {{ 'hidden' }} @else {{ 'required' }} @endif"
                                                                name="files[]">
-                                                        <input type="hidden" class="banner-link" name="banners[]" data-type="{{ \App\Core\Glosary\MetaKey::BANNER['VALUE'] }}" value="{{ $banner[0] }}">
+                                                        <input type="hidden" class="banner-link" name="banners[]"
+                                                               data-type="{{ \App\Core\Glosary\MetaKey::BANNER['VALUE'] }}"
+                                                               value="{{ $banner[0] }}">
                                                         <p class="text-danger error-message" style="font-weight: bold">
                                                             @error('files')
                                                             {{ $message }}
@@ -168,15 +197,19 @@
                                                     <th style="vertical-align: middle; width: 100px">Tablet</th>
                                                     <td>
                                                         <div class="preview-image">
-                                                            <div class="close  @if($banner[1] == '') {{ 'deleted' }} @endif">
+                                                            <div
+                                                                class="close  @if($banner[1] == '') {{ 'deleted' }} @endif">
                                                                 <i class="dripicons-cross"></i>
                                                             </div>
-                                                            <img src="{{ asset($banner[1]) }}" style="width: 100%" alt="">
+                                                            <img src="{{ asset($banner[1]) }}" style="width: 100%"
+                                                                 alt="">
                                                         </div>
                                                         <input type="file" style="padding: 3px 5px; overflow: hidden"
                                                                class="form-control banner-image @if($banner[1] != '') {{ 'hidden' }} @else {{ 'required' }} @endif"
                                                                name="files[]">
-                                                        <input type="hidden" class="banner-link" name="banners[]" data-type="{{ \App\Core\Glosary\MetaKey::BANNER['VALUE'] }}" value="{{ $banner[1] }}">
+                                                        <input type="hidden" class="banner-link" name="banners[]"
+                                                               data-type="{{ \App\Core\Glosary\MetaKey::BANNER['VALUE'] }}"
+                                                               value="{{ $banner[1] }}">
                                                         <p class="text-danger error-message" style="font-weight: bold">
                                                             @error('files')
                                                             {{ $message }}
@@ -188,15 +221,19 @@
                                                     <th style="vertical-align: middle; width: 100px">Mobile</th>
                                                     <td>
                                                         <div class="preview-image">
-                                                            <div class="close  @if($banner[2] == '') {{ 'deleted' }} @endif">
+                                                            <div
+                                                                class="close  @if($banner[2] == '') {{ 'deleted' }} @endif">
                                                                 <i class="dripicons-cross"></i>
                                                             </div>
-                                                            <img src="{{ asset($banner[2]) }}" style="width: 100%" alt="">
+                                                            <img src="{{ asset($banner[2]) }}" style="width: 100%"
+                                                                 alt="">
                                                         </div>
                                                         <input type="file" style="padding: 3px 5px; overflow: hidden"
                                                                class="form-control banner-image @if($banner[2] != '') {{ 'hidden' }} @else {{ 'required' }} @endif"
                                                                name="files[]">
-                                                        <input type="hidden" class="banner-link" name="banners[]" data-type="{{ \App\Core\Glosary\MetaKey::BANNER['VALUE'] }}" value="{{ $banner[2] }}">
+                                                        <input type="hidden" class="banner-link" name="banners[]"
+                                                               data-type="{{ \App\Core\Glosary\MetaKey::BANNER['VALUE'] }}"
+                                                               value="{{ $banner[2] }}">
                                                         <p class="text-danger error-message" style="font-weight: bold">
                                                             @error('files')
                                                             {{ $message }}
@@ -211,11 +248,25 @@
                                     <div class="tab-pane p-3" id="slide" role="tabpanel">
                                         @if(isset($result[\App\Core\Glosary\MetaKey::COMPLETE_ITEM['NAME']]) && !empty($result[\App\Core\Glosary\MetaKey::COMPLETE_ITEM['NAME']]))
                                             @if($result['page_template'] == \App\Core\Glosary\PageTemplateConfigs::SERVICE['VALUE'])
-                                                @include('Page::elements.service',['serviceItem' => $result[\App\Core\Glosary\MetaKey::COMPLETE_ITEM['NAME']]])
+                                                @include('Page::elements.service',
+                                                        [
+                                                        'serviceItem' => $result[\App\Core\Glosary\MetaKey::COMPLETE_ITEM['NAME']]
+                                                        ])
                                             @endif
-
+                                        @endif
+                                        @if(isset($result[\App\Core\Glosary\MetaKey::COMPLETE_ITEM['NAME']])
+                                                    && !empty($result[\App\Core\Glosary\MetaKey::COMPLETE_ITEM['NAME']])
+                                                    && isset($result[\App\Core\Glosary\MetaKey::IMAGE_ITEM['NAME']])
+                                                    && !empty($result[\App\Core\Glosary\MetaKey::INDEX_COMPLETE_ITEM['NAME']])
+                                                    && isset($result[\App\Core\Glosary\MetaKey::INDEX_COMPLETE_ITEM['NAME']])
+                                                    && !empty($result[\App\Core\Glosary\MetaKey::IMAGE_ITEM['NAME']]))
                                             @if($result['page_template'] == \App\Core\Glosary\PageTemplateConfigs::ABOUT['VALUE'])
-                                                    @include('Page::elements.about',['indexItem' => $result[\App\Core\Glosary\MetaKey::INDEX_COMPLETE_ITEM['NAME']],'completeItem' => $result[\App\Core\Glosary\MetaKey::COMPLETE_ITEM['NAME']]])
+                                                @include('Page::elements.about',
+                                                        [
+                                                            'indexItem' => $result[\App\Core\Glosary\MetaKey::INDEX_COMPLETE_ITEM['NAME']],
+                                                            'completeItem' => $result[\App\Core\Glosary\MetaKey::COMPLETE_ITEM['NAME']],
+                                                            'imageItem' => $result[\App\Core\Glosary\MetaKey::IMAGE_ITEM['NAME']]
+                                                        ])
                                             @endif
                                         @endif
                                     </div>
@@ -227,16 +278,23 @@
                         <div class="card">
                             <h5 class="card-header mt-0 font-size-16">Template</h5>
                             <div class="card-body">
-                                <select name="template" data-id="{{ $result['id'] }}" class="form-control" id="template">
+                                <select name="template" data-id="{{ $result['id'] }}" class="form-control"
+                                        id="template">
                                     @foreach(\App\Core\Glosary\PageTemplateConfigs::getAll() as $value)
-                                        <option value="{{ $value['VALUE'] }}" @if($result['page_template'] == $value['VALUE']) selected @endif>{{ $value['NAME'] }}</option>
+                                        <option value="{{ $value['VALUE'] }}"
+                                                @if($result['page_template'] == $value['VALUE']) selected @endif>{{ $value['NAME'] }}</option>
                                     @endforeach
                                 </select>
                             </div>
-                            <div class="card-footer" style="display: flex; align-items: center; justify-content: space-between">
+                            <div class="card-footer"
+                                 style="display: flex; align-items: center; justify-content: space-between">
                                 <input type="hidden" id="publishStatus" name="status">
-                                <button type="submit" class="btn btn-info btn-draft waves-effect waves-light">Save Draft</button>
-                                <button type="submit" class="btn btn-primary btn-submit waves-effect waves-light">Publish</button>
+                                <button type="submit" class="btn btn-info btn-draft waves-effect waves-light">Save
+                                    Draft
+                                </button>
+                                <button type="submit" class="btn btn-primary btn-submit waves-effect waves-light">
+                                    Publish
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -255,20 +313,20 @@
         CKEDITOR.replace('description', {filebrowserImageBrowseUrl: '/file-manager/ckeditor'});
         $(document).ready(function () {
 
-            $('#template').on('change',function (){
+            $('#template').on('change', function () {
                 let value = $(this).val();
                 let postId = $(this).data('id');
                 $('#loading').show();
                 $.ajax({
-                    url : '{{ route('page.template') }}',
-                    type : 'POST',
+                    url: '{{ route('page.template') }}',
+                    type: 'POST',
                     dataType: 'html',
-                    data : {
-                        _token : '{{ csrf_token() }}',
-                        template : value,
+                    data: {
+                        _token: '{{ csrf_token() }}',
+                        template: value,
                         postId: postId
                     },
-                    success : function (response){
+                    success: function (response) {
                         $('#loading').hide();
                         if (response) {
                             $('#slide').empty();
@@ -276,7 +334,7 @@
                             $('#customTab').show();
                         }
                     },
-                    error : function (e) {
+                    error: function (e) {
                         console.log(e);
                     }
                 })
@@ -313,18 +371,18 @@
                 }
             })
 
-            $('#excerpt').on('change',function () {
+            $('#excerpt').on('change', function () {
                 let val = $(this).val();
                 if (val.trim() === '') {
                     $(this).addClass('error');
                     $('#excerpt-error').text('This field cannot be null');
-                }else{
+                } else {
                     $(this).removeClass('error');
                     $('#excerpt-error').text('');
                 }
             })
             // Validate File Input
-            $('body').on('change',".banner-image",function () {
+            $('body').on('change', ".banner-image", function () {
                 let val = $(this).val();
                 if (val) {
                     if (validateFileUpload(val)) {
@@ -345,24 +403,24 @@
                 }
             });
 
-            $('#tax').on('change',function () {
+            $('#tax').on('change', function () {
                 if ($(this).val() == '') {
                     $(this).addClass('error');
                     $(this).parents('.form-group').find('.error-message').text('This field cannot be null');
-                }else {
+                } else {
                     $(this).removeClass('error');
                     $(this).parents('.form-group').find('.error-message').text('');
                     $(this).removeClass('required');
                 }
             })
 
-            CKEDITOR.instances.description.on('change',function (){
+            CKEDITOR.instances.description.on('change', function () {
                 let value = CKEDITOR.instances.description.getData();
 
                 if (value == '') {
                     $('#description').parents('.form-group').find('.editor-wrapper').addClass('error');
                     $('#description').parents('.form-group').find('.error-message').text('This field cannot be null');
-                }else{
+                } else {
                     $('#description').parents('.form-group').find('.editor-wrapper').removeClass('error');
                     $('#description').parents('.form-group').find('.error-message').text('');
                 }
@@ -381,14 +439,14 @@
                 if (checkRequired('add-form')) {
                     $('#publishStatus').val(1);
                     // $('#add-form').submit();
-                    $('#commonTab').css('background','');
-                }else{
+                    $('#commonTab').css('background', '');
+                } else {
                     Swal.fire({
                         type: 'warning',
                         title: 'Oops... !',
                         text: 'Some field need to required. Please check it again',
                     });
-                    $('#commonTab').css('background','#FF7575');
+                    $('#commonTab').css('background', '#FF7575');
                 }
             })
 
@@ -397,7 +455,7 @@
                 if (checkRequired('add-form')) {
                     $('#publishStatus').val(0);
                     $('#add-form').submit();
-                }else{
+                } else {
                     Swal.fire({
                         type: 'warning',
                         title: 'Oops... !',
@@ -406,18 +464,19 @@
                 }
             })
 
-            $('body').on('change','.required',function (){
+            $('body').on('change', '.required', function () {
                 let value = $(this).val();
                 if (value.trim() === '') {
                     $(this).addClass('error');
                     $(this).parent().find('.error-message').text('This field cannot be null');
-                }else{
+                } else {
                     $(this).removeClass('error');
                     $(this).parent().find('.error-message').text('');
                 }
             })
 
         })
+
         function readURL(input, element) {
             if (input.files && input.files[0]) {
                 element.find('img').remove();
@@ -425,7 +484,7 @@
                 let name = input.files[0].name;
                 reader.onload = function (e) {
 
-                    let html = '<img id="image" style="width: 100%" src="' + e.target.result + '" title="'+name+'" alt="your image" />';
+                    let html = '<img id="image" style="width: 100%" src="' + e.target.result + '" title="' + name + '" alt="your image" />';
                     element.append(html);
                 }
                 reader.readAsDataURL(input.files[0]);
@@ -448,14 +507,14 @@
                 $('#description').parents('.form-group').find('.editor-wrapper').addClass('error');
                 $('#description').parents('.form-group').find('.error-message').text('This field cannot be null');
                 valid = false;
-            }else{
+            } else {
                 $('#description').parents('.form-group').find('.editor-wrapper').removeClass('error');
                 $('#description').parents('.form-group').find('.error-message').text('');
             }
             return valid;
         }
 
-        $('body').on('click','.btn-add-type',function (e){
+        $('body').on('click', '.btn-add-type', function (e) {
             e.preventDefault();
             let row = $(this).parents('tr').clone();
             row.find('.action-wrapper').empty();
@@ -469,11 +528,13 @@
             row.find('textarea').val('');
             $(this).parents('tbody').append(row);
 
+            row.find('.banner-image-multiple').val('');
+
             let count = parseInt($(this).parents('.section').find('.item-count').val());
             count = count + 1;
             $(this).parents('.section').find('.item-count').val(count);
         })
-        $('body').on('click','.btn-delete-type',function (e){
+        $('body').on('click', '.btn-delete-type', function (e) {
             e.preventDefault();
 
             let count = parseInt($(this).parents('.section').find('.item-count').val());
@@ -481,6 +542,11 @@
             $(this).parents('.section').find('.item-count').val(count);
 
             $(this).parents('tr').remove();
+        })
+
+        $('body').on('change','.banner-image-multiple',function (){
+            $(this).parent().find('.banner-link').val('');
+
         })
     </script>
 @endsection

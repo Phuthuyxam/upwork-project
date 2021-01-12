@@ -41,6 +41,7 @@ class TaxonomyController extends Controller
             'description' => 'required'
         ]);
 
+//        $terms = $this->termRepository->getAll();
         $dataTerm = [
             'name' => $request->input('name'),
             'slug' => $request->input('slug'),

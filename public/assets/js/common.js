@@ -57,7 +57,7 @@ function readURLMultiple(input, element) {
 
             reader.onload = function(event) {
                 let html = '<div class="items">' +
-                    '<img id="image" style="width: 100%" src="' + event.target.result + '" title="'+name+'" alt="your image" />'+
+                    '<img  style="width: 100%" src="' + event.target.result + '" title="'+name+'" alt="your image" />'+
                     '</div>';
 
                 $(element).append(html);
