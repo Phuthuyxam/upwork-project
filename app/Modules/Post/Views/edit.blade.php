@@ -1,4 +1,7 @@
 @extends('backend.default')
+@section('title')
+    Edit Hotel
+@endsection
 @section('style')
     <style>
         .error {
@@ -59,7 +62,7 @@
     </style>
 @endsection
 @section('heading')
-    <h4 class="page-title font-size-18">Edit post</h4>
+    <h4 class="page-title font-size-18">Edit Hotel</h4>
 @endsection
 @section('content')
     <div class="content-wrapper">
@@ -87,6 +90,9 @@
                                     <li class="nav-item">
                                         <a class="nav-link" data-toggle="tab" href="#settings" role="tab">Facilities and
                                             Amenities</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" data-toggle="tab" href="#map" role="tab"> Map settings </a>
                                     </li>
                                 </ul>
                                 <div class="tab-content">
@@ -116,6 +122,31 @@
                                                 hyphens and must be unique</p>
                                             <p class="text-danger error-message" style="font-weight: bold" id="slug-error">
                                                 @error('post_name')
+                                                    {{ $message }}
+                                                @enderror
+                                            </p>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="rate">Rate</label>
+                                            <input type="number" class="form-control required" name="rate" id="rate"
+                                                   placeholder="Rate" max="5" min="0"
+                                                   value="{{ old('rate') ? old('rate') : $postMetaMap[\App\Core\Glosary\MetaKey::RATE['VALUE']] }}">
+                                            <p class="text-danger error-message" style="font-weight: bold">
+                                                @error('rate')
+                                                {{ $message }}
+                                                @enderror
+                                            </p>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="description">Description</label>
+                                            <div class="editor-wrapper">
+                                                <textarea name="post_content" id="description" class="form-control"
+                                                          style="width: 100%; height: 90px"
+                                                          placeholder="Description">{{ $post['post_content'] }}</textarea>
+                                            </div>
+                                            <p class="text-danger error-message" style="font-weight: bold"
+                                               id="description-error">
+                                                @error('post_content')
                                                     {{ $message }}
                                                 @enderror
                                             </p>
@@ -196,20 +227,6 @@
                                                 </tbody>
                                             </table>
                                         </div>
-                                        <div class="form-group">
-                                            <label for="description">Description</label>
-                                            <div class="editor-wrapper">
-                                                <textarea name="post_content" id="description" class="form-control"
-                                                          style="width: 100%; height: 90px"
-                                                          placeholder="Description">{{ $post['post_content'] }}</textarea>
-                                            </div>
-                                            <p class="text-danger error-message" style="font-weight: bold"
-                                               id="description-error">
-                                                @error('post_content')
-                                                    {{ $message }}
-                                                @enderror
-                                            </p>
-                                        </div>
                                     </div>
                                     <div class="tab-pane p-3" id="slide" role="tabpanel">
                                         <table class="table-bordered table">
@@ -261,7 +278,7 @@
 
                                                         </div>
                                                         <input type="file" style="padding: 3px 5px; overflow: hidden;" class="form-control input-image " name="images[]">
-                                                        <p class="text-danger error-message" style="font-weight: bold" id="title-error"></p>
+                                                        <p class="text-danger error-message" style="font-weight: bold"></p>
                                                     </td>
                                                     <td style="width: 120px; vertical-align: middle">
                                                         <div class="action-wrapper">
@@ -339,6 +356,46 @@
                                                         </tr>
                                                     @endforeach
                                                 @endif
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="tab-pane p-3" id="map" role="tabpanel">
+                                        <table class="table table-bordered">
+                                            <thead>
+                                                <tr>
+                                                    <th rowspan="2" style="text-align: center; vertical-align: middle">Image</th>
+                                                    <th rowspan="2" style="text-align: center; vertical-align: middle">Address</th>
+                                                    <th colspan="2" style="text-align: center; vertical-align: middle">Location</th>
+                                                </tr>
+                                                <tr>
+                                                    <th style="text-align: center">Lat</th>
+                                                    <th style="text-align: center">Long</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @php
+                                                    $map = $postMetaMap[\App\Core\Glosary\MetaKey::LOCATION['VALUE']];
+                                                @endphp
+                                                <tr>
+                                                    <td style="width: 260px">
+                                                        <div class="preview-image" style="width: 100%;">
+                                                            <div class="close">
+                                                                <i class="dripicons-cross"></i>
+                                                            </div>
+                                                            @if($map->image != '' && !empty($map->image))
+                                                                <img src="{{ asset($map->image) }}"  alt="">
+                                                            @endif
+                                                        </div>
+                                                        <input type="file" class="form-control banner-image @if($map->image != '' && !empty($map->image)) {{ 'hidden' }} @endif" name="map_image"  style="padding: 3px 5px; overflow: hidden">
+                                                    </td>
+                                                    <td><textarea type="text" class="form-control" name="map_address">{{ old('map_address') ? old('map_address') : $map->address}}</textarea></td>
+                                                    <td>
+                                                        <input type="number" class="form-control" name="map_lat" value="{{ old('map_lat') ? old('map_lat') : $map->location->lat }}">
+                                                    </td>
+                                                    <td>
+                                                        <input type="number" class="form-control" name="map_long" value="{{ old('map_long') ? old('map_long') : $map->location->long}}">
+                                                    </td>
+                                                </tr>
                                             </tbody>
                                         </table>
                                     </div>
