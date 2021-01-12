@@ -22,7 +22,8 @@ class OptionController extends Controller
         if(is_null($key)) $key = OptionMetaKey::MENU['VALUE'];
         $dataMenu = $this->optionRepository->filter([['option_key', OptionMetaKey::MENU['VALUE']]]);
         $dataFooter = $this->optionRepository->filter([['option_key', OptionMetaKey::FOOTER['VALUE']]]);
-        return view('Setting::index', compact('allOption', 'key', 'dataMenu', 'dataFooter'));
+        $dataHome = $this->optionRepository->filter([['option_key', OptionMetaKey::HOME['VALUE']]]);
+        return view('Setting::index', compact('allOption', 'key', 'dataMenu', 'dataFooter', 'dataHome'));
     }
     public function save($key = null, Request $request) {
         if(is_null($key)) $key = OptionMetaKey::MENU['VALUE'];
@@ -77,6 +78,75 @@ class OptionController extends Controller
                 return redirect()->back()->with('message', 'danger|Menu save something wrong try again!');
             }
 
+        }
+
+        $homeData = [];
+        if(isset($request->option_home_slider_desc) && !empty($request->option_home_slider_desc)) {
+            $slider_desc = $request->option_home_slider_desc;
+            $slider_url = $request->option_home_slider_url;
+            $slider_logo = $request->option_home_slider_logo;
+            $slider_banner_desktop = $request->option_home_slider_banner_desktop;
+            $slider_banner_tablet = $request->option_home_slider_banner_tablet;
+            $slider_banner_mobile = $request->option_home_slider_banner_mobile;
+
+            foreach ($slider_desc as $key => $slider) {
+                $homeData['slider'][] = [
+                    'desc' => $slider_desc[$key],
+                    'url' => $slider_url[$key],
+                    'logo' => $slider_logo[$key],
+                    'banner_desktop' => $slider_banner_desktop[$key],
+                    'banner_tablet'  => $slider_banner_tablet[$key],
+                    'banner_mobile'  => $slider_banner_mobile[$key]
+                ];
+            }
+        }
+
+        $homeData['our_service'] = [
+            'background' => $request->option_our_service_bg,
+            'title' => $request->option_our_service_title,
+            'heading' => $request->option_our_service_heading,
+            'paragraph' => $request->option_our_service_paragraph,
+            'url'   => $request->option_our_service_url
+        ];
+        $homeData['our_hotel'] = [
+            'title' => $request->option_our_hotel_title,
+            'heading' => $request->option_our_hotel_heading,
+            'url'   => $request->option_our_hotel_url,
+        ];
+        if(isset($request->option_home_hotel_banner) && !empty($request->option_home_hotel_banner)) {
+            $hotel_banner = $request->option_home_hotel_banner;
+            $hotel_logo = $request->option_home_hotel_logo;
+            foreach ($hotel_banner as $key => $h_banner) {
+                $homeData['our_hotel']['hotels'][] = [
+                    'banner' => $h_banner,
+                    'logo'  => $hotel_logo[$key]
+                ];
+            }
+        }
+
+        $homeData['message'] = [
+            'background' => $request->option_our_message_bg,
+            'title' => $request->option_our_message_title,
+            'paragraph' => $request->option_our_message_paragraph,
+            'author'    => $request->option_our_message_auth,
+            'avatar'    => $request->option_our_avatar_image,
+            'sign'      => $request->option_our_message_sign,
+        ];
+
+        $homeData['map'] = $request->option_home_map;
+
+        if(isset($request->option_type) && $request->option_type == 'homepage_setting') {
+            try {
+                $findData = $this->optionRepository->getInstantModel()->where('option_key', OptionMetaKey::HOME['VALUE'])->get();
+                if($findData->isNotEmpty()) {
+                    $this->optionRepository->getInstantModel()->where('option_key', OptionMetaKey::HOME['VALUE'])->update(['option_value' => json_encode($homeData)]);
+                }else {
+                    $this->optionRepository->create(['option_key' => OptionMetaKey::HOME['VALUE'], 'option_value' => json_encode($homeData) ]);
+                }
+                return redirect()->back()->with('message', 'success|Home option save success.');
+            } catch (\Throwable $th) {
+                return redirect()->back()->with('message', 'danger|Home option save something wrong try again!');
+            }
         }
 
         return redirect()->back();
