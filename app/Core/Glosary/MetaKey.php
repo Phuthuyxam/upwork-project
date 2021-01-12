@@ -15,14 +15,18 @@ class MetaKey extends BasicEnum
     const SLIDE = ['VALUE' => 3, 'NAME' => 'slide' ];
     const ROOM_TYPE = ['VALUE' => 4, 'NAME' => 'room_type'];
     const FACILITY = ['VALUE' => 5, 'NAME' => 'facility'];
-    const PAGE_TEMPLATE = ['VALUE' => 7,'NAME' => 'page_template'];
-
 
     const COMPLETE_ITEM = ['VALUE' => 6,'NAME' => 'item'];
-    const IMAGE_ITEM = ['VALUE' => 7, 'NAME' => 'images'];
+
+    const PAGE_TEMPLATE = ['VALUE' => 7,'NAME' => 'page_template'];
 
     const INDEX_COMPLETE_ITEM = ['VALUE' => 8 ,'NAME' => 'index_item'];
     const INDEX_IMAGE_ITEM = ['VALUE' => 9 ,'NAME' => 'index_image'];
+
+    const IMAGE_ITEM = ['VALUE' => 10, 'NAME' => 'images'];
+
+    const RATE = ['VALUE' => 11, 'NAME' => 'rate'];
+    const LOCATION = ['VALUE' => 12, 'NAME' => 'location'];
 
     public static function display($value) {
         $oClass = new \ReflectionClass(__CLASS__);

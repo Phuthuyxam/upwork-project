@@ -22,14 +22,7 @@
                         </a>
                     </li>
                 @endif
-                @if(PermissionHelpers::canAccess(route('taxonomy.index')))
-                    <li>
-                        <a href="{{ route('taxonomy.index') }}" class="waves-effect">
-                            <i class="dripicons-checklist"></i>
-                            <span> Categories </span>
-                        </a>
-                    </li>
-                @endif
+
                 @if(PermissionHelpers::canAccess(route('page.index')))
                     <li>
                         <a href="javascript: void(0);" class="waves-effect has-arrow">
@@ -39,6 +32,9 @@
                         <ul class="sub-menu" aria-expanded="false">
                             @if(PermissionHelpers::canAccess(route('page.add')))
                                 <li><a href="{{ route('page.add') }}">Create</a></li>
+                            @endif
+                            @if(PermissionHelpers::canAccess(route('taxonomy.index')))
+                                <li><a href="{{ route('taxonomy.index') }}" class="waves-effect">Brands</a></li>
                             @endif
                             @if(PermissionHelpers::canAccess(route('page.index')))
                                 <li><a href="{{ route('page.index') }}">All Pages</a></li>

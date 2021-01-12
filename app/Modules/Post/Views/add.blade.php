@@ -1,4 +1,7 @@
 @extends('backend.default')
+@section('title')
+    Add Hotel
+@endsection
 @section('style')
     <style>
         .error {
@@ -53,7 +56,7 @@
     </style>
 @endsection
 @section('heading')
-    <h4 class="page-title font-size-18">Add post</h4>
+    <h4 class="page-title font-size-18">Add Hotel</h4>
 @endsection
 @section('content')
     <div class="content-wrapper">
@@ -81,6 +84,9 @@
                                 <li class="nav-item">
                                     <a class="nav-link" data-toggle="tab" href="#settings" role="tab">Facilities and
                                         Amenities</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" data-toggle="tab" href="#map" role="tab"> Map settings </a>
                                 </li>
                             </ul>
                                 <div class="tab-content">
@@ -110,6 +116,31 @@
                                             <p class="text-danger error-message" style="font-weight: bold" id="slug-error">
                                                 @error('post_name')
                                                 {{ $message }}
+                                                @enderror
+                                            </p>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="rate">Rate</label>
+                                            <input type="number" class="form-control required" name="rate" id="rate"
+                                                   placeholder="Rate" max="5" min="0"
+                                                   value="{{ old('rate') }}">
+                                            <p class="text-danger error-message" style="font-weight: bold">
+                                                @error('rate')
+                                                    {{ $message }}
+                                                @enderror
+                                            </p>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="description">Description</label>
+                                            <div class="editor-wrapper">
+                                                <textarea name="post_content" id="description" class="form-control"
+                                                          style="width: 100%; height: 90px"
+                                                          placeholder="Description">{{ old('description') }}</textarea>
+                                            </div>
+                                            <p class="text-danger error-message" style="font-weight: bold"
+                                               id="description-error">
+                                                @error('description')
+                                                    {{ $message }}
                                                 @enderror
                                             </p>
                                         </div>
@@ -173,20 +204,6 @@
                                                     </tr>
                                                 </tbody>
                                             </table>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="description">Description</label>
-                                            <div class="editor-wrapper">
-                                                <textarea name="post_content" id="description" class="form-control"
-                                                          style="width: 100%; height: 90px"
-                                                          placeholder="Description">{{ old('description') }}</textarea>
-                                            </div>
-                                            <p class="text-danger error-message" style="font-weight: bold"
-                                               id="description-error">
-                                                @error('post_content')
-                                                {{ $message }}
-                                                @enderror
-                                            </p>
                                         </div>
                                     </div>
                                     <div class="tab-pane p-3" id="slide" role="tabpanel">
@@ -306,6 +323,40 @@
                                             </tbody>
                                         </table>
                                     </div>
+                                    <div class="tab-pane p-3" id="map" role="tabpanel">
+                                        <table class="table table-bordered">
+                                            <thead>
+                                                <tr>
+                                                    <th rowspan="2" style="text-align: center">Image</th>
+                                                    <th rowspan="2" style="text-align: center">Address</th>
+                                                    <th colspan="2" style="text-align: center">Location</th>
+                                                </tr>
+                                                <tr>
+                                                    <th style="text-align: center">Lat</th>
+                                                    <th style="text-align: center">Long</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td style="width: 260px">
+                                                        <div class="preview-image" style="width: 100%;">
+                                                            <div class="close">
+                                                                <i class="dripicons-cross"></i>
+                                                            </div>
+                                                        </div>
+                                                        <input type="file" class="form-control banner-image" name="map_image"  style="padding: 3px 5px; overflow: hidden">
+                                                    </td>
+                                                    <td><textarea type="text" class="form-control" name="map_address">{{ old('map_address') }}</textarea></td>
+                                                    <td>
+                                                        <input type="number" class="form-control" name="map_lat" value="{{ old('map_lat') }}">
+                                                    </td>
+                                                    <td>
+                                                        <input type="number" class="form-control" name="map_long" value="{{ old('map_long') }}">
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
                                 </div>
                         </div>
                     </div>
@@ -386,6 +437,18 @@
                     }
                 }
             })
+
+            $('#rate').on('change',function () {
+                let val = parseInt($(this).val());
+                let max = parseInt($(this).attr('max'));
+                if (val < 0 ){
+                    $(this).val(0);
+                }
+                if (val > max) {
+                    $(this).val(max);
+                }
+            })
+
             // Validate File Input
             $(".banner-image").change(function () {
                 let val = $(this).val();
