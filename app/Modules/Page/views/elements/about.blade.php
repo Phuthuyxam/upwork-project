@@ -26,7 +26,7 @@
                 @if($key < $indexItem[0])
                     <tr>
                         <td style="max-width: 400px;">
-                            {!! renderMediaManage('images[]',$value->image) !!}
+                            {!! renderMediaManage('gallery[]',$value->image) !!}
                         </td>
                         <td>
                             <textarea class="form-control required" name="descriptions[]">{{ $value->desc }}</textarea>
@@ -166,12 +166,14 @@
                     <div class="image-items">
                         <table class="table table-bordered">
                             <tbody>
-                                <td>{!! renderMediaManage('images[]') !!}</td>
-                                <td style="vertical-align: middle;width: 50px;">
-                                    <div class="action-wrapper">
-                                        <button class="btn btn-success btn-add-child"><i class="dripicons-plus"></i></button>
-                                    </div>
-                                </td>
+                                <tr>
+                                    <td>{!! renderMediaManage('images[]') !!}</td>
+                                    <td style="vertical-align: middle;width: 50px;">
+                                        <div class="button-wrapper">
+                                            <button class="btn btn-success btn-add-child"><i class="dripicons-plus"></i></button>
+                                        </div>
+                                    </td>
+                                </tr>
                             </tbody>
                         </table>
                         <input type="hidden" name="rowItem[]" class="row-item" value="1">
