@@ -20,6 +20,7 @@
         .preview-image {
             position: relative;
             overflow: hidden;
+            margin-bottom: 1rem;
             /*width: 50%;*/
         }
 
@@ -172,48 +173,17 @@
                                                 <tr>
                                                     <th style="vertical-align: middle; width: 100px">Desktop</th>
                                                     <td>
-{{--                                                        <div class="preview-image">--}}
-{{--                                                            <div--}}
-{{--                                                                class="close  @if($banner[0] == '') {{ 'deleted' }} @endif">--}}
-{{--                                                                <i class="dripicons-cross"></i>--}}
-{{--                                                            </div>--}}
-{{--                                                            <img src="{{ asset($banner[0]) }}" style="width: 100%"--}}
-{{--                                                                 alt="">--}}
-{{--                                                        </div>--}}
-{{--                                                        <input type="file" style="padding: 3px 5px; overflow: hidden"--}}
-{{--                                                               class="form-control banner-image @if($banner[0] != '') {{ 'hidden' }} @else {{ 'required' }} @endif"--}}
-{{--                                                               name="files[]">--}}
-{{--                                                        <input type="hidden" class="banner-link" name="banners[]"--}}
-{{--                                                               data-type="{{ \App\Core\Glosary\MetaKey::BANNER['VALUE'] }}"--}}
-{{--                                                               value="{{ $banner[0] }}">--}}
-
                                                         {!!  renderMediaManage('files[]', $banner[0]) !!}
                                                         <p class="text-danger error-message" style="font-weight: bold">
                                                             @error('files')
                                                             {{ $message }}
                                                             @enderror
                                                         </p>
-
-
                                                     </td>
                                                 </tr>
                                                 <tr>
                                                     <th style="vertical-align: middle; width: 100px">Tablet</th>
                                                     <td>
-{{--                                                        <div class="preview-image">--}}
-{{--                                                            <div--}}
-{{--                                                                class="close  @if($banner[1] == '') {{ 'deleted' }} @endif">--}}
-{{--                                                                <i class="dripicons-cross"></i>--}}
-{{--                                                            </div>--}}
-{{--                                                            <img src="{{ asset($banner[1]) }}" style="width: 100%"--}}
-{{--                                                                 alt="">--}}
-{{--                                                        </div>--}}
-{{--                                                        <input type="file" style="padding: 3px 5px; overflow: hidden"--}}
-{{--                                                               class="form-control banner-image @if($banner[1] != '') {{ 'hidden' }} @else {{ 'required' }} @endif"--}}
-{{--                                                               name="files[]">--}}
-{{--                                                        <input type="hidden" class="banner-link" name="banners[]"--}}
-{{--                                                               data-type="{{ \App\Core\Glosary\MetaKey::BANNER['VALUE'] }}"--}}
-{{--                                                               value="{{ $banner[1] }}">--}}
                                                         {!!  renderMediaManage('files[]', $banner[1]) !!}
                                                         <p class="text-danger error-message" style="font-weight: bold">
                                                             @error('files')
@@ -225,20 +195,6 @@
                                                 <tr>
                                                     <th style="vertical-align: middle; width: 100px">Mobile</th>
                                                     <td>
-{{--                                                        <div class="preview-image">--}}
-{{--                                                            <div--}}
-{{--                                                                class="close  @if($banner[2] == '') {{ 'deleted' }} @endif">--}}
-{{--                                                                <i class="dripicons-cross"></i>--}}
-{{--                                                            </div>--}}
-{{--                                                            <img src="{{ asset($banner[2]) }}" style="width: 100%"--}}
-{{--                                                                 alt="">--}}
-{{--                                                        </div>--}}
-{{--                                                        <input type="file" style="padding: 3px 5px; overflow: hidden"--}}
-{{--                                                               class="form-control banner-image @if($banner[2] != '') {{ 'hidden' }} @else {{ 'required' }} @endif"--}}
-{{--                                                               name="files[]">--}}
-{{--                                                        <input type="hidden" class="banner-link" name="banners[]"--}}
-{{--                                                               data-type="{{ \App\Core\Glosary\MetaKey::BANNER['VALUE'] }}"--}}
-{{--                                                               value="{{ $banner[2] }}">--}}
                                                         {!!  renderMediaManage('files[]', $banner[2]) !!}
                                                         <p class="text-danger error-message" style="font-weight: bold">
                                                             @error('files')
@@ -262,16 +218,13 @@
                                         @endif
                                         @if(isset($result[\App\Core\Glosary\MetaKey::COMPLETE_ITEM['NAME']])
                                                     && !empty($result[\App\Core\Glosary\MetaKey::COMPLETE_ITEM['NAME']])
-                                                    && isset($result[\App\Core\Glosary\MetaKey::IMAGE_ITEM['NAME']])
                                                     && !empty($result[\App\Core\Glosary\MetaKey::INDEX_COMPLETE_ITEM['NAME']])
-                                                    && isset($result[\App\Core\Glosary\MetaKey::INDEX_COMPLETE_ITEM['NAME']])
-                                                    && !empty($result[\App\Core\Glosary\MetaKey::IMAGE_ITEM['NAME']]))
+                                                    && isset($result[\App\Core\Glosary\MetaKey::INDEX_COMPLETE_ITEM['NAME']]))
                                             @if($result['page_template'] == \App\Core\Glosary\PageTemplateConfigs::ABOUT['VALUE'])
                                                 @include('Page::elements.about',
                                                         [
                                                             'indexItem' => $result[\App\Core\Glosary\MetaKey::INDEX_COMPLETE_ITEM['NAME']],
                                                             'completeItem' => $result[\App\Core\Glosary\MetaKey::COMPLETE_ITEM['NAME']],
-                                                            'imageItem' => $result[\App\Core\Glosary\MetaKey::IMAGE_ITEM['NAME']]
                                                         ])
                                             @endif
                                         @endif
@@ -522,25 +475,35 @@
 
         $('body').on('click', '.btn-add-type', function (e) {
             e.preventDefault();
-            let row = $(this).parents('tr').clone();
+            let row = $(this).closest('tr').clone();
             row.find('.action-wrapper').empty();
             row.find('.action-wrapper').append('<button class="btn btn-success btn-add-type"><i class="dripicons-plus"></i></button><button class="btn btn-danger btn-delete-type"><i class="dripicons-minus"></i></button>');
-            row.find('.preview-image img').remove();
-            row.find('.banner-image').val('');
-            row.find('.banner-image').show();
-            row.find('.banner-image').removeClass('hidden');
-            row.find('.banner-image').addClass('required');
-            row.find('.banner-link').val('');
             row.find('textarea').val('');
             row.find('.home-slider-image').val('');
             row.find('.image-preview-container').html("");
-            $(this).parents('tbody').append(row);
+            $(this).closest('tbody').append(row);
 
-            row.find('.banner-image-multiple').val('');
 
             let count = parseInt($(this).parents('.section').find('.item-count').val());
             count = count + 1;
             $(this).parents('.section').find('.item-count').val(count);
+
+        })
+        $('body').on('click', '.btn-add-child', function (e) {
+            e.preventDefault();
+            let row = $(this).closest('tr').clone();
+            row.find('.action-wrapper').empty();
+            row.find('.action-wrapper').append('<button class="btn btn-success btn-add-child"><i class="dripicons-plus"></i></button><button class="btn btn-danger btn-delete-child"><i class="dripicons-minus"></i></button>');
+            row.find('textarea').val('');
+            row.find('.home-slider-image').val('');
+            row.find('.image-preview-container').html("");
+            $(this).closest('tbody').append(row);
+
+
+            let countItem = parseInt($(this).closest('.image-items').find('.row-item').val());
+            countItem = countItem + 1;
+            $(this).closest('.image-items').find('.row-item').val(countItem);
+            console.log(countItem);
         })
         $('body').on('click', '.btn-delete-type', function (e) {
             e.preventDefault();
@@ -550,6 +513,16 @@
             $(this).parents('.section').find('.item-count').val(count);
 
             $(this).parents('tr').remove();
+        })
+
+        $('body').on('click', '.btn-delete-child', function (e) {
+            e.preventDefault();
+
+            let countItem = parseInt($(this).closest('.image-items').find('.row-item').val());
+            countItem = countItem - 1;
+            $(this).closest('.image-items').find('.row-item').val(countItem);
+
+            $(this).closest('tr').remove();
         })
 
         $('body').on('change','.banner-image-multiple',function (){

@@ -21,6 +21,7 @@
         .preview-image-multiple .items{
             position: relative;
             overflow: hidden;
+            margin-bottom: 1rem;
             /*width: 50%;*/
         }
         .preview-image-multiple {

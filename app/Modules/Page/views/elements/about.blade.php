@@ -26,17 +26,7 @@
                 @if($key < $indexItem[0])
                     <tr>
                         <td style="max-width: 400px;">
-                            <div class="preview-image">
-                                <div class="close {{ $value->image == '' ? 'deleted' : '' }}">
-                                    <i class="dripicons-cross"></i>
-                                </div>
-                                <img src="{{ asset($value->image) }}" style="width: 100%" alt="">
-                            </div>
-                            <input type="file" style="padding: 3px 5px; overflow: hidden" class="form-control banner-image {{ $value->image != '' ? 'hidden' : 'required' }}"
-                                   name="images[]">
-                            <input type="hidden" class="banner-link" name="imageMap[]" data-type="{{ \App\Core\Glosary\MetaKey::COMPLETE_ITEM['VALUE'] }}" value="{{ $value->image }}">
-                            <p class="text-danger error-message" style="font-weight: bold" id="excerpt-error">
-                            </p>
+                            {!! renderMediaManage('images[]',$value->image) !!}
                         </td>
                         <td>
                             <textarea class="form-control required" name="descriptions[]">{{ $value->desc }}</textarea>
@@ -57,20 +47,10 @@
         @else
             <tr>
                 <td style="width: 400px;">
-                    <div class="preview-image">
-                        <div class="close">
-                            <i class="dripicons-cross"></i>
-                        </div>
-                    </div>
-                    <input type="file" style="padding: 3px 5px; overflow: hidden" class="form-control required banner-image"
-                           name="images[]">
-                    <p class="text-danger error-message" style="font-weight: bold">
-                    </p>
+                    {!! renderMediaManage('images[]') !!}
                 </td>
                 <td>
-                    <textarea class="form-control required" name="descriptions[]"></textarea>
-                    <p class="text-danger error-message" style="font-weight: bold">
-                    </p>
+                    <textarea class="form-control" name="descriptions[]"></textarea>
                 </td>
                 <td style="vertical-align: middle;width: 50px">
                     <div class="action-wrapper">
@@ -100,17 +80,7 @@
                 @if($key >= $indexItem[0])
                     <tr>
                         <td style="max-width: 400px;">
-                            <div class="preview-image">
-                                <div class="close {{ $value->image == ''? 'deleted' : '' }}">
-                                    <i class="dripicons-cross"></i>
-                                </div>
-                                <img src="{{ asset($value->image) }}" style="width: 100%" alt="">
-                            </div>
-                            <input type="file" style="padding: 3px 5px; overflow: hidden" class="form-control banner-image {{ $value->image != '' ? 'hidden' : 'required' }}"
-                                   name="images[]">
-                            <input type="hidden" class="banner-link" name="imageMap[]" data-type="{{ \App\Core\Glosary\MetaKey::COMPLETE_ITEM['VALUE'] }}" value="{{ $value->image }}">
-                            <p class="text-danger error-message" style="font-weight: bold">
-                            </p>
+                            {!! renderMediaManage('images[]',$value->image) !!}
                         </td>
                         <td>
                             <textarea class="form-control required" name="descriptions[]">{{ $value->desc }}</textarea>
@@ -131,15 +101,7 @@
         @else
             <tr>
                 <td style="width: 400px;">
-                    <div class="preview-image">
-                        <div class="close">
-                            <i class="dripicons-cross"></i>
-                        </div>
-                    </div>
-                    <input type="file" style="padding: 3px 5px; overflow: hidden" class="form-control required banner-image"
-                           name="images[]">
-                    <p class="text-danger error-message" style="font-weight: bold">
-                    </p>
+                    {!! renderMediaManage('images[]') !!}
                 </td>
                 <td>
                     <textarea class="form-control required" name="descriptions[]"></textarea>
@@ -201,17 +163,25 @@
         @else
             <tr>
                 <td style="max-width: 400px;">
-                    <div class="preview-image-multiple">
-
+                    <div class="image-items">
+                        <table class="table table-bordered">
+                            <tbody>
+                                <td>{!! renderMediaManage('images[]') !!}</td>
+                                <td style="vertical-align: middle;width: 50px;">
+                                    <div class="action-wrapper">
+                                        <button class="btn btn-success btn-add-child"><i class="dripicons-plus"></i></button>
+                                    </div>
+                                </td>
+                            </tbody>
+                        </table>
+                        <input type="hidden" name="rowItem[]" class="row-item" value="1">
                     </div>
-                    <input type="file" style="padding: 3px 5px; overflow: hidden" class="form-control banner-image-multiple required"
-                           name="row[][]" multiple>
-                    <p class="text-danger error-message" style="font-weight: bold"></p>
                 </td>
-                <td style="vertical-align: middle;width: 125px">
+                <td style="vertical-align: middle;width: 50px">
                     <div class="action-wrapper">
-                        <button class="btn btn-success btn-add-type"><i class="dripicons-plus"></i></button>
+                        <button class="btn btn-success btn-add-type parent"><i class="dripicons-plus"></i></button>
                     </div>
+                    <input type="hidden" name="row[]" class="row" value="1">
                 </td>
             </tr>
         @endif

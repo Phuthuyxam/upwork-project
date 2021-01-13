@@ -84,7 +84,14 @@
                             <span>Theme setting</span>
                         </a>
                     @endif
-
+                </li>
+                <li>
+                    @if(PermissionHelpers::canAccess(route('system.index')))
+                        <a href="{{ route('system.index') }}" class="waves-effect">
+                            <i class="dripicons-gear"></i>
+                            <span>General setting</span>
+                        </a>
+                    @endif
                 </li>
             </ul>
         </div>
