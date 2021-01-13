@@ -26,6 +26,8 @@ class OptionController extends Controller
         return view('Setting::index', compact('allOption', 'key', 'dataMenu', 'dataFooter', 'dataHome'));
     }
     public function save($key = null, Request $request) {
+//        app()->setLocale('ar');
+//        $this->optionRepository->setModel();
         if(is_null($key)) $key = OptionMetaKey::MENU['VALUE'];
         $menuData = [];
         // menu

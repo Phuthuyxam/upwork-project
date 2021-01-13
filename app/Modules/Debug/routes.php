@@ -9,8 +9,6 @@ $prefix = generatePrefixLanguage();
 Route::group(
     ['module'=>'Debug', 'namespace' => $namespace, 'middleware' => ['web', 'auth','ptx.permission'] , 'prefix' => $prefix.'admin' ],
     function() {
-        Route::get('/debug', function () {
-            echo "asdasdada";
-        });
+        Route::get('/debug',['uses' => 'FixController@index']);
     }
 );
