@@ -102,7 +102,7 @@ function findParent(el, clas) {
     return el;
 }
 function addPreviewImage($url, $elm) {
-    let htmlTemp = `<img class="image-preview" style="width: 20%" src="`+ $url +`" alt="your image">`;
+    let htmlTemp = `<img class="image-preview" style="width: 100%" src="`+ $url +`" alt="your image">`;
     $elm.innerHTML = htmlTemp;
 }
 function deleteImagePreview(thisElm) {

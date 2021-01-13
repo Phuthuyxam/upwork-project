@@ -26,7 +26,7 @@
                     </td>
                     <td style="vertical-align: middle">
                         <div class="action-wrapper">
-                            <button type="button" class="btn btn-success btn-add-type" style="margin-right: 30px">
+                            <button type="button" class="btn btn-success btn-add-type" style="margin-right: 1rem; margin-bottom: 0">
                                 <i class="dripicons-plus"></i>
                             </button>
                             <button type="button" class="btn btn-danger btn-delete-type"><i class="dripicons-minus"></i></button>

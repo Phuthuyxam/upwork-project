@@ -11,10 +11,15 @@
             display: flex;
             justify-content: flex-end;
         }
+        .action-wrapper .btn-add-type{
+            margin-bottom: 1rem;
+        }
         .preview-image {
             margin-bottom: 1rem;
             position: relative;
             overflow: hidden;
+            background: #ccc;
+            width: 40%;
         }
         .preview-image .close {
             position: absolute;
@@ -64,13 +69,16 @@
 @section('content')
     <div class="content-wrapper">
         <div class="container-fluid">
-
-
             <div class="row">
                 <div class="col-3">
                     <div class="card">
                         <div class="card-body">
-                            <h4 class="card-title">Edit Option</h4>
+                            <div class="tab-heading" style="display: flex; justify-content: space-between;align-items: center">
+                                <h4 class="card-title">Edit Option</h4>
+                                <div class="tab-translate">
+                                    <a href="{{ route('option.index') }}" target="_blank"><i class="dripicons-web"></i> Make translation</a>
+                                </div>
+                            </div>
                             @if(isset($allOption) && !empty($allOption))
                             <ul class="list-option">
                                 @foreach($allOption as $option)

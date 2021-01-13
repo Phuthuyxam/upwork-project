@@ -56,22 +56,24 @@
                                         <label class="mb-1">
                                             Logo image
                                         </label>
-                                        <div class="input-group media-load-image">
-                                            <div class="preview-image" style="width: 100%">
+                                        <div class="form-group media-load-image">
+                                            <div class="preview-image" >
                                                 <div class="close" onclick="deleteImagePreview(this)">
                                                     <i class="dripicons-cross"></i>
                                                 </div>
                                                 <div class="image-preview-container">
                                                     @if(isset($slider['logo']) && !empty($slider['logo']))
-                                                        <img class="image-preview" style="width: 20%" src="{{ $slider['logo'] }}" alt="your image">
+                                                        <img class="image-preview" style="width: 100%" src="{{ $slider['logo'] }}" alt="your image">
                                                     @endif
                                                 </div>
                                             </div>
-                                            <input type="text" style="padding: 3px 5px; overflow: hidden" name="option_home_slider_logo[]"
-                                                   class="form-control required home-slider-image" aria-describedby="button-image" readonly
-                                                   value="{{ (isset($slider['logo']) && !empty($slider['logo'])) ? $slider['logo'] : ''  }}">
-                                            <div class="input-group-append">
-                                                <button class="btn btn-primary waves-effect waves-light btn-popup-media" type="button" onclick="openMediaManager(this)">Select Image</button>
+                                            <div class="input-group">
+                                                <input type="text" style="padding: 3px 5px; overflow: hidden" name="option_home_slider_logo[]"
+                                                       class="form-control required home-slider-image" aria-describedby="button-image" readonly
+                                                       value="{{ (isset($slider['logo']) && !empty($slider['logo'])) ? $slider['logo'] : ''  }}">
+                                                <div class="input-group-append">
+                                                    <button class="btn btn-primary waves-effect waves-light btn-popup-media" type="button" onclick="openMediaManager(this)">Select Image</button>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -84,22 +86,24 @@
                                             <label for="example-text-input" class="col-sm-2 col-form-label">Desktop</label>
                                             <div class="col-sm-10">
 
-                                                <div class="input-group media-load-image">
-                                                    <div class="preview-image" style="width: 100%">
+                                                <div class="form-group media-load-image">
+                                                    <div class="preview-image" >
                                                         <div class="close" onclick="deleteImagePreview(this)">
                                                             <i class="dripicons-cross"></i>
                                                         </div>
                                                         <div class="image-preview-container">
                                                             @if(isset($slider['banner_desktop']) && !empty($slider['banner_desktop']))
-                                                                <img class="image-preview" style="width: 20%" src="{{ $slider['banner_desktop'] }}" alt="your image">
+                                                                <img class="image-preview" style="width: 100%" src="{{ $slider['banner_desktop'] }}" alt="your image">
                                                             @endif
                                                         </div>
                                                     </div>
-                                                    <input type="text" style="padding: 3px 5px; overflow: hidden"
-                                                           name="option_home_slider_banner_desktop[]" class="form-control required home-slider-image" aria-describedby="button-image" readonly
-                                                            value="{{ (isset($slider['banner_desktop']) && !empty($slider['banner_desktop'])) ? $slider['banner_desktop'] : ""  }}">
-                                                    <div class="input-group-append">
-                                                        <button class="btn btn-primary waves-effect waves-light btn-popup-media" type="button" onclick="openMediaManager(this)">Select Image</button>
+                                                    <div class="input-group">
+                                                        <input type="text" style="padding: 3px 5px; overflow: hidden"
+                                                               name="option_home_slider_banner_desktop[]" class="form-control required home-slider-image" aria-describedby="button-image" readonly
+                                                               value="{{ (isset($slider['banner_desktop']) && !empty($slider['banner_desktop'])) ? $slider['banner_desktop'] : ""  }}">
+                                                        <div class="input-group-append">
+                                                            <button class="btn btn-primary waves-effect waves-light btn-popup-media" type="button" onclick="openMediaManager(this)">Select Image</button>
+                                                        </div>
                                                     </div>
                                                 </div>
 
@@ -111,21 +115,23 @@
                                             <label for="example-text-input" class="col-sm-2 col-form-label">Tablet</label>
                                             <div class="col-sm-10">
 
-                                                <div class="input-group media-load-image">
-                                                    <div class="preview-image" style="width: 100%">
+                                                <div class="form-group media-load-image">
+                                                    <div class="preview-image" >
                                                         <div class="close" onclick="deleteImagePreview(this)">
                                                             <i class="dripicons-cross"></i>
                                                         </div>
                                                         <div class="image-preview-container">
                                                             @if(isset($slider['banner_tablet']) && !empty($slider['banner_tablet']))
-                                                                <img class="image-preview" style="width: 20%" src="{{ $slider['banner_tablet'] }}" alt="your image">
+                                                                <img class="image-preview" style="width: 100%" src="{{ $slider['banner_tablet'] }}" alt="your image">
                                                             @endif
                                                         </div>
                                                     </div>
-                                                    <input type="text" style="padding: 3px 5px; overflow: hidden" name="option_home_slider_banner_tablet[]" class="form-control required home-slider-image" aria-describedby="button-image" readonly
-                                                           value="{{ (isset($slider['banner_tablet']) && !empty($slider['banner_tablet'])) ? $slider['banner_tablet'] : ""  }}">
-                                                    <div class="input-group-append">
-                                                        <button class="btn btn-primary waves-effect waves-light btn-popup-media" type="button" onclick="openMediaManager(this)">Select Image</button>
+                                                    <div class="input-group">
+                                                        <input type="text" style="padding: 3px 5px; overflow: hidden" name="option_home_slider_banner_tablet[]" class="form-control required home-slider-image" aria-describedby="button-image" readonly
+                                                               value="{{ (isset($slider['banner_tablet']) && !empty($slider['banner_tablet'])) ? $slider['banner_tablet'] : ""  }}">
+                                                        <div class="input-group-append">
+                                                            <button class="btn btn-primary waves-effect waves-light btn-popup-media" type="button" onclick="openMediaManager(this)">Select Image</button>
+                                                        </div>
                                                     </div>
                                                 </div>
 
@@ -136,34 +142,35 @@
                                             <label for="example-text-input" class="col-sm-2 col-form-label">Mobile</label>
                                             <div class="col-sm-10">
 
-                                                <div class="input-group media-load-image">
-                                                    <div class="preview-image" style="width: 100%">
+                                                <div class="form-group media-load-image">
+                                                    <div class="preview-image" >
                                                         <div class="close" onclick="deleteImagePreview(this)">
                                                             <i class="dripicons-cross"></i>
                                                         </div>
                                                         <div class="image-preview-container">
                                                             @if(isset($slider['banner_mobile']) && !empty($slider['banner_mobile']))
-                                                                <img class="image-preview" style="width: 20%" src="{{ $slider['banner_mobile'] }}" alt="your image">
+                                                                <img class="image-preview" style="width: 100%" src="{{ $slider['banner_mobile'] }}" alt="your image">
                                                             @endif
                                                         </div>
                                                     </div>
-                                                    <input type="text" style="padding: 3px 5px; overflow: hidden" name="option_home_slider_banner_mobile[]" class="form-control required home-slider-image"
-                                                           aria-describedby="button-image" readonly
-                                                           value="{{ (isset($slider['banner_mobile']) && !empty($slider['banner_mobile'])) ? $slider['banner_mobile'] : ""  }}">
-                                                    <div class="input-group-append">
-                                                        <button class="btn btn-primary waves-effect waves-light btn-popup-media" type="button" onclick="openMediaManager(this)">Select Image</button>
+                                                    <div class="input-group">
+                                                        <input type="text" style="padding: 3px 5px; overflow: hidden" name="option_home_slider_banner_mobile[]" class="form-control required home-slider-image"
+                                                               aria-describedby="button-image" readonly
+                                                               value="{{ (isset($slider['banner_mobile']) && !empty($slider['banner_mobile'])) ? $slider['banner_mobile'] : ""  }}">
+                                                        <div class="input-group-append">
+                                                            <button class="btn btn-primary waves-effect waves-light btn-popup-media" type="button" onclick="openMediaManager(this)">Select Image</button>
+                                                        </div>
                                                     </div>
                                                 </div>
-
                                             </div>
                                         </div>
 
                                     </div>
                                 </div>
                             </td>
-                            <td>
+                            <td style="width: 50px; vertical-align: middle">
                                 <div class="action-wrapper">
-                                    <button type="button" class="btn btn-success btn-add-type" style="margin-right: 30px"><i class="dripicons-plus"></i></button><button type="button" class="btn btn-danger btn-delete-type"><i class="dripicons-minus"></i></button>
+                                    <button type="button" class="btn btn-success btn-add-type"><i class="dripicons-plus"></i></button><button type="button" class="btn btn-danger btn-delete-type"><i class="dripicons-minus"></i></button>
                                 </div>
                             </td>
                         </tr>
@@ -182,8 +189,8 @@
                                     <label class="mb-1">
                                         Logo image
                                     </label>
-                                    <div class="input-group media-load-image">
-                                        <div class="preview-image" style="width: 100%">
+                                    <div class="form-group media-load-image">
+                                        <div class="preview-image" >
                                             <div class="close" onclick="deleteImagePreview(this)">
                                                 <i class="dripicons-cross"></i>
                                             </div>
@@ -191,11 +198,13 @@
 
                                             </div>
                                         </div>
-                                        <input type="text" style="padding: 3px 5px; overflow: hidden" name="option_home_slider_logo[]"
-                                               class="form-control required home-slider-image" aria-describedby="button-image" readonly
-                                               value="">
-                                        <div class="input-group-append">
-                                            <button class="btn btn-primary waves-effect waves-light btn-popup-media" type="button" onclick="openMediaManager(this)">Select Image</button>
+                                        <div class="input-group">
+                                            <input type="text" style="padding: 3px 5px; overflow: hidden" name="option_home_slider_logo[]"
+                                                   class="form-control required home-slider-image" aria-describedby="button-image" readonly
+                                                   value="">
+                                            <div class="input-group-append">
+                                                <button class="btn btn-primary waves-effect waves-light btn-popup-media" type="button" onclick="openMediaManager(this)">Select Image</button>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -208,8 +217,8 @@
                                         <label for="example-text-input" class="col-sm-2 col-form-label">Desktop</label>
                                         <div class="col-sm-10">
 
-                                            <div class="input-group media-load-image">
-                                                <div class="preview-image" style="width: 100%">
+                                            <div class="form-group media-load-image">
+                                                <div class="preview-image" >
                                                     <div class="close" onclick="deleteImagePreview(this)">
                                                         <i class="dripicons-cross"></i>
                                                     </div>
@@ -217,11 +226,13 @@
 
                                                     </div>
                                                 </div>
-                                                <input type="text" style="padding: 3px 5px; overflow: hidden"
-                                                       name="option_home_slider_banner_desktop[]" class="form-control required home-slider-image" aria-describedby="button-image" readonly
-                                                       value="">
-                                                <div class="input-group-append">
-                                                    <button class="btn btn-primary waves-effect waves-light btn-popup-media" type="button" onclick="openMediaManager(this)">Select Image</button>
+                                                <div class="input-group">
+                                                    <input type="text" style="padding: 3px 5px; overflow: hidden"
+                                                           name="option_home_slider_banner_desktop[]" class="form-control required home-slider-image" aria-describedby="button-image" readonly
+                                                           value="">
+                                                    <div class="input-group-append">
+                                                        <button class="btn btn-primary waves-effect waves-light btn-popup-media" type="button" onclick="openMediaManager(this)">Select Image</button>
+                                                    </div>
                                                 </div>
                                             </div>
 
@@ -233,18 +244,20 @@
                                         <label for="example-text-input" class="col-sm-2 col-form-label">Tablet</label>
                                         <div class="col-sm-10">
 
-                                            <div class="input-group media-load-image">
-                                                <div class="preview-image" style="width: 100%">
+                                            <div class="form-group media-load-image">
+                                                <div class="preview-image" >
                                                     <div class="close" onclick="deleteImagePreview(this)">
                                                         <i class="dripicons-cross"></i>
                                                     </div>
                                                     <div class="image-preview-container">
                                                     </div>
                                                 </div>
-                                                <input type="text" style="padding: 3px 5px; overflow: hidden" name="option_home_slider_banner_tablet[]" class="form-control required home-slider-image" aria-describedby="button-image" readonly
-                                                       value="">
-                                                <div class="input-group-append">
-                                                    <button class="btn btn-primary waves-effect waves-light btn-popup-media" type="button" onclick="openMediaManager(this)">Select Image</button>
+                                                <div class="input-group">
+                                                    <input type="text" style="padding: 3px 5px; overflow: hidden" name="option_home_slider_banner_tablet[]" class="form-control required home-slider-image" aria-describedby="button-image" readonly
+                                                           value="">
+                                                    <div class="input-group-append">
+                                                        <button class="btn btn-primary waves-effect waves-light btn-popup-media" type="button" onclick="openMediaManager(this)">Select Image</button>
+                                                    </div>
                                                 </div>
                                             </div>
 
@@ -255,19 +268,21 @@
                                         <label for="example-text-input" class="col-sm-2 col-form-label">Mobile</label>
                                         <div class="col-sm-10">
 
-                                            <div class="input-group media-load-image">
-                                                <div class="preview-image" style="width: 100%">
+                                            <div class="form-group media-load-image">
+                                                <div class="preview-image" >
                                                     <div class="close" onclick="deleteImagePreview(this)">
                                                         <i class="dripicons-cross"></i>
                                                     </div>
                                                     <div class="image-preview-container">
                                                     </div>
                                                 </div>
-                                                <input type="text" style="padding: 3px 5px; overflow: hidden" name="option_home_slider_banner_mobile[]" class="form-control required home-slider-image"
-                                                       aria-describedby="button-image" readonly
-                                                       value="">
-                                                <div class="input-group-append">
-                                                    <button class="btn btn-primary waves-effect waves-light btn-popup-media" type="button" onclick="openMediaManager(this)">Select Image</button>
+                                                <div class="input-group">
+                                                    <input type="text" style="padding: 3px 5px; overflow: hidden" name="option_home_slider_banner_mobile[]" class="form-control required home-slider-image"
+                                                           aria-describedby="button-image" readonly
+                                                           value="">
+                                                    <div class="input-group-append">
+                                                        <button class="btn btn-primary waves-effect waves-light btn-popup-media" type="button" onclick="openMediaManager(this)">Select Image</button>
+                                                    </div>
                                                 </div>
                                             </div>
 
@@ -278,7 +293,7 @@
                                 </div>
                             </div>
                         </td>
-                        <td>
+                        <td style="width: 50px; vertical-align: middle">
                             <div class="action-wrapper">
                                 <button type="button" class="btn btn-success btn-add-type"><i class="dripicons-plus"></i></button>
                             </div>
@@ -296,21 +311,23 @@
         <div class="form-group row">
             <label for="example-text-input" class="col-sm-2 col-form-label">Background image</label>
             <div class="col-sm-10">
-                <div class="input-group media-load-image">
-                    <div class="preview-image" style="width: 100%">
+                <div class="form-group media-load-image">
+                    <div class="preview-image" >
                         <div class="close" onclick="deleteImagePreview(this)">
                             <i class="dripicons-cross"></i>
                         </div>
                         <div class="image-preview-container">
                             @if(isset($dataHome['our_service']['background']) && !empty($dataHome['our_service']['background']) )
-                                <img class="image-preview" style="width: 20%" src="{{ $dataHome['our_service']['background'] }}" alt="your image">
+                                <img class="image-preview" style="width: 100%" src="{{ $dataHome['our_service']['background'] }}" alt="your image">
                             @endif
                         </div>
                     </div>
-                    <input type="text" style="padding: 3px 5px; overflow: hidden" name="option_our_service_bg" class="form-control required home-slider-image" aria-describedby="button-image" readonly
-                    value="{{ (isset($dataHome['our_service']['background']) && !empty($dataHome['our_service']['background']) ) ? $dataHome['our_service']['background'] : ""  }}">
-                    <div class="input-group-append">
-                        <button class="btn btn-primary waves-effect waves-light btn-popup-media" type="button" onclick="openMediaManager(this)">Select Image</button>
+                    <div class="input-group">
+                        <input type="text" style="padding: 3px 5px; overflow: hidden" name="option_our_service_bg" class="form-control required home-slider-image" aria-describedby="button-image" readonly
+                        value="{{ (isset($dataHome['our_service']['background']) && !empty($dataHome['our_service']['background']) ) ? $dataHome['our_service']['background'] : ""  }}">
+                        <div class="input-group-append">
+                            <button class="btn btn-primary waves-effect waves-light btn-popup-media" type="button" onclick="openMediaManager(this)">Select Image</button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -394,21 +411,23 @@
                                         <label class="mb-1">
                                             Logo image
                                         </label>
-                                        <div class="input-group media-load-image">
-                                            <div class="preview-image" style="width: 100%">
+                                        <div class="form-group media-load-image">
+                                            <div class="preview-image" >
                                                 <div class="close" onclick="deleteImagePreview(this)">
                                                     <i class="dripicons-cross"></i>
                                                 </div>
                                                 <div class="image-preview-container">
                                                     @if(isset($hotel['logo']) && !empty($hotel['logo']) )
-                                                        <img class="image-preview" style="width: 20%" src="{{ $hotel['logo'] }}" alt="your image">
+                                                        <img class="image-preview" style="width: 100%" src="{{ $hotel['logo'] }}" alt="your image">
                                                     @endif
                                                 </div>
                                             </div>
-                                            <input type="text" style="padding: 3px 5px; overflow: hidden" name="option_home_hotel_logo[]" class="form-control required home-slider-image" aria-describedby="button-image" readonly
-                                            value="{{ (isset($hotel['logo']) && !empty($hotel['logo'])) ? $hotel['logo'] : ""  }}">
-                                            <div class="input-group-append">
-                                                <button class="btn btn-primary waves-effect waves-light btn-popup-media" type="button" onclick="openMediaManager(this)">Select Image</button>
+                                            <div class="input-group">
+                                                <input type="text" style="padding: 3px 5px; overflow: hidden" name="option_home_hotel_logo[]" class="form-control required home-slider-image" aria-describedby="button-image" readonly
+                                                value="{{ (isset($hotel['logo']) && !empty($hotel['logo'])) ? $hotel['logo'] : ""  }}">
+                                                <div class="input-group-append">
+                                                    <button class="btn btn-primary waves-effect waves-light btn-popup-media" type="button" onclick="openMediaManager(this)">Select Image</button>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -416,27 +435,29 @@
                                         <label class="mb-1">
                                             Background image
                                         </label>
-                                        <div class="input-group media-load-image">
-                                            <div class="preview-image" style="width: 100%">
+                                        <div class="form-group media-load-image">
+                                            <div class="preview-image" >
                                                 <div class="close" onclick="deleteImagePreview(this)">
                                                     <i class="dripicons-cross"></i>
                                                 </div>
                                                 <div class="image-preview-container">
                                                     @if(isset($hotel['banner']) && !empty($hotel['banner']))
-                                                        <img class="image-preview" style="width: 20%" src="{{ $hotel['banner'] }}" alt="your image">
+                                                        <img class="image-preview" style="width: 100%" src="{{ $hotel['banner'] }}" alt="your image">
                                                     @endif
                                                 </div>
                                             </div>
-                                            <input type="text" style="padding: 3px 5px; overflow: hidden" name="option_home_hotel_banner[]" class="form-control required home-slider-image" aria-describedby="button-image" readonly
-                                            value="{{ (isset($hotel['banner']) && !empty($hotel['banner']) ) ? $hotel['banner'] : "" }}">
-                                            <div class="input-group-append">
-                                                <button class="btn btn-primary waves-effect waves-light btn-popup-media" type="button" onclick="openMediaManager(this)">Select Image</button>
+                                            <div class="input-group">
+                                                <input type="text" style="padding: 3px 5px; overflow: hidden" name="option_home_hotel_banner[]" class="form-control required home-slider-image" aria-describedby="button-image" readonly
+                                                value="{{ (isset($hotel['banner']) && !empty($hotel['banner']) ) ? $hotel['banner'] : "" }}">
+                                                <div class="input-group-append">
+                                                    <button class="btn btn-primary waves-effect waves-light btn-popup-media" type="button" onclick="openMediaManager(this)">Select Image</button>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </td>
-                            <td>
+                            <td style="width: 50px; vertical-align: middle">
                                 <div class="action-wrapper">
                                     <button type="button" class="btn btn-success btn-add-type"><i class="dripicons-plus"></i></button>
                                 </div>
@@ -451,17 +472,19 @@
                                     <label class="mb-1">
                                         Logo image
                                     </label>
-                                    <div class="input-group media-load-image">
-                                        <div class="preview-image" style="width: 100%">
+                                    <div class="form-group media-load-image">
+                                        <div class="preview-image" >
                                             <div class="close" onclick="deleteImagePreview(this)">
                                                 <i class="dripicons-cross"></i>
                                             </div>
                                             <div class="image-preview-container">
                                             </div>
                                         </div>
-                                        <input type="text" style="padding: 3px 5px; overflow: hidden" name="option_home_hotel_logo[]" class="form-control required home-slider-image" aria-describedby="button-image" readonly>
-                                        <div class="input-group-append">
-                                            <button class="btn btn-primary waves-effect waves-light btn-popup-media" type="button" onclick="openMediaManager(this)">Select Image</button>
+                                        <div class="input-group">
+                                            <input type="text" style="padding: 3px 5px; overflow: hidden" name="option_home_hotel_logo[]" class="form-control required home-slider-image" aria-describedby="button-image" readonly>
+                                            <div class="input-group-append">
+                                                <button class="btn btn-primary waves-effect waves-light btn-popup-media" type="button" onclick="openMediaManager(this)">Select Image</button>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -469,23 +492,25 @@
                                     <label class="mb-1">
                                         Background image
                                     </label>
-                                    <div class="input-group media-load-image">
-                                        <div class="preview-image" style="width: 100%">
+                                    <div class="form-group media-load-image">
+                                        <div class="preview-image" >
                                             <div class="close" onclick="deleteImagePreview(this)">
                                                 <i class="dripicons-cross"></i>
                                             </div>
                                             <div class="image-preview-container">
                                             </div>
                                         </div>
-                                        <input type="text" style="padding: 3px 5px; overflow: hidden" name="option_home_hotel_banner[]" class="form-control required home-slider-image" aria-describedby="button-image" readonly>
-                                        <div class="input-group-append">
-                                            <button class="btn btn-primary waves-effect waves-light btn-popup-media" type="button" onclick="openMediaManager(this)">Select Image</button>
+                                        <div class="input-group">
+                                            <input type="text" style="padding: 3px 5px; overflow: hidden" name="option_home_hotel_banner[]" class="form-control required home-slider-image" aria-describedby="button-image" readonly>
+                                            <div class="input-group-append">
+                                                <button class="btn btn-primary waves-effect waves-light btn-popup-media" type="button" onclick="openMediaManager(this)">Select Image</button>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </td>
-                        <td>
+                        <td style="width: 50px; vertical-align: middle">
                             <div class="action-wrapper">
                                 <button type="button" class="btn btn-success btn-add-type"><i class="dripicons-plus"></i></button>
                             </div>
@@ -498,30 +523,29 @@
                 </tbody>
             </table>
         </div>
-
-
-
     </div>
 
     <div class="tab-pane p-3" id="tab4" role="tabpanel">
         <div class="form-group row">
             <label for="example-text-input" class="col-sm-2 col-form-label">Background image</label>
             <div class="col-sm-10">
-                <div class="input-group media-load-image">
-                    <div class="preview-image" style="width: 100%">
+                <div class="form-group media-load-image">
+                    <div class="preview-image" >
                         <div class="close" onclick="deleteImagePreview(this)">
                             <i class="dripicons-cross"></i>
                         </div>
                         <div class="image-preview-container">
                             @if(isset($dataHome['message']['background']) && !empty($dataHome['message']['background']))
-                                <img class="image-preview" style="width: 20%" src="{{ $dataHome['message']['background'] }}" alt="your image">
+                                <img class="image-preview" style="width: 100%" src="{{ $dataHome['message']['background'] }}" alt="your image">
                             @endif
                         </div>
                     </div>
-                    <input type="text" style="padding: 3px 5px; overflow: hidden" name="option_our_message_bg" class="form-control required home-slider-image" aria-describedby="button-image" readonly
-                    value="{{ isset($dataHome['message']['background']) && !empty($dataHome['message']['background']) ? $dataHome['message']['background'] : "" }}">
-                    <div class="input-group-append">
-                        <button class="btn btn-primary waves-effect waves-light btn-popup-media" type="button" onclick="openMediaManager(this)">Select Image</button>
+                    <div class="input-group">
+                        <input type="text" style="padding: 3px 5px; overflow: hidden" name="option_our_message_bg" class="form-control required home-slider-image" aria-describedby="button-image" readonly
+                        value="{{ isset($dataHome['message']['background']) && !empty($dataHome['message']['background']) ? $dataHome['message']['background'] : "" }}">
+                        <div class="input-group-append">
+                            <button class="btn btn-primary waves-effect waves-light btn-popup-media" type="button" onclick="openMediaManager(this)">Select Image</button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -551,21 +575,23 @@
         <div class="form-group row">
             <label for="example-text-input" class="col-sm-2 col-form-label">Avatar image</label>
             <div class="col-sm-10">
-                <div class="input-group media-load-image">
-                    <div class="preview-image" style="width: 100%">
+                <div class="form-group media-load-image">
+                    <div class="preview-image" >
                         <div class="close" onclick="deleteImagePreview(this)">
                             <i class="dripicons-cross"></i>
                         </div>
                         <div class="image-preview-container">
                             @if(isset($dataHome['message']['avatar']) && !empty($dataHome['message']['avatar']))
-                                <img class="image-preview" style="width: 20%" src="{{ $dataHome['message']['avatar'] }}" alt="your image">
+                                <img class="image-preview" style="width: 100%" src="{{ $dataHome['message']['avatar'] }}" alt="your image">
                             @endif
                         </div>
                     </div>
-                    <input type="text" style="padding: 3px 5px; overflow: hidden" name="option_our_avatar_image" class="form-control required home-slider-image" aria-describedby="button-image" readonly
-                    value="{{ (isset($dataHome['message']['avatar']) && !empty($dataHome['message']['avatar'])) ? $dataHome['message']['avatar'] : "" }}">
-                    <div class="input-group-append">
-                        <button class="btn btn-primary waves-effect waves-light btn-popup-media" type="button" onclick="openMediaManager(this)">Select Image</button>
+                    <div class="input-group">
+                        <input type="text" style="padding: 3px 5px; overflow: hidden" name="option_our_avatar_image" class="form-control required home-slider-image" aria-describedby="button-image" readonly
+                        value="{{ (isset($dataHome['message']['avatar']) && !empty($dataHome['message']['avatar'])) ? $dataHome['message']['avatar'] : "" }}">
+                        <div class="input-group-append">
+                            <button class="btn btn-primary waves-effect waves-light btn-popup-media" type="button" onclick="openMediaManager(this)">Select Image</button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -573,21 +599,23 @@
         <div class="form-group row">
             <label for="example-text-input" class="col-sm-2 col-form-label">Signature image</label>
             <div class="col-sm-10">
-                <div class="input-group media-load-image">
-                    <div class="preview-image" style="width: 100%">
+                <div class="form-group media-load-image">
+                    <div class="preview-image" >
                         <div class="close" onclick="deleteImagePreview(this)">
                             <i class="dripicons-cross"></i>
                         </div>
-                        <div class="image-preview-container">
+                        <div class="image-preview-container" style="background: #ccc">
                             @if(isset($dataHome['message']['sign']) && !empty($dataHome['message']['sign']))
-                                <img class="image-preview" style="width: 20%" src="{{ $dataHome['message']['sign'] }}" alt="your image">
+                                <img class="image-preview" style="width: 100%" src="{{ $dataHome['message']['sign'] }}" alt="your image">
                             @endif
                         </div>
                     </div>
-                    <input type="text" style="padding: 3px 5px; overflow: hidden" name="option_our_message_sign" class="form-control required home-slider-image" aria-describedby="button-image" readonly
-                    value="{{ isset($dataHome['message']['sign']) && !empty($dataHome['message']['sign']) ? $dataHome['message']['sign'] : "" }}">
-                    <div class="input-group-append">
-                        <button class="btn btn-primary waves-effect waves-light btn-popup-media" type="button" onclick="openMediaManager(this)">Select Image</button>
+                    <div class="input-group">
+                        <input type="text" style="padding: 3px 5px; overflow: hidden" name="option_our_message_sign" class="form-control required home-slider-image" aria-describedby="button-image" readonly
+                        value="{{ isset($dataHome['message']['sign']) && !empty($dataHome['message']['sign']) ? $dataHome['message']['sign'] : "" }}">
+                        <div class="input-group-append">
+                            <button class="btn btn-primary waves-effect waves-light btn-popup-media" type="button" onclick="openMediaManager(this)">Select Image</button>
+                        </div>
                     </div>
                 </div>
             </div>

@@ -92,6 +92,7 @@
         <script src="{{ asset('assets/libs/sweetalert2/sweetalert2.min.js') }}"></script>
         <!-- Plugins js -->
         <script src="{{ asset('assets/libs/dropzone/min/dropzone.min.js') }}"></script>
+        <script src="{{ asset('assets/js/pages/invert.min.js') }}"></script>
 
         <script src="{{ asset('assets/js/app.js') }}"></script>
         <script src="{{ asset('assets/js/common.js') }}"></script>
