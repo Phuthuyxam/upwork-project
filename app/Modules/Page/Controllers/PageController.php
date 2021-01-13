@@ -40,9 +40,8 @@ class PageController extends Controller
             $validate = $request->validate([
                 'post_title' => 'required|max:191',
                 'post_name' => 'required|unique:posts',
-                'post_excerpt' => 'required',
-                'files.*' => 'required|mimes:jpg,png,gif',
-                'post_content' => 'required',
+                'post_excerpt' => '',
+//                'files.*' => 'mimes:jpg,png,gif',
                 'template' => 'required'
             ]);
 
@@ -62,20 +61,26 @@ class PageController extends Controller
             $postId = $this->postRepository->create($dataPost)->id;
             if ($postId) {
                 $result = false;
-                $files = $request->file('files');
-                if ($request->hasFile('files')){
+                $files = $request->input('files');
+                if (isset($files) && !empty($files)){
                     $fileMap = [];
                     foreach ($files as $value) {
-                        $fileName = $value->getClientOriginalName();
-                        $value->storeAs('public/pages/' . $postId . '/banner', $fileName);
-                        $fileMap[] = 'storage/pages/' . $postId. '/banner/'.$fileName;
+                        $fileMap[] = $value;
                     }
                     $dataMeta = [
-                        'post_id' => $postId,
-                        'meta_key' => MetaKey::BANNER['VALUE'],
-                        'meta_value' => json_encode($fileMap)
+                        [
+                            'post_id' => $postId,
+                            'meta_key' => MetaKey::BANNER['VALUE'],
+                            'meta_value' => json_encode($fileMap)
+                        ],
+
+                        [
+                            'post_id' => $postId,
+                            'meta_key' => MetaKey::PAGE_TEMPLATE['VALUE'],
+                            'meta_value' => $request->input('template')
+                        ],
                     ];
-                    if ($this->postMetaRepository->create($dataMeta)) {
+                    if ($this->postMetaRepository->getInstantModel()->insert($dataMeta)) {
                         $result = true;
                     }else{
                         $result = false;
@@ -120,8 +125,8 @@ class PageController extends Controller
             $validate = $request->validate([
                 'post_title' => 'required|max:191',
                 'post_name' => 'required|unique:posts,post_name,'.$id,
-                'files.*' => 'mimes:jpg,png,gif',
-                'post_content' => 'required',
+//                'files.*' => 'mimes:jpg,png,gif',
+//                'post_content' => 'required',
                 'post_excerpt' => 'required',
                 'template' => 'required',
             ]);
@@ -144,6 +149,18 @@ class PageController extends Controller
 
             if ($this->postRepository->update($id,$dataPost)) {
                 $result = true;
+            }
+            // update image
+            $metaImages = $this->postMetaRepository->getInstantModel()->where([['post_id', $id] , ['meta_key', MetaKey::PAGE_TEMPLATE['VALUE']]])->get();
+            if($metaImages->isNotEmpty()) {
+                $this->postMetaRepository->getInstantModel()->where([['post_id', $id] , ['meta_key', MetaKey::BANNER['VALUE']]])
+                    ->update(['meta_value' => json_encode($request->input('files'))]);
+            }else{
+                $this->postMetaRepository->getInstantModel()->create([
+                    'post_id' => $id,
+                    'meta_key' => MetaKey::BANNER['VALUE'],
+                    'meta_value' => json_encode($request->input('files'))
+                ]);
             }
 
             if ($request->input('template') == PageTemplateConfigs::SERVICE['VALUE']) {
@@ -211,14 +228,13 @@ class PageController extends Controller
             }
         }
         if ($completeItem){
-            $images = $request->file('images');
+            $images = $request->input('images');
             $descriptions = $request->input('descriptions');
             $itemMeta = [];
             if (!empty($descriptions) && !empty($images)) {
                 foreach ($images as $key => $value) {
-                    $value->storeAs('public/pages/' . $postId . '/items', $value->getClientOriginalName());
                     $itemMeta[] = [
-                        'image' => 'storage/pages/' . $postId . '/items/'. $value->getClientOriginalName(),
+                        'image' => $value,
                         'desc' => $descriptions[$key]
                     ];
                 }
@@ -258,7 +274,7 @@ class PageController extends Controller
 
     private function updatePage($request,$postId,$completeItem,$imageItem) {
         $result = false;
-        $images = $request->file('images');
+        $images = $request->input('images');
         $descriptions = $request->input('descriptions');
 //        if ($imageItem) {
 //            $folderName = 'imageItem';
@@ -287,52 +303,52 @@ class PageController extends Controller
 //        }
         if ($completeItem) {
             $condition = [['post_id','=',$postId],['meta_key' ,'=', $completeItem]];
-            if ($request->hasFile('images')) {
+            if ($request->input('images')) {
                 // add or edit slide
                 $folderName = 'items';
                 $postMeta = $this->postMetaRepository->getMetaValueByCondition($condition);
                 if ($postMeta) {
-                    $imageMap = $request->input('imageMap');
-                    $imageMeta = json_decode($postMeta['meta_value']);
-                    $itemMap = [];
-
-                    foreach ($imageMap as $key => $value) {
-                        if ($value == '') {
-                            $images[$key]->storeAs('public/pages/' . $postId .'/'.$folderName, $images[$key]->getClientOriginalName());
-                            $itemMap[$key] = [
-                                'image' => 'storage/pages/' . $postId . '/'.$folderName.'/' . $images[$key]->getClientOriginalName()
-                            ];
-                        }else{
-                            if ($imageMap >= $images) {
-                                $itemMap[$key] = [
-                                    'image' => $imageMeta[$key]->image
-                                ];
-                            }
-                        }
-                    }
-
-                    foreach ($descriptions as $key => $value) {
-                        $itemMap[$key]['desc'] = $value;
-                    }
-                    $dataPostMeta = [
-                        'meta_value' => json_encode($itemMap)
-                    ];
-                    if ($this->postMetaRepository->updateByCondition($condition,$dataPostMeta)) {
-                        if ($request->input('numbers')) {
-                            $condition = [['post_id','=',$postId],['meta_key' ,'=', MetaKey::INDEX_COMPLETE_ITEM['VALUE']]];
-                            $dataMeta = [
-                                'meta_value' => json_encode($request->input('numbers')),
-                            ];
-                            if ($this->postMetaRepository->updateByCondition($condition,$dataMeta)) {
-                                $result = true;
-                            }else{
-                                $result = false;
-                            }
-                        }
-                        $result = true;
-                    }else {
-                        $result = false;
-                    }
+//                    $imageMap = $request->input('imageMap');
+//                    $imageMeta = json_decode($postMeta['meta_value']);
+//                    $itemMap = [];
+//
+//                    foreach ($imageMap as $key => $value) {
+//                        if ($value == '') {
+//                            $images[$key]->storeAs('public/pages/' . $postId .'/'.$folderName, $images[$key]->getClientOriginalName());
+//                            $itemMap[$key] = [
+//                                'image' => 'storage/pages/' . $postId . '/'.$folderName.'/' . $images[$key]->getClientOriginalName()
+//                            ];
+//                        }else{
+//                            if ($imageMap >= $images) {
+//                                $itemMap[$key] = [
+//                                    'image' => $imageMeta[$key]->image
+//                                ];
+//                            }
+//                        }
+//                    }
+//
+//                    foreach ($descriptions as $key => $value) {
+//                        $itemMap[$key]['desc'] = $value;
+//                    }
+//                    $dataPostMeta = [
+//                        'meta_value' => json_encode($itemMap)
+//                    ];
+//                    if ($this->postMetaRepository->updateByCondition($condition,$dataPostMeta)) {
+//                        if ($request->input('numbers')) {
+//                            $condition = [['post_id','=',$postId],['meta_key' ,'=', MetaKey::INDEX_COMPLETE_ITEM['VALUE']]];
+//                            $dataMeta = [
+//                                'meta_value' => json_encode($request->input('numbers')),
+//                            ];
+//                            if ($this->postMetaRepository->updateByCondition($condition,$dataMeta)) {
+//                                $result = true;
+//                            }else{
+//                                $result = false;
+//                            }
+//                        }
+//                        $result = true;
+//                    }else {
+//                        $result = false;
+//                    }
                 }
             }else{
                 // delete
