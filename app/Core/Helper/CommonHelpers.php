@@ -140,7 +140,7 @@ if(!function_exists('renderMediaManage')) {
                 </div>
                 <div class="image-preview-container">
                     <?php if(isset($previewImage) && !empty($previewImage)): ?>
-                    <img class="image-preview" style="width: 20%" src="<?php echo $previewImage ?>" alt="your image">
+                    <img class="image-preview" style="width: 100%" src="<?php echo $previewImage ?>" alt="your image">
                     <?php endif; ?>
                 </div>
             </div>

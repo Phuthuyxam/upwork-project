@@ -17,13 +17,14 @@ class SystemConfigController extends Controller
     }
     public function index(Request $request){
         if ($request->isMethod('get')) {
-            $result = $this->systemRepository->findByCondition([['option_key' ,'=', 'general']])->toArray()['option_value'];
+            $result = json_decode($this->systemRepository->findByCondition([['option_key' ,'=', 'general']])->toArray()['option_value']);
             return view('SystemConfig::index',compact('result'));
         }else {
             $data = [
                 'logo' => $request->input('logo') ,
                 'phone' => $request->input('phone'),
-                'email' => $request->input('email'),
+                'email' => $request->input('email_'),
+                'address' => $request->input('address'),
                 'social_link' => $request->input('social_links')
             ];
 
@@ -41,7 +42,12 @@ class SystemConfigController extends Controller
                 }
             }else{
                 $id = $this->systemRepository->findByCondition($condition)->id;
-                return $this->systemRepository->update($id,$option);
+                if ($this->systemRepository->update($id,$option)) {
+                    return redirect()->back()->with('message', 'success|Save success.');
+                }else{
+                    return redirect()->back()->with('message', 'danger|Save fail.');
+                }
+
             }
         }
 
