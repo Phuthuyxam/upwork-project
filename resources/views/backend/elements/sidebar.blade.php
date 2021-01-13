@@ -76,12 +76,15 @@
                     </ul>
                 </li>
                 @endif
-                <li class="menu-title">General settings</li>
+                <li class="menu-title">Settings</li>
                 <li>
-                    <a href="#" class="waves-effect">
-                        <i class="dripicons-device-desktop"></i>
-                        <span>Logo</span>
-                    </a>
+                    @if(PermissionHelpers::canAccess(route('option.index')))
+                        <a href="{{ route('option.index') }}" class="waves-effect">
+                            <i class="dripicons-device-desktop"></i>
+                            <span>Theme setting</span>
+                        </a>
+                    @endif
+
                 </li>
             </ul>
         </div>

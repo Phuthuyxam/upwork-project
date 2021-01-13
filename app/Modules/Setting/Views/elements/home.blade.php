@@ -503,9 +503,6 @@
 
     </div>
 
-
-{{--@dd(isset($dataHome['message']['background']) && !empty($dataHome[['message']['background']]))--}}
-
     <div class="tab-pane p-3" id="tab4" role="tabpanel">
         <div class="form-group row">
             <label for="example-text-input" class="col-sm-2 col-form-label">Background image</label>
