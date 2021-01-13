@@ -62,14 +62,10 @@
             line-height: .4;
         }
 
-        .action-wrapper {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .action-wrapper .btn-add {
-            margin-right: 10px;
+        .action-wrapper button,
+        .button-wrapper button{
+            display: block;
+            margin-bottom: 1rem;
         }
     </style>
 @endsection
@@ -109,7 +105,6 @@
                                             <p style="font-style: italic; font-size: 12px">The name is how it appears on your
                                                 website</p>
                                             <p class="text-danger error-message" style="font-weight: bold" id="title-error">
-                                                @if($errors->first('post_title')) {!! '<p style="color: red"> '. $errors->first('post_title') .' </p>' !!} @endif
                                                 @error('post_title')
                                                 {{ $message }}
                                                 @enderror
@@ -133,7 +128,7 @@
                                             <label for="excerpt">Post excerpt</label>
                                             <textarea type="text" class="form-control" name="post_excerpt" id="excerpt" placeholder="Excerpt" rows="8">{{ old('post_excerpt') }}</textarea>
                                             <p class="text-danger error-message" style="font-weight: bold" id="excerpt-error">
-                                                @error('post_title')
+                                                @error('post_excerpt')
                                                 {{ $message }}
                                                 @enderror
                                             </p>
@@ -480,12 +475,20 @@
             row.find('.home-slider-image').val('');
             row.find('.image-preview-container').html("");
 
-
+            if ($(this).hasClass('parent')) {
+                let imageRow = row.find('.image-items tr').first();
+                row.find('.image-items tbody').empty();
+                row.find('.image-items tbody').append(imageRow[0].outerHTML);
+                row.find('.image-items tbody')
+                row.find('.row-item').val(1);
+                row.find('.home-slider-image').val('');
+            }
             $(this).parents('tbody').append(row);
 
             let count = parseInt($(this).parents('.section').find('.item-count').val());
             count = count + 1;
             $(this).parents('.section').find('.item-count').val(count);
+
         })
         $('body').on('click','.btn-delete-type',function (e){
             e.preventDefault();
@@ -493,6 +496,31 @@
             count = count - 1;
             $(this).parents('.section').find('.item-count').val(count);
             $(this).parents('tr').remove();
+
+        })
+        $('body').on('click', '.btn-add-child', function (e) {
+            e.preventDefault();
+            let row = $(this).closest('tr').clone();
+            row.find('.button-wrapper').empty();
+            row.find('.button-wrapper').append('<button class="btn btn-success btn-add-child"><i class="dripicons-plus"></i></button><button class="btn btn-danger btn-delete-child"><i class="dripicons-minus"></i></button>');
+            row.find('textarea').val('');
+            row.find('.home-slider-image').val('');
+            row.find('.image-preview-container').html("");
+            $(this).closest('tbody').append(row);
+
+
+            let countItem = parseInt($(this).closest('.image-items').find('.row-item').val());
+            countItem = countItem + 1;
+            $(this).closest('.image-items').find('.row-item').val(countItem);
+        })
+        $('body').on('click', '.btn-delete-child', function (e) {
+            e.preventDefault();
+
+            let countItem = parseInt($(this).closest('.image-items').find('.row-item').val());
+            countItem = countItem - 1;
+            $(this).closest('.image-items').find('.row-item').val(countItem);
+
+            $(this).closest('tr').remove();
         })
     </script>
 @endsection

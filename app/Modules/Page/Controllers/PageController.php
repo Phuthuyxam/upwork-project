@@ -197,34 +197,22 @@ class PageController extends Controller
     }
 
     private function createPage($request,$postId,$completeItem,$imageItem = null){
+        $dataMeta = [];
         if ($imageItem) {
-            $keyArray = array_keys($request->all());
-            $keyMap = [];
-            foreach ($keyArray as $value) {
-                if (strpos($value,'row') !== false) {
-                    $keyMap[] = $value;
-                }
-            }
-            $imageMap = [];
-            if (!empty($keyMap)) {
-                foreach ($keyMap as $value) {
-                    $itemMeta = [];
-                    foreach ($request->file($value) as $item) {
-                        $item->storeAs('public/pages/' . $postId . '/imageItem', $item->getClientOriginalName());
-                        $itemMeta[] = 'storage/pages/' . $postId . '/imageItem/' . $item->getClientOriginalName();
-                    }
-                    $imageMap[] = $itemMeta;
-                }
+            $images = $request->input('gallery');
+            $dataMeta[] = [
+                'post_id' => $postId,
+                'meta_key' => MetaKey::IMAGE_ITEM['VALUE'],
+                'meta_value' => json_encode($images),
+                'created_at' => date('Y-m-d H:i:s')
+            ];
 
-                $dataMeta = [
-                    [
-                        'post_id' => $postId,
-                        'meta_key' => $imageItem,
-                        'meta_value' => json_encode($imageMap),
-                        'created_at' => date('Y-m-d H:i:s')
-                    ]
-                ];
-            }
+            $dataMeta[] = [
+                'post_id' => $postId,
+                'meta_key' => MetaKey::INDEX_IMAGE_ITEM['VALUE'],
+                'meta_value' => json_encode($request->input('rowItem')),
+                'created_at' => date('Y-m-d H:i:s')
+            ];
         }
         if ($completeItem){
             $images = $request->input('images');
