@@ -71,14 +71,34 @@
         @include('backend.elements.languages')
         <div class="container-fluid">
             <div class="row">
-                <div class="col-3">
+                <div class="col-4">
                     <div class="card">
                         <div class="card-body">
                             <div class="tab-heading" style="display: flex; justify-content: space-between;align-items: center">
                                 <h4 class="card-title">Edit Option</h4>
+
+                                @php
+                                    $languages = \App\Core\Glosary\LocationConfigs::getAll();
+                                    $currentLang = app()->getLocale();
+
+                                @endphp
+                                @if(isset($languages) && !empty($languages))
+
                                 <div class="tab-translate">
-                                    <a href="{{ route('option.index') }}" target="_blank"><i class="dripicons-web"></i> Make translation</a>
+                                    <b><i class="dripicons-flag"></i> Make translation</b>
+                                    <select id="make-translation">
+                                        <option value="0">---choose language---</option>
+                                        @foreach($languages as $lan)
+                                            @if($lan['VALUE'] != $currentLang)
+                                                <option value="{{ $lan['VALUE'] }}" data-display="{{ $lan['DISPLAY'] }}">
+                                                    {{ $lan['DISPLAY'] }}
+                                                </option>
+                                            @endif
+                                        @endforeach
+                                    </select>
                                 </div>
+                                @endif
+
                             </div>
                             @if(isset($allOption) && !empty($allOption))
                             <ul class="list-option">
@@ -92,7 +112,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-9">
+                <div class="col-8">
                     <div class="card">
                         <div class="card-body">
                             {!! displayAlert(Session::get('message'))  !!}
@@ -102,8 +122,9 @@
 
                                 <div class="submit-section">
                                     <div class="form-group mb-0">
+                                        <input type="hidden" name="translation" id="translation_mode">
                                         <div>
-                                            <button type="submit" class="btn btn-primary waves-effect waves-light">
+                                            <button type="submit" class="btn btn-primary waves-effect waves-light" id="ptx-save-btn">
                                                 Save
                                             </button>
                                         </div>
@@ -119,11 +140,6 @@
 @endsection
 @section('script')
     <script>
-{{--        function deleteUser(id) {--}}
-{{--            if(confirm("are you sure delete user?"))--}}
-{{--                $('#deleteuser'+id).submit();--}}
-{{--        }--}}
-
     $('body').on('click','.btn-add-type',function (e){
         e.preventDefault();
         let row = $(this).parents('tr').clone();
@@ -141,6 +157,24 @@
         e.preventDefault();
         $(this).parents('tr').remove();
     })
+
+    $('#make-translation').change(function (e){
+        e.preventDefault();
+        let lanCode = $(this).val();
+        if(lanCode === "0") {
+            $('#ptx-save-btn').text("Save");
+            $('#translation_mode').val("");
+            return
+        }
+        let display = $("#make-translation option:selected").data('display');
+        let text = "Are you sure make a translation to " + display + " ? After confirm you will complete with save button";
+        var r = confirm(text);
+        if (r == true) {
+            $('#translation_mode').val(lanCode);
+            $('#ptx-save-btn').text("Save with "+display);
+            $('html, body').animate({ scrollTop: $('#ptx-save-btn').offset().top }, 'slow');
+        }
+    });
     </script>
 
 @endsection

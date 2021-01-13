@@ -2,6 +2,7 @@
 
 namespace App\Modules\Taxonomy\Controllers;
 
+use App\Core\Glosary\LocationConfigs;
 use App\Core\Glosary\MetaKey;
 use App\Core\Glosary\ResponeCode;
 use App\Core\Glosary\TaxonomyType;
@@ -93,6 +94,16 @@ class TaxonomyController extends Controller
             $slugs = $this->termRepository->getAllSlug();
             return view('Taxonomy::edit',compact('slugs','result','taxonomy'));
         }else{
+//            $translation = false;
+//            if(isset($request->translation) && !empty($request->translation) && LocationConfigs::checkLanguageCode($request->translation)){
+//                app()->setLocale($request->translation);
+//                $this->termRepository->setModel();
+//                $this->termMetaRepository->setModel();
+//                $this->termTaxonomyRepository->setModel();
+////                $transUrl = renderTranslationUrl(url()->current(), $request->translation);
+//                $translation = true;
+//            }
+
             $validate = $request->validate([
                 'name' => 'required|max:191',
                 'slug' => 'required|unique:terms,slug,'. $id,

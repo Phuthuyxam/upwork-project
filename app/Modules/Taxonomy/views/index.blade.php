@@ -1,4 +1,7 @@
 @extends('backend.default')
+@section('title')
+    All Taxonomy
+@endsection
 @section('style')
     <style>
         .error {
@@ -41,6 +44,7 @@
 @endsection
 @section('content')
     <div class="content-wrapper">
+        @include('backend.elements.languages')
         <div class="container-fluid">
             {!! displayAlert(Session::get('message'))  !!}
             <div class="row">
@@ -101,9 +105,9 @@
                                         <tr>
                                             <th><input type="checkbox" name="" id="checkAll"></th>
                                             <th style="color:#1967a9;">Name</th>
-                                            <th style="color:#1967a9;">Translation</th>
+{{--                                            <th style="color:#1967a9;">Translation</th>--}}
                                             <th style="color:#1967a9;">Slug</th>
-                                            <th style="color:#1967a9;">Count</th>
+{{--                                            <th style="color:#1967a9;">Count</th>--}}
                                             <th style="color:#1967a9; text-align: center">Action</th>
                                         </tr>
                                     </thead>
@@ -113,12 +117,12 @@
                                                 <tr>
                                                     <td><input type="checkbox" class="cate-check" data-id="{{ $value->term_id }}" name="" id=""></td>
                                                     <td><a href="#">{{ $value->name }}</a></td>
-                                                    <td><a href="#" target="_blank"><i class="dripicons-web"></i> Make translation</a></td>
+{{--                                                    <td><a href="#" target="_blank"><i class="dripicons-web"></i> Make translation</a></td>--}}
                                                     <td>{{ $value->slug }}</td>
-                                                    <td></td>
+{{--                                                    <td></td>--}}
                                                     <td>
                                                         <div class="btn-wrapper" style="display: flex; align-items: center;justify-content: center">
-                                                            <a href="{{ route('taxonomy.edit',$value->term_id) }}" target="_blank" class="btn btn-primary btn-edit" style="margin-right: 10px">Edit</a>
+                                                            <a href="{{ route('taxonomy.edit',$value->term_id) }}" class="btn btn-primary btn-edit" style="margin-right: 10px">Edit</a>
                                                             <button class="btn btn-danger btn-delete" data-id="{{ $value->term_id }}">Delete</button>
                                                         </div>
                                                     </td>

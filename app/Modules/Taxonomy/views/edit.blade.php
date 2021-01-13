@@ -1,4 +1,7 @@
 @extends('backend.default')
+@section('title')
+    Edit Taxonomy
+@endsection
 @section('style')
     <style>
         .error {
@@ -49,6 +52,34 @@
 @endsection
 @section('content')
     <div class="content-wrapper">
+        @php
+            $languages = \App\Core\Glosary\LocationConfigs::getAll();
+            $currentLang = app()->getLocale();
+
+        @endphp
+        @if(isset($languages) && !empty($languages))
+            <div class="car">
+                <div class="card-body">
+                    <div class="row" >
+                        <div class="tab-translate col-12" style="float: right">
+                            <b><i class="dripicons-flag"></i> Make translation</b>
+                            <select id="make-translation">
+                                <option value="0">---choose language---</option>
+                                @foreach($languages as $lan)
+                                    @if($lan['VALUE'] != $currentLang)
+                                        <option value="{{ $lan['VALUE'] }}" data-display="{{ $lan['DISPLAY'] }}">
+                                            {{ $lan['DISPLAY'] }}
+                                        </option>
+                                    @endif
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        @endif
+
+
         <div class="container-fluid">
             {!! displayAlert(Session::get('message'))  !!}
             <div class="card">
@@ -90,7 +121,8 @@
                                 @enderror
                             </p>
                         </div>
-                        <button type="submit" class="btn btn-primary btn-submit">Submit</button>
+                        <input type="hidden" name="translation" id="translation_mode">
+                        <button type="submit" class="btn btn-primary btn-submit" id="ptx-save-btn">Submit</button>
                     </form>
                 </div>
             </div>
@@ -169,5 +201,23 @@
 
             return valid;
         }
+
+        $('#make-translation').change(function (e){
+            e.preventDefault();
+            let lanCode = $(this).val();
+            if(lanCode === "0") {
+                $('#ptx-save-btn').text("Save");
+                $('#translation_mode').val("");
+                return
+            }
+            let display = $("#make-translation option:selected").data('display');
+            let text = "Are you sure make a translation to " + display + " ? After confirm you will complete with save button";
+            var r = confirm(text);
+            if (r == true) {
+                $('#translation_mode').val(lanCode);
+                $('#ptx-save-btn').text("Submit with "+display);
+                $('html, body').animate({ scrollTop: ( $('#ptx-save-btn').offset().top - 200 ) }, 'slow');
+            }
+        });
     </script>
 @endsection

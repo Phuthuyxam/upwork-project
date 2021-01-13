@@ -48,14 +48,17 @@ if(!function_exists('generatePrefixLanguage')) {
 
 if(!function_exists('renderTranslationUrl')) {
     function renderTranslationUrl($url, $langCode) {
-        if(!isset($_SERVER['REQUEST_URI']) || empty($_SERVER['REQUEST_URI'])) return false;
-        $serverPath = explode('/', $_SERVER['REQUEST_URI']);
+        if(empty(parse_url($url))) return false;
+        $urlParse = parse_url($url);
+        $serverPath = explode('/', $urlParse['path']);
         $firstLevel = $serverPath[1];
         if((LocationConfigs::checkLanguageCode($firstLevel))){
-
-            return  app()->getLocale().'/';
+            $serverPath[1] = $langCode;
+            $newPath = implode("/", $serverPath);
+            return  $urlParse['scheme'] . "://" . $urlParse['host'] . ":" . $urlParse['port'] . $newPath;
         }else {
-            return '';
+            $urlParse['path'] = "/" . $langCode . $urlParse['path'];
+            return $urlParse['scheme'] . "://" . $urlParse['host'] . ((isset($urlParse['port']) && !empty($urlParse['port']) ) ? ":" . $urlParse['port'] : "" ) . $urlParse['path'];
         }
     }
 }

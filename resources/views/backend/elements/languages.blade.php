@@ -10,7 +10,9 @@
                 @if(isset($languages) && !empty($languages))
                 <select class="selectpicker" data-width="fit" onchange="makeUrlTranslation(this)">
                     @foreach($languages as $lan)
-                        <option value="{{ $lan['VALUE'] }}" {{ app()->getLocale() == $lan['VALUE'] ? 'selected' : false }}>{{ $lan['DISPLAY'] }}</option>
+                        <option
+                            value="{{ renderTranslationUrl(url()->current(), $lan['VALUE']) }}"
+                            {{ app()->getLocale() == $lan['VALUE'] ? 'selected' : false }}>{{ $lan['DISPLAY'] }}</option>
                     @endforeach
                 </select>
                 @endif
@@ -23,10 +25,6 @@
     let languages = '{{ json_encode($languages) ? json_encode($languages) : ""  }}';
     function makeUrlTranslation($this) {
         let value = $this.value;
-
-        let pathname = window.location.pathname;
-        let host = window.location.hostname;
-        let newUrl = host + "/"+ value +"/" + pathname;
-        console.log(newUrl,pathname,host);
+        window.location.href = value;
     }
 </script>

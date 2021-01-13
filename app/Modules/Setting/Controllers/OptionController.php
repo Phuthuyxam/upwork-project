@@ -4,6 +4,7 @@
 namespace App\Modules\Setting\Controllers;
 
 
+use App\Core\Glosary\LocationConfigs;
 use App\Core\Glosary\OptionMetaKey;
 use App\Http\Controllers\Controller;
 use App\Modules\Setting\Repositories\OptionRepository;
@@ -26,8 +27,14 @@ class OptionController extends Controller
         return view('Setting::index', compact('allOption', 'key', 'dataMenu', 'dataFooter', 'dataHome'));
     }
     public function save($key = null, Request $request) {
-//        app()->setLocale('ar');
-//        $this->optionRepository->setModel();
+        $translation = false;
+        if(isset($request->translation) && !empty($request->translation) && LocationConfigs::checkLanguageCode($request->translation)){
+            app()->setLocale($request->translation);
+            $this->optionRepository->setModel();
+            $transUrl = renderTranslationUrl(url()->current(), $request->translation);
+            $translation = true;
+        }
+
         if(is_null($key)) $key = OptionMetaKey::MENU['VALUE'];
         $menuData = [];
         // menu
@@ -50,8 +57,12 @@ class OptionController extends Controller
                 }else {
                     $this->optionRepository->create(['option_key' => OptionMetaKey::MENU['VALUE'], 'option_value' => json_encode($menuData) ]);
                 }
+                if($translation)
+                    return redirect()->to($transUrl)->with('message', 'success|Menu save success.');
                 return redirect()->back()->with('message', 'success|Menu save success.');
             } catch (\Throwable $th) {
+                if($translation)
+                    return redirect()->to($transUrl)->with('message', 'danger|Menu save something wrong try again!');
                 return redirect()->back()->with('message', 'danger|Menu save something wrong try again!');
             }
 
@@ -75,8 +86,12 @@ class OptionController extends Controller
                 }else {
                     $this->optionRepository->create(['option_key' => OptionMetaKey::FOOTER['VALUE'], 'option_value' => json_encode($footerData) ]);
                 }
+                if($translation)
+                    return redirect()->to($transUrl)->with('message', 'success|Menu save success.');
                 return redirect()->back()->with('message', 'success|Menu save success.');
             } catch (\Throwable $th) {
+                if($translation)
+                    return redirect()->to($transUrl)->with('message', 'danger|Menu save something wrong try again!');
                 return redirect()->back()->with('message', 'danger|Menu save something wrong try again!');
             }
 
@@ -145,8 +160,12 @@ class OptionController extends Controller
                 }else {
                     $this->optionRepository->create(['option_key' => OptionMetaKey::HOME['VALUE'], 'option_value' => json_encode($homeData) ]);
                 }
+                if($translation)
+                    return redirect()->to($transUrl)->with('message', 'success|Home option save success.');
                 return redirect()->back()->with('message', 'success|Home option save success.');
             } catch (\Throwable $th) {
+                if($translation)
+                    return redirect()->to($transUrl)->with('message', 'danger|Home option save something wrong try again!');
                 return redirect()->back()->with('message', 'danger|Home option save something wrong try again!');
             }
         }
