@@ -128,10 +128,8 @@
                                             </p>
                                         </div>
                                         <div class="form-group">
-                                            <label for="excerpt">Title</label>
-                                            <input type="text" class="form-control required" name="post_excerpt" id="excerpt"
-                                                   placeholder="Excerpt"
-                                                   value="{{ old('post_excerpt') }}">
+                                            <label for="excerpt">Post excerpt</label>
+                                            <textarea type="text" class="form-control" name="post_excerpt" id="excerpt" placeholder="Excerpt" rows="8">{{ old('post_excerpt') }}</textarea>
                                             <p class="text-danger error-message" style="font-weight: bold" id="excerpt-error">
                                                 @error('post_title')
                                                 {{ $message }}
@@ -139,7 +137,7 @@
                                             </p>
                                         </div>
                                         <div class="form-group">
-                                            <label for="description">Description</label>
+                                            <label for="description">Content</label>
                                             <div class="editor-wrapper">
                                                 <textarea name="post_content" id="description" class="form-control"
                                                           style="width: 100%; height: 90px"
@@ -159,17 +157,17 @@
                                                 <tr>
                                                     <th style="vertical-align: middle; width: 100px">Desktop</th>
                                                     <td>
-                                                        <div class="preview-image">
-                                                            <div class="close">
-                                                                <i class="dripicons-cross"></i>
-                                                            </div>
-                                                        </div>
+{{--                                                        <div class="preview-image">--}}
+{{--                                                            <div class="close">--}}
+{{--                                                                <i class="dripicons-cross"></i>--}}
+{{--                                                            </div>--}}
+{{--                                                        </div>--}}
 {{--                                                        <input type="file" style="padding: 3px 5px; overflow: hidden"--}}
 {{--                                                               class="form-control required banner-image"--}}
 {{--                                                               name="files[]">--}}
 
                                                         {!!  renderMediaManage('files[]') !!}
-                                                        
+
                                                         <p class="text-danger error-message" style="font-weight: bold">
                                                             @error('files')
                                                             {{ $message }}
@@ -180,14 +178,7 @@
                                                 <tr>
                                                     <th style="vertical-align: middle; width: 100px">Tablet</th>
                                                     <td>
-                                                        <div class="preview-image">
-                                                            <div class="close">
-                                                                <i class="dripicons-cross"></i>
-                                                            </div>
-                                                        </div>
-                                                        <input type="file" style="padding: 3px 5px; overflow: hidden"
-                                                               class="form-control required banner-image"
-                                                               name="files[]">
+                                                        {!!  renderMediaManage('files[]') !!}
                                                         <p class="text-danger error-message" style="font-weight: bold">
                                                             @error('files')
                                                             {{ $message }}
@@ -198,14 +189,7 @@
                                                 <tr>
                                                     <th style="vertical-align: middle; width: 100px">Mobile</th>
                                                     <td>
-                                                        <div class="preview-image">
-                                                            <div class="close">
-                                                                <i class="dripicons-cross"></i>
-                                                            </div>
-                                                        </div>
-                                                        <input type="file" style="padding: 3px 5px; overflow: hidden"
-                                                               class="form-control required banner-image"
-                                                               name="files[]">
+                                                        {!!  renderMediaManage('files[]') !!}
                                                         <p class="text-danger error-message" style="font-weight: bold">
                                                             @error('files')
                                                             {{ $message }}
@@ -452,6 +436,7 @@
         function checkRequired(formId) {
             let valid = true;
             $('#' + formId).find('.required').each(function () {
+                console.log(this);
                 if ($(this).val().trim() === '') {
                     $(this).addClass('error');
                     $(this).parent().find('.error-message').text('This field cannot be null');
@@ -461,14 +446,14 @@
                     $(this).parent().find('.error-message').text('This field cannot be null');
                 }
             })
-            if (CKEDITOR.instances.description.getData() == '') {
-                $('#description').parents('.form-group').find('.editor-wrapper').addClass('error');
-                $('#description').parents('.form-group').find('.error-message').text('This field cannot be null');
-                valid = false;
-            }else{
-                $('#description').parents('.form-group').find('.editor-wrapper').removeClass('error');
-                $('#description').parents('.form-group').find('.error-message').text('');
-            }
+            // if (CKEDITOR.instances.description.getData() == '') {
+            //     $('#description').parents('.form-group').find('.editor-wrapper').addClass('error');
+            //     $('#description').parents('.form-group').find('.error-message').text('This field cannot be null');
+            //     valid = false;
+            // }else{
+            //     $('#description').parents('.form-group').find('.editor-wrapper').removeClass('error');
+            //     $('#description').parents('.form-group').find('.error-message').text('');
+            // }
             return valid;
         }
 

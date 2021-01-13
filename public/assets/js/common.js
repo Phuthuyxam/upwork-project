@@ -93,6 +93,7 @@ function openMediaManager(btnElm) {
 let inputElement = '';
 function fmSetLink($url) {
     findParent(inputElement, 'media-load-image').querySelector('.home-slider-image').setAttribute('value' , $url );
+    findParent(inputElement, 'media-load-image').querySelector('.home-slider-image').value = $url;
     addPreviewImage($url,findParent(inputElement, 'media-load-image').querySelector('.image-preview-container') );
 }
 function findParent(el, clas) {
@@ -106,5 +107,6 @@ function addPreviewImage($url, $elm) {
 }
 function deleteImagePreview(thisElm) {
     findParent(thisElm, 'media-load-image').querySelector('.home-slider-image').setAttribute('value' , "" );
+    findParent(thisElm, 'media-load-image').querySelector('.home-slider-image').value = ""
     findParent(thisElm, 'media-load-image').querySelector('.image-preview-container').innerHTML = "";
 }
