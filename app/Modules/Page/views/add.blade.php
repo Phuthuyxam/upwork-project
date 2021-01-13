@@ -38,7 +38,7 @@
         .preview-image-multiple .items .close{
             position: absolute;
             top: 5px;
-            right: 5px;
+            left: 5px;
             cursor: pointer;
             background: #9C9C9C;
             border-radius: 100%;
@@ -164,9 +164,12 @@
                                                                 <i class="dripicons-cross"></i>
                                                             </div>
                                                         </div>
-                                                        <input type="file" style="padding: 3px 5px; overflow: hidden"
-                                                               class="form-control required banner-image"
-                                                               name="files[]">
+{{--                                                        <input type="file" style="padding: 3px 5px; overflow: hidden"--}}
+{{--                                                               class="form-control required banner-image"--}}
+{{--                                                               name="files[]">--}}
+
+                                                        {!!  renderMediaManage('files[]') !!}
+                                                        
                                                         <p class="text-danger error-message" style="font-weight: bold">
                                                             @error('files')
                                                             {{ $message }}
