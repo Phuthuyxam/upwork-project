@@ -108,6 +108,7 @@
                                             <p style="font-style: italic; font-size: 12px">The name is how it appears on your
                                                 website</p>
                                             <p class="text-danger error-message" style="font-weight: bold" id="title-error">
+                                                @if($errors->first('post_title')) {!! '<p style="color: red"> '. $errors->first('post_title') .' </p>' !!} @endif
                                                 @error('post_title')
                                                 {{ $message }}
                                                 @enderror
@@ -141,7 +142,7 @@
                                             <div class="editor-wrapper">
                                                 <textarea name="post_content" id="description" class="form-control"
                                                           style="width: 100%; height: 90px"
-                                                          placeholder="Description"></textarea>
+                                                          placeholder="Description">{{ old('post_content') }}</textarea>
                                             </div>
                                             <p class="text-danger error-message" style="font-weight: bold"
                                                id="description-error">
@@ -474,6 +475,9 @@
             row.find('.banner-image-multiple').attr('name','row'+rowCount+'[]');
             row.find('.preview-image-multiple').empty();
             row.find('.number-image').val(0);
+
+            row.find('.home-slider-image').val('');
+            row.find('.image-preview-container').html("");
 
 
             $(this).parents('tbody').append(row);

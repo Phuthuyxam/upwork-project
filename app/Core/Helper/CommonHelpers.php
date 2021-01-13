@@ -144,7 +144,7 @@ if(!function_exists('renderMediaManage')) {
                     <?php endif; ?>
                 </div>
             </div>
-            <input type="text" style="padding: 3px 5px; overflow: hidden" name="<?php echo $inputName ?>" class="form-control required home-slider-image" aria-describedby="button-image" readonly
+            <input type="text" style="padding: 3px 5px; overflow: hidden" name="<?php echo $inputName ?>" class="form-control home-slider-image" aria-describedby="button-image" readonly
                    value="<?php echo (isset($previewImage) && !empty($previewImage)) ? $previewImage : "" ?>">
             <div class="input-group-append">
                 <button class="btn btn-primary waves-effect waves-light btn-popup-media" type="button" onclick="openMediaManager(this)">Select Image</button>

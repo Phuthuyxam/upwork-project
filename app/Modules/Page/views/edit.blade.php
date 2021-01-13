@@ -26,7 +26,7 @@
         .preview-image .close {
             position: absolute;
             top: 5px;
-            right: 5px;
+            left: 5px;
             cursor: pointer;
             background: #9C9C9C;
             border-radius: 100%;
@@ -172,44 +172,49 @@
                                                 <tr>
                                                     <th style="vertical-align: middle; width: 100px">Desktop</th>
                                                     <td>
-                                                        <div class="preview-image">
-                                                            <div
-                                                                class="close  @if($banner[0] == '') {{ 'deleted' }} @endif">
-                                                                <i class="dripicons-cross"></i>
-                                                            </div>
-                                                            <img src="{{ asset($banner[0]) }}" style="width: 100%"
-                                                                 alt="">
-                                                        </div>
-                                                        <input type="file" style="padding: 3px 5px; overflow: hidden"
-                                                               class="form-control banner-image @if($banner[0] != '') {{ 'hidden' }} @else {{ 'required' }} @endif"
-                                                               name="files[]">
-                                                        <input type="hidden" class="banner-link" name="banners[]"
-                                                               data-type="{{ \App\Core\Glosary\MetaKey::BANNER['VALUE'] }}"
-                                                               value="{{ $banner[0] }}">
+{{--                                                        <div class="preview-image">--}}
+{{--                                                            <div--}}
+{{--                                                                class="close  @if($banner[0] == '') {{ 'deleted' }} @endif">--}}
+{{--                                                                <i class="dripicons-cross"></i>--}}
+{{--                                                            </div>--}}
+{{--                                                            <img src="{{ asset($banner[0]) }}" style="width: 100%"--}}
+{{--                                                                 alt="">--}}
+{{--                                                        </div>--}}
+{{--                                                        <input type="file" style="padding: 3px 5px; overflow: hidden"--}}
+{{--                                                               class="form-control banner-image @if($banner[0] != '') {{ 'hidden' }} @else {{ 'required' }} @endif"--}}
+{{--                                                               name="files[]">--}}
+{{--                                                        <input type="hidden" class="banner-link" name="banners[]"--}}
+{{--                                                               data-type="{{ \App\Core\Glosary\MetaKey::BANNER['VALUE'] }}"--}}
+{{--                                                               value="{{ $banner[0] }}">--}}
+
+                                                        {!!  renderMediaManage('files[]', $banner[0]) !!}
                                                         <p class="text-danger error-message" style="font-weight: bold">
                                                             @error('files')
                                                             {{ $message }}
                                                             @enderror
                                                         </p>
+
+
                                                     </td>
                                                 </tr>
                                                 <tr>
                                                     <th style="vertical-align: middle; width: 100px">Tablet</th>
                                                     <td>
-                                                        <div class="preview-image">
-                                                            <div
-                                                                class="close  @if($banner[1] == '') {{ 'deleted' }} @endif">
-                                                                <i class="dripicons-cross"></i>
-                                                            </div>
-                                                            <img src="{{ asset($banner[1]) }}" style="width: 100%"
-                                                                 alt="">
-                                                        </div>
-                                                        <input type="file" style="padding: 3px 5px; overflow: hidden"
-                                                               class="form-control banner-image @if($banner[1] != '') {{ 'hidden' }} @else {{ 'required' }} @endif"
-                                                               name="files[]">
-                                                        <input type="hidden" class="banner-link" name="banners[]"
-                                                               data-type="{{ \App\Core\Glosary\MetaKey::BANNER['VALUE'] }}"
-                                                               value="{{ $banner[1] }}">
+{{--                                                        <div class="preview-image">--}}
+{{--                                                            <div--}}
+{{--                                                                class="close  @if($banner[1] == '') {{ 'deleted' }} @endif">--}}
+{{--                                                                <i class="dripicons-cross"></i>--}}
+{{--                                                            </div>--}}
+{{--                                                            <img src="{{ asset($banner[1]) }}" style="width: 100%"--}}
+{{--                                                                 alt="">--}}
+{{--                                                        </div>--}}
+{{--                                                        <input type="file" style="padding: 3px 5px; overflow: hidden"--}}
+{{--                                                               class="form-control banner-image @if($banner[1] != '') {{ 'hidden' }} @else {{ 'required' }} @endif"--}}
+{{--                                                               name="files[]">--}}
+{{--                                                        <input type="hidden" class="banner-link" name="banners[]"--}}
+{{--                                                               data-type="{{ \App\Core\Glosary\MetaKey::BANNER['VALUE'] }}"--}}
+{{--                                                               value="{{ $banner[1] }}">--}}
+                                                        {!!  renderMediaManage('files[]', $banner[1]) !!}
                                                         <p class="text-danger error-message" style="font-weight: bold">
                                                             @error('files')
                                                             {{ $message }}
@@ -220,20 +225,21 @@
                                                 <tr>
                                                     <th style="vertical-align: middle; width: 100px">Mobile</th>
                                                     <td>
-                                                        <div class="preview-image">
-                                                            <div
-                                                                class="close  @if($banner[2] == '') {{ 'deleted' }} @endif">
-                                                                <i class="dripicons-cross"></i>
-                                                            </div>
-                                                            <img src="{{ asset($banner[2]) }}" style="width: 100%"
-                                                                 alt="">
-                                                        </div>
-                                                        <input type="file" style="padding: 3px 5px; overflow: hidden"
-                                                               class="form-control banner-image @if($banner[2] != '') {{ 'hidden' }} @else {{ 'required' }} @endif"
-                                                               name="files[]">
-                                                        <input type="hidden" class="banner-link" name="banners[]"
-                                                               data-type="{{ \App\Core\Glosary\MetaKey::BANNER['VALUE'] }}"
-                                                               value="{{ $banner[2] }}">
+{{--                                                        <div class="preview-image">--}}
+{{--                                                            <div--}}
+{{--                                                                class="close  @if($banner[2] == '') {{ 'deleted' }} @endif">--}}
+{{--                                                                <i class="dripicons-cross"></i>--}}
+{{--                                                            </div>--}}
+{{--                                                            <img src="{{ asset($banner[2]) }}" style="width: 100%"--}}
+{{--                                                                 alt="">--}}
+{{--                                                        </div>--}}
+{{--                                                        <input type="file" style="padding: 3px 5px; overflow: hidden"--}}
+{{--                                                               class="form-control banner-image @if($banner[2] != '') {{ 'hidden' }} @else {{ 'required' }} @endif"--}}
+{{--                                                               name="files[]">--}}
+{{--                                                        <input type="hidden" class="banner-link" name="banners[]"--}}
+{{--                                                               data-type="{{ \App\Core\Glosary\MetaKey::BANNER['VALUE'] }}"--}}
+{{--                                                               value="{{ $banner[2] }}">--}}
+                                                        {!!  renderMediaManage('files[]', $banner[2]) !!}
                                                         <p class="text-danger error-message" style="font-weight: bold">
                                                             @error('files')
                                                             {{ $message }}
@@ -438,15 +444,15 @@
                 e.preventDefault();
                 if (checkRequired('add-form')) {
                     $('#publishStatus').val(1);
-                    // $('#add-form').submit();
-                    $('#commonTab').css('background', '');
+                    $('#add-form').submit();
+                    // $('#commonTab').css('background', '');
                 } else {
                     Swal.fire({
                         type: 'warning',
                         title: 'Oops... !',
                         text: 'Some field need to required. Please check it again',
                     });
-                    $('#commonTab').css('background', '#FF7575');
+                    // $('#commonTab').css('background', '#FF7575');
                 }
             })
 
@@ -526,6 +532,8 @@
             row.find('.banner-image').addClass('required');
             row.find('.banner-link').val('');
             row.find('textarea').val('');
+            row.find('.home-slider-image').val('');
+            row.find('.image-preview-container').html("");
             $(this).parents('tbody').append(row);
 
             row.find('.banner-image-multiple').val('');
