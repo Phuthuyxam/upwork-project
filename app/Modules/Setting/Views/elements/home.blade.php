@@ -457,7 +457,6 @@
                                                 <i class="dripicons-cross"></i>
                                             </div>
                                             <div class="image-preview-container">
-                                                {{--                                            <img class="image-preview" style="width: 20%" src="http://127.0.0.1:8000/storage/categories/wts.jpg" alt="your image">--}}
                                             </div>
                                         </div>
                                         <input type="text" style="padding: 3px 5px; overflow: hidden" name="option_home_hotel_logo[]" class="form-control required home-slider-image" aria-describedby="button-image" readonly>
@@ -476,7 +475,6 @@
                                                 <i class="dripicons-cross"></i>
                                             </div>
                                             <div class="image-preview-container">
-                                                {{-- <img class="image-preview" style="width: 20%" src="http://127.0.0.1:8000/storage/categories/wts.jpg" alt="your image">--}}
                                             </div>
                                         </div>
                                         <input type="text" style="padding: 3px 5px; overflow: hidden" name="option_home_hotel_banner[]" class="form-control required home-slider-image" aria-describedby="button-image" readonly>
@@ -506,7 +504,7 @@
     </div>
 
 
-
+{{--@dd(isset($dataHome['message']['background']) && !empty($dataHome[['message']['background']]))--}}
 
     <div class="tab-pane p-3" id="tab4" role="tabpanel">
         <div class="form-group row">
@@ -518,7 +516,7 @@
                             <i class="dripicons-cross"></i>
                         </div>
                         <div class="image-preview-container">
-                            @if($dataHome['message']['background'])
+                            @if(isset($dataHome['message']['background']) && !empty($dataHome['message']['background']))
                                 <img class="image-preview" style="width: 20%" src="{{ $dataHome['message']['background'] }}" alt="your image">
                             @endif
                         </div>
