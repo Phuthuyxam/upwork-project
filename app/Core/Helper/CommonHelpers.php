@@ -46,6 +46,20 @@ if(!function_exists('generatePrefixLanguage')) {
     }
 }
 
+if(!function_exists('renderTranslationUrl')) {
+    function renderTranslationUrl($url, $langCode) {
+        if(!isset($_SERVER['REQUEST_URI']) || empty($_SERVER['REQUEST_URI'])) return false;
+        $serverPath = explode('/', $_SERVER['REQUEST_URI']);
+        $firstLevel = $serverPath[1];
+        if((LocationConfigs::checkLanguageCode($firstLevel))){
+
+            return  app()->getLocale().'/';
+        }else {
+            return '';
+        }
+    }
+}
+
 if(!function_exists('generateSeoOption')) {
     function generateSeoOption() {
 

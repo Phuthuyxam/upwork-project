@@ -33,4 +33,10 @@ class LocationConfigs extends BasicEnum
             }
         return $result;
     }
+
+    public static function getAll() {
+        $oClass = new \ReflectionClass(__CLASS__);
+        $constants = $oClass->getConstants();
+        return $constants;
+    }
 }
