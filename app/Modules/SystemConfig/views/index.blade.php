@@ -41,19 +41,23 @@
                         @csrf
                         <div class="form-group media-load-image">
                             <label for="logo">Logo:</label>
-                            {!! renderMediaManage('logo',$result->logo) !!}
+                            @if(isset($result->logo))
+                                {!! renderMediaManage('logo',$result->logo) !!}
+                            @else
+                                {!! renderMediaManage('logo') !!}
+                            @endif
                         </div>
                         <div class="form-group">
                             <label for="phone">Phone:</label>
-                            <input type="text" class="form-control" name="phone" id="phone" value="{{ $result->phone }}">
+                            <input type="text" class="form-control" name="phone" id="phone" value="{{ isset($result->phone) ? $result->logo : "" }}">
                         </div>
                         <div class="form-group">
                             <label for="email">Email:</label>
-                            <input type="text" class="form-control" name="email " id="email" value="{{ $result->email }}">
+                            <input type="text" class="form-control" name="email " id="email" value="{{ isset($result->email) ? $result->email : "" }}">
                         </div>
                         <div class="form-group">
                             <label for="address">Address:</label>
-                            <input type="text" class="form-control" name="address" id="address" value="{{ $result->address }}">
+                            <input type="text" class="form-control" name="address" id="address" value="{{ isset($result->address) ? $result->address : "" }}">
                         </div>
                         <div class="form-group">
                             <label>Social links:</label>
@@ -62,25 +66,25 @@
                                     <tr>
                                         <th>Facebook:</th>
                                         <td>
-                                            <input type="text" class="form-control" name="social_links[]" value="{{ $result->social_link[0] }}">
+                                            <input type="text" class="form-control" name="social_links[]" value="{{ isset($result->social_link[0]) ? $result->social_link[0] : "" }}">
                                         </td>
                                     </tr>
                                     <tr>
                                         <th>Twitter:</th>
                                         <td>
-                                            <input type="text" class="form-control" name="social_links[]" value="{{ $result->social_link[1] }}">
+                                            <input type="text" class="form-control" name="social_links[]" value="{{ isset($result->social_link[1]) ? $result->social_link[1] : "" }}">
                                         </td>
                                     </tr>
                                     <tr>
                                         <th>Instagram:</th>
                                         <td>
-                                            <input type="text" class="form-control" name="social_links[]" value="{{ $result->social_link[2] }}">
+                                            <input type="text" class="form-control" name="social_links[]" value="{{ isset($result->social_link[2]) ? $result->social_link[2] : "" }}">
                                         </td>
                                     </tr>
                                     <tr>
                                         <th>Youtube:</th>
                                         <td>
-                                            <input type="text" class="form-control" name="social_links[]" value="{{ $result->social_link[3] }}">
+                                            <input type="text" class="form-control" name="social_links[]" value="{{ isset($result->social_link[3]) ? $result->social_link[3] : "" }}">
                                         </td>
                                     </tr>
                                 </tbody>
