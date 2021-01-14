@@ -94,22 +94,22 @@ class TaxonomyController extends Controller
             $slugs = $this->termRepository->getAllSlug();
             return view('Taxonomy::edit',compact('slugs','result','taxonomy'));
         }else{
-//            $translation = false;
-//            if(isset($request->translation) && !empty($request->translation) && LocationConfigs::checkLanguageCode($request->translation)){
-//                app()->setLocale($request->translation);
-//                $this->termRepository->setModel();
-//                $this->termMetaRepository->setModel();
-//                $this->termTaxonomyRepository->setModel();
-////                $transUrl = renderTranslationUrl(url()->current(), $request->translation);
-//                $translation = true;
-//            }
-
-            $validate = $request->validate([
+            $validateRule = [
                 'name' => 'required|max:191',
                 'slug' => 'required|unique:terms,slug,'. $id,
                 'description' => 'required',
-            ]);
-
+            ];
+            $prefixLanguage = generatePrefixLanguage();
+            if($prefixLanguage && !empty($prefixLanguage) && LocationConfigs::checkLanguageCode(str_replace("/","",$prefixLanguage))
+                && LocationConfigs::getLanguageDefault()['VALUE'] != str_replace("/","",$prefixLanguage))
+                $validateRule['slug'] = "required|unique:terms_". str_replace("/","",$prefixLanguage) .",slug," . $id;
+            $validate = $request->validate($validateRule);
+            // make translation
+            if(isset($request->translation) && !empty($request->translation) && LocationConfigs::checkLanguageCode($request->translation)) {
+                $translation = $this->translationSave($request);
+                if($translation) return redirect()->to($translation['redirect_url'])->with('message', $translation['message']);
+                return redirect()->back()->with('message', 'danger|Something wrong when make a translation record try again!');
+            }
             $name = $request->input('name');
 
             $dataTerm = [
@@ -132,6 +132,55 @@ class TaxonomyController extends Controller
                 }
             } else {
                 return redirect()->back()->with('message', 'danger|Something wrong try again!');
+            }
+        }
+    }
+
+    // Translation
+    public function translationSave($request) {
+        app()->setLocale($request->translation);
+        $this->termRepository->setModel();
+        $this->termMetaRepository->setModel();
+        $this->termTaxonomyRepository->setModel();
+//                $transUrl = renderTranslationUrl(url()->current(), $request->translation);
+        $slug = $request->input('slug');
+
+        $translationRecord = $this->termRepository->filter([['slug' , $slug]]);
+        if($translationRecord && $translationRecord->isNotEmpty()) {
+            // update
+            $transUrl = renderTranslationUrl(route('taxonomy.edit', ['id' => $translationRecord[0]->id]), $request->translation);
+            return [ 'redirect_url' => $transUrl, 'message' => 'warning|Warning! when creating the translation. A record already exists. Please edit with this one.' ];
+        } else {
+            // insert
+            $dataInsert = [
+                'name' => $request->input('name'),
+                'slug' => $request->input('slug')
+            ];
+            try {
+                $id = $this->termRepository->create($dataInsert)->id;
+                if($id) {
+                    $dataTermTax = [
+                        'description' => $request->input('description'),
+                    ];
+
+                    $dataTermTax = [
+                        'term_id' => $id,
+                        'taxonomy' => 0,
+                        'description' => $request->input('description'),
+                    ];
+
+                    if ($this->termTaxonomyRepository->create($dataTermTax)) {
+                        $transUrl = renderTranslationUrl(route('taxonomy.edit', ['id' => $id]), $request->translation);
+
+                        return [ 'redirect_url' => $transUrl,
+                                 'message' => 'success|Successfully add a Translation"' . $request->input('name') . '" category'
+                                ];
+                    } else {
+                        return false;
+                    }
+                }
+            } catch (\Throwable $th) {
+                return false;
             }
         }
     }

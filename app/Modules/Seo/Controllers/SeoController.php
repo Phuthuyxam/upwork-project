@@ -20,7 +20,7 @@ class SeoController extends Controller
     {
         $result = [];
         $seoOptions = $getSeoOption = $this->seoRepository->filter([['object_id', $objectId] , ['seo_type', $seoType]]);
-        if($seoOptions->isNotEmpty()) {
+        if($seoOptions && $seoOptions->isNotEmpty()) {
             foreach ($seoOptions as $seo) {
                 $result[$seo->seo_key] = $seo->seo_value;
             }
@@ -32,7 +32,7 @@ class SeoController extends Controller
     {
         try {
             $getSeoOption = $this->seoRepository->filter([['object_id', $objectId] , ['seo_type', $seoType]]);
-            if($getSeoOption->isNotEmpty()) {
+            if($getSeoOption && $getSeoOption->isNotEmpty()) {
                 // delete
                 $this->seoRepository->getInstantModel()->where([['object_id', $objectId] , ['seo_type', $seoType]])->delete();
             }

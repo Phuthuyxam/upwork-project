@@ -15,7 +15,4 @@ class SeoRepository extends EloquentRepository {
         return Seo::class;
     }
 
-    public function renderDataSeo() {
-        return "sadasd";
-    }
 }
