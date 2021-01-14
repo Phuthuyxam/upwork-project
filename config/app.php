@@ -237,7 +237,9 @@ return [
         'URL' => Illuminate\Support\Facades\URL::class,
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
-        'PermissionHelpers' => App\Core\Helper\PermissionHelpers::class
+        'PermissionHelpers' => App\Core\Helper\PermissionHelpers::class,
+        'OptionHelpers' => App\Core\Helper\OptionHelpers::class,
+        'FrontendHelpers' => App\Core\Helper\FrontendHelpers::class
     ],
 
 ];

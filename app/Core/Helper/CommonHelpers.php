@@ -50,12 +50,13 @@ if(!function_exists('renderTranslationUrl')) {
     function renderTranslationUrl($url, $langCode) {
         if(empty(parse_url($url))) return false;
         $urlParse = parse_url($url);
+        if(!isset($urlParse['path']) || empty($urlParse['path']))  return  $urlParse['scheme'] . "://" . $urlParse['host'] . ((isset($urlParse['port']) && !empty($urlParse['port']) ) ? ":" . $urlParse['port'] : "" ) . "/" . $langCode;
         $serverPath = explode('/', $urlParse['path']);
         $firstLevel = $serverPath[1];
         if((LocationConfigs::checkLanguageCode($firstLevel))){
             $serverPath[1] = $langCode;
             $newPath = implode("/", $serverPath);
-            return  $urlParse['scheme'] . "://" . $urlParse['host'] . ":" . $urlParse['port'] . $newPath;
+            return  $urlParse['scheme'] . "://" . $urlParse['host'] . ((isset($urlParse['port']) && !empty($urlParse['port']) ) ? ":" . $urlParse['port'] : "" ) . $newPath;
         }else {
             $urlParse['path'] = "/" . $langCode . $urlParse['path'];
             return $urlParse['scheme'] . "://" . $urlParse['host'] . ((isset($urlParse['port']) && !empty($urlParse['port']) ) ? ":" . $urlParse['port'] : "" ) . $urlParse['path'];
@@ -175,3 +176,4 @@ if(!function_exists('renderMediaManage')) {
         return $content;
     }
 }
+

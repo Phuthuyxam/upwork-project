@@ -17,7 +17,10 @@ class SystemConfigController extends Controller
     }
     public function index(Request $request){
         if ($request->isMethod('get')) {
-            $result = json_decode($this->systemRepository->findByCondition([['option_key' ,'=', 'general']])->toArray()['option_value']);
+            $result = $this->systemRepository->findByCondition([['option_key' ,'=', 'general']]);
+            if($result != null){
+                $result = json_decode($result->toArray()['option_value']);
+            }
             return view('SystemConfig::index',compact('result'));
         }else {
             $data = [
