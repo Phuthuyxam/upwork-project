@@ -191,7 +191,7 @@ class PostController extends Controller
     {
         if ($request->isMethod('get')) {
             $post = $this->posRepository->find($id)->toArray();
-            $postMeta = $this->postMetaRepository->getByPostId($id);
+            $postMeta = $this->postMetaRepository->getByPostId($id)->toArray();
             $postMetaMap = [];
             foreach ($postMeta as $value) {
                 $postMetaMap[$value['meta_key']] = json_decode($value['meta_value']);

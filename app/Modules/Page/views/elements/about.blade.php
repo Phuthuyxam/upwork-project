@@ -1,14 +1,3 @@
-@php
-    if (isset($indexItem) && !empty($indexItem)) {
-        $indexItem = json_decode($indexItem);
-    }
-    if (isset($completeItem) && !empty($completeItem)) {
-        $completeItem = json_decode($completeItem);
-    }
-    if (isset($imageItem) && !empty($imageItem)) {
-        $imageItem = json_decode($imageItem);
-    }
-@endphp
 <div class="section">
     <h5>Our Vision</h5>
     <table class="table table-bordered">
@@ -20,29 +9,26 @@
         </tr>
         </thead>
         <tbody>
-
-        @if(isset($completeItem) && isset($indexItem))
-            @foreach($completeItem as $key => $value)
-                @if($key < $indexItem[0])
-                    <tr>
-                        <td style="max-width: 400px;">
-                            {!! renderMediaManage('gallery[]',$value->image) !!}
-                        </td>
-                        <td>
-                            <textarea class="form-control required" name="descriptions[]">{{ $value->desc }}</textarea>
-                            <p class="text-danger error-message" style="font-weight: bold">
-                            </p>
-                        </td>
-                        <td style="vertical-align: middle; width: 50px">
-                            <div class="action-wrapper">
-                                <button class="btn btn-success btn-add-type"><i class="dripicons-plus"></i></button>
-                                @if($key > 0)
-                                    <button class="btn btn-danger btn-delete-type"><i class="dripicons-minus"></i></button>
-                                @endif
-                            </div>
-                        </td>
-                    </tr>
-                @endif
+        @if(isset($itemMap) && !empty($itemMap))
+            @foreach($itemMap[0] as $key => $value)
+                <tr>
+                    <td style="max-width: 400px;">
+                        {!! renderMediaManage('images[]',$value->image) !!}
+                    </td>
+                    <td>
+                        <textarea class="form-control required" style="height: 200px" name="descriptions[]">{{ $value->desc }}</textarea>
+                        <p class="text-danger error-message" style="font-weight: bold">
+                        </p>
+                    </td>
+                    <td style="vertical-align: middle; width: 50px">
+                        <div class="action-wrapper">
+                            <button class="btn btn-success btn-add-type"><i class="dripicons-plus"></i></button>
+                            @if($key > 0)
+                                <button class="btn btn-danger btn-delete-type"><i class="dripicons-minus"></i></button>
+                            @endif
+                        </div>
+                    </td>
+                </tr>
             @endforeach
         @else
             <tr>
@@ -50,7 +36,11 @@
                     {!! renderMediaManage('images[]') !!}
                 </td>
                 <td>
-                    <textarea class="form-control" name="descriptions[]"></textarea>
+                    <div class="form-group">
+                        <textarea class="form-control required" style="height: 100px" name="descriptions[]"></textarea>
+                        <p class="text-danger error-message" style="font-weight: bold">
+                        </p>
+                    </div>
                 </td>
                 <td style="vertical-align: middle;width: 50px">
                     <div class="action-wrapper">
@@ -61,7 +51,7 @@
         @endif
         </tbody>
     </table>
-    <input type="hidden" class="item-count" name="numbers[]" value="{{ isset($indexItem) && $indexItem[1] != '' ? $indexItem[0] : 1 }}">
+    <input type="hidden" class="item-count" name="numbers[]" value="{{ isset($itemMap[0]) && !empty($itemMap[0]) ? count($itemMap[0]) : 1 }}">
 </div>
 
 <div class="section">
@@ -75,28 +65,28 @@
         </tr>
         </thead>
         <tbody>
-        @if(isset($completeItem) && isset($indexItem))
-            @foreach($completeItem as $key => $value)
-                @if($key >= $indexItem[0])
-                    <tr>
-                        <td style="max-width: 400px;">
-                            {!! renderMediaManage('images[]',$value->image) !!}
-                        </td>
-                        <td>
-                            <textarea class="form-control required" name="descriptions[]">{{ $value->desc }}</textarea>
+        @if(isset($itemMap) && !empty($itemMap))
+            @foreach($itemMap[1] as $key => $value)
+                <tr>
+                    <td style="max-width: 400px;">
+                        {!! renderMediaManage('images[]',$value->image) !!}
+                    </td>
+                    <td>
+                        <div class="form-group">
+                            <textarea class="form-control required" style="height: 200px" name="descriptions[]">{{ $value->desc }}</textarea>
                             <p class="text-danger error-message" style="font-weight: bold">
                             </p>
-                        </td>
-                        <td style="vertical-align: middle; width: 50px">
-                            <div class="action-wrapper">
-                                <button class="btn btn-success btn-add-type"><i class="dripicons-plus"></i></button>
-                                @if($key > $indexItem[0])
-                                    <button class="btn btn-danger btn-delete-type"><i class="dripicons-minus"></i></button>
-                                @endif
-                            </div>
-                        </td>
-                    </tr>
-                @endif
+                        </div>
+                    </td>
+                    <td style="vertical-align: middle; width: 50px">
+                        <div class="action-wrapper">
+                            <button class="btn btn-success btn-add-type"><i class="dripicons-plus"></i></button>
+                            @if($key > 0)
+                                <button class="btn btn-danger btn-delete-type"><i class="dripicons-minus"></i></button>
+                            @endif
+                        </div>
+                    </td>
+                </tr>
             @endforeach
         @else
             <tr>
@@ -104,9 +94,11 @@
                     {!! renderMediaManage('images[]') !!}
                 </td>
                 <td>
-                    <textarea class="form-control required" name="descriptions[]"></textarea>
-                    <p class="text-danger error-message" style="font-weight: bold">
-                    </p>
+                    <div class="form-group">
+                        <textarea class="form-control required" style="height: 100px" name="descriptions[]"></textarea>
+                        <p class="text-danger error-message" style="font-weight: bold">
+                        </p>
+                    </div>
                 </td>
                 <td style="vertical-align: middle;width: 50px">
                     <div class="action-wrapper">
@@ -117,7 +109,7 @@
         @endif
         </tbody>
     </table>
-    <input type="hidden" class="item-count" name="numbers[]" value="{{ isset($indexItem) && $indexItem[1] != '' ? $indexItem[1] : 1 }}">
+    <input type="hidden" class="item-count" name="numbers[]" value="{{ isset($itemMap[1]) && !empty($itemMap[1]) ? count($itemMap[1]) : 1 }}">
 </div>
 
 <div class="section">
@@ -130,31 +122,36 @@
         </tr>
     </thead>
     <tbody>
-        @if(isset($imageItem))
-            @foreach($imageItem as $key=>$item)
+        @if(isset($imageMap) && !empty($imageMap))
+            @foreach($imageMap as $key=>$value)
                 <tr>
                     <td style="max-width: 400px;">
-                        <div class="preview-image-multiple">
-                            @if(!empty($item))
-                                @foreach($item as $value)
-                                    @if($value != '')
-                                        <div class="items">
-                                            <img style="width: 100%" src="{{ asset($value) }}" alt="">
-                                        </div>
-                                    @endif
+                        <div class="image-items">
+                            <table class="table table-bordered">
+                                <tbody>
+                                @foreach($value as $k => $item)
+                                    <tr>
+                                        <td>{!! renderMediaManage('gallery[]',$item) !!}</td>
+                                        <td style="vertical-align: middle;width: 50px;">
+                                            <div class="button-wrapper">
+                                                <button class="btn btn-success btn-add-child"><i class="dripicons-plus"></i></button>
+                                                @if($k > 0)
+                                                    <button class="btn btn-danger btn-delete-child"><i class="dripicons-minus"></i></button>
+                                                @endif
+                                            </div>
+                                        </td>
+                                    </tr>
                                 @endforeach
-                            @endif
+                                </tbody>
+                            </table>
+                            <input type="hidden" name="rowItem[]" class="row-item" value="{{count($value)}}">
                         </div>
-                        <input type="file" style="padding: 3px 5px; overflow: hidden" class="form-control banner-image-multiple {{ empty($item) ? 'required':'' }}"
-                               name="row[]" multiple>
-                        <input type="hidden" name="rowMap[]" class="banner-link" value="{{ json_encode($item) }}">
-                        <p class="text-danger error-message" style="font-weight: bold"></p>
                     </td>
                     <td style="vertical-align: middle;width: 50px">
                         <div class="action-wrapper">
-                            <button class="btn btn-success btn-add-type"><i class="dripicons-plus"></i></button>
+                            <button class="btn btn-success btn-add-type parent"><i class="dripicons-plus"></i></button>
                             @if($key > 0)
-                                <button class="btn btn-danger btn-delete-type"><i class="dripicons-minus"></i></button>
+                                <button class="btn btn-danger btn-delete-type parent"><i class="dripicons-minus"></i></button>
                             @endif
                         </div>
                     </td>
@@ -167,7 +164,7 @@
                         <table class="table table-bordered">
                             <tbody>
                                 <tr>
-                                    <td>{!! renderMediaManage('images[]') !!}</td>
+                                    <td>{!! renderMediaManage('gallery[]') !!}</td>
                                     <td style="vertical-align: middle;width: 50px;">
                                         <div class="button-wrapper">
                                             <button class="btn btn-success btn-add-child"><i class="dripicons-plus"></i></button>

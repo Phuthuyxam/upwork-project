@@ -11,7 +11,7 @@ class PostMetaRepository extends EloquentRepository {
     }
 
     public function getByPostId($postId){
-        return $this->_model->where('post_id',$postId)->get()->toArray();
+        return $this->_model->where('post_id',$postId)->get();
     }
 
     public function updateMeta($metaKey,$data){
@@ -38,5 +38,9 @@ class PostMetaRepository extends EloquentRepository {
 
     public function deleteByPostId($postId) {
         return $this->_model->where('post_id',$postId)->delete();
+    }
+
+    public function deleteFields($post_id,$fields) {
+        return $this->_model->where('post_id', $post_id)->whereIn('meta_key',$fields)->delete();
     }
 }

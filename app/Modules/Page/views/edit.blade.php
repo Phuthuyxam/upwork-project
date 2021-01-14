@@ -48,15 +48,6 @@
             display: block;
             margin-bottom: 10px;
         }
-        /*.action-wrapper {*/
-        /*    display: flex;*/
-        /*    align-items: center;*/
-        /*    justify-content: space-between;*/
-        /*}*/
-
-        /*.action-wrapper .btn-add {*/
-        /*    margin-right: 10px;*/
-        /*}*/
 
         .hidden {
             display: none;
@@ -67,6 +58,12 @@
         .preview-image-multiple {
             display: flex;
             align-items: center;
+            margin-bottom: 1rem;
+        }
+        .image-items .preview-image {
+            width: 20% !important;
+        }
+        .btn-add-child {
             margin-bottom: 1rem;
         }
     </style>
@@ -137,20 +134,16 @@
                                             </p>
                                         </div>
                                         <div class="form-group">
-                                            <label for="excerpt">Title</label>
-                                            <input type="text" class="form-control required" name="post_excerpt"
-                                                   id="excerpt"
-                                                   placeholder="Excerpt"
-                                                   value="{{ old('post_excerpt') ? old('post_excerpt') : $result['post_excerpt'] }}">
-                                            <p class="text-danger error-message" style="font-weight: bold"
-                                               id="excerpt-error">
+                                            <label for="excerpt">Excerpt</label>
+                                            <textarea type="text" class="form-control required" name="post_excerpt" id="excerpt" placeholder="Excerpt" rows="8">{{ old('post_excerpt') ? old('post_excerpt') : $result['post_excerpt'] }}</textarea>
+                                            <p class="text-danger error-message" style="font-weight: bold" id="excerpt-error">
                                                 @error('post_excerpt')
                                                 {{ $message }}
                                                 @enderror
                                             </p>
                                         </div>
                                         <div class="form-group">
-                                            <label for="description">Description</label>
+                                            <label for="description">Content</label>
                                             <div class="editor-wrapper">
                                                 <textarea name="post_content" id="description" class="form-control"
                                                           style="width: 100%; height: 90px"
@@ -208,25 +201,12 @@
                                         </div>
                                     </div>
                                     <div class="tab-pane p-3" id="slide" role="tabpanel">
-                                        @if(isset($result[\App\Core\Glosary\MetaKey::COMPLETE_ITEM['NAME']]) && !empty($result[\App\Core\Glosary\MetaKey::COMPLETE_ITEM['NAME']]))
-                                            @if($result['page_template'] == \App\Core\Glosary\PageTemplateConfigs::SERVICE['VALUE'])
+                                        @if($result['page_template'] == \App\Core\Glosary\PageTemplateConfigs::SERVICE['VALUE'])
                                                 @include('Page::elements.service',
-                                                        [
-                                                        'serviceItem' => $result[\App\Core\Glosary\MetaKey::COMPLETE_ITEM['NAME']]
-                                                        ])
-                                            @endif
+                                                        ['serviceItem' => $result[\App\Core\Glosary\MetaKey::COMPLETE_ITEM['NAME']]])
                                         @endif
-                                        @if(isset($result[\App\Core\Glosary\MetaKey::COMPLETE_ITEM['NAME']])
-                                                    && !empty($result[\App\Core\Glosary\MetaKey::COMPLETE_ITEM['NAME']])
-                                                    && !empty($result[\App\Core\Glosary\MetaKey::INDEX_COMPLETE_ITEM['NAME']])
-                                                    && isset($result[\App\Core\Glosary\MetaKey::INDEX_COMPLETE_ITEM['NAME']]))
-                                            @if($result['page_template'] == \App\Core\Glosary\PageTemplateConfigs::ABOUT['VALUE'])
-                                                @include('Page::elements.about',
-                                                        [
-                                                            'indexItem' => $result[\App\Core\Glosary\MetaKey::INDEX_COMPLETE_ITEM['NAME']],
-                                                            'completeItem' => $result[\App\Core\Glosary\MetaKey::COMPLETE_ITEM['NAME']],
-                                                        ])
-                                            @endif
+                                        @if($result['page_template'] == \App\Core\Glosary\PageTemplateConfigs::ABOUT['VALUE'])
+                                                @include('Page::elements.about', [ 'imageMap' => $imageMap , 'itemMap' => $itemMap ])
                                         @endif
                                     </div>
                                 </div>
@@ -268,6 +248,8 @@
 @section('script')
     <script>
         const maxFileSize = '{{ \App\Core\Glosary\MaxFileSize::IMAGE['VALUE'] }}';
+        let currentTemplate = {{ $result[\App\Core\Glosary\MetaKey::PAGE_TEMPLATE['NAME']] }};
+        const defaultTemplate = {{ \App\Core\Glosary\PageTemplateConfigs::HOTEL['VALUE'] }};
         {{--const slugs = JSON.parse('{!! json_encode($slugs) !!}')--}}
         CKEDITOR.replace('description', {filebrowserImageBrowseUrl: '/file-manager/ckeditor'});
         $(document).ready(function () {
@@ -287,10 +269,13 @@
                     },
                     success: function (response) {
                         $('#loading').hide();
-                        if (response) {
+                        if (response != 'default') {
                             $('#slide').empty();
                             $('#slide').append(response);
                             $('#customTab').show();
+                        }else{
+                            $('#customTab').hide();
+                            $('#slide').empty();
                         }
                     },
                     error: function (e) {
@@ -373,18 +358,6 @@
                 }
             })
 
-            CKEDITOR.instances.description.on('change', function () {
-                let value = CKEDITOR.instances.description.getData();
-
-                if (value == '') {
-                    $('#description').parents('.form-group').find('.editor-wrapper').addClass('error');
-                    $('#description').parents('.form-group').find('.error-message').text('This field cannot be null');
-                } else {
-                    $('#description').parents('.form-group').find('.editor-wrapper').removeClass('error');
-                    $('#description').parents('.form-group').find('.error-message').text('');
-                }
-            })
-
             $('body').on('click', '.preview-image .close', function () {
                 $(this).parent().find('img').remove();
                 $(this).parent().parent().find('input[type=file]').val('');
@@ -396,24 +369,56 @@
             $('.btn-submit').click(function (e) {
                 e.preventDefault();
                 if (checkRequired('add-form')) {
-                    $('#publishStatus').val(1);
-                    $('#add-form').submit();
-                    // $('#commonTab').css('background', '');
+                    if (parseInt($('#template').val()) !== currentTemplate && currentTemplate != defaultTemplate) {
+                        Swal.fire({
+                            title: 'Are you sure?',
+                            text: "You are changing template! Old data will be lost",
+                            type: 'warning',
+                            showCancelButton: true,
+                            confirmButtonColor: '#3085d6',
+                            cancelButtonColor: '#d33',
+                            confirmButtonText: 'Confirm !'
+                        }).then((result) => {
+                            if (result.value) {
+                                $('#publishStatus').val(1);
+                                $('#add-form').submit();
+                            }
+                        })
+                    }else{
+                        $('#publishStatus').val(1);
+                        $('#add-form').submit();
+                    }
                 } else {
                     Swal.fire({
                         type: 'warning',
                         title: 'Oops... !',
                         text: 'Some field need to required. Please check it again',
                     });
-                    // $('#commonTab').css('background', '#FF7575');
                 }
             })
 
             $('.btn-draft').click(function (e) {
                 e.preventDefault();
                 if (checkRequired('add-form')) {
-                    $('#publishStatus').val(0);
-                    $('#add-form').submit();
+                    if (parseInt($('#template').val()) !== currentTemplate && currentTemplate != defaultTemplate) {
+                        Swal.fire({
+                            title: 'Are you sure?',
+                            text: "You are changing template! Old data will be lost",
+                            type: 'warning',
+                            showCancelButton: true,
+                            confirmButtonColor: '#3085d6',
+                            cancelButtonColor: '#d33',
+                            confirmButtonText: 'Confirm !'
+                        }).then((result) => {
+                            if (result.value) {
+                                $('#publishStatus').val(0);
+                                $('#add-form').submit();
+                            }
+                        })
+                    }else{
+                        $('#publishStatus').val(0);
+                        $('#add-form').submit();
+                    }
                 } else {
                     Swal.fire({
                         type: 'warning',
@@ -436,43 +441,6 @@
 
         })
 
-        function readURL(input, element) {
-            if (input.files && input.files[0]) {
-                element.find('img').remove();
-                let reader = new FileReader();
-                let name = input.files[0].name;
-                reader.onload = function (e) {
-
-                    let html = '<img id="image" style="width: 100%" src="' + e.target.result + '" title="' + name + '" alt="your image" />';
-                    element.append(html);
-                }
-                reader.readAsDataURL(input.files[0]);
-            }
-        }
-
-        function checkRequired(formId) {
-            let valid = true;
-            $('#' + formId).find('.required').each(function () {
-                if ($(this).val().trim() === '') {
-                    $(this).addClass('error');
-                    $(this).parent().find('.error-message').text('This field cannot be null');
-                    valid = false;
-                } else {
-                    $(this).removeClass('error');
-                    $(this).parent().find('.error-message').text('');
-                }
-            })
-            if (CKEDITOR.instances.description.getData() == '') {
-                $('#description').parents('.form-group').find('.editor-wrapper').addClass('error');
-                $('#description').parents('.form-group').find('.error-message').text('This field cannot be null');
-                valid = false;
-            } else {
-                $('#description').parents('.form-group').find('.editor-wrapper').removeClass('error');
-                $('#description').parents('.form-group').find('.error-message').text('');
-            }
-            return valid;
-        }
-
         $('body').on('click', '.btn-add-type', function (e) {
             e.preventDefault();
             let row = $(this).closest('tr').clone();
@@ -481,30 +449,26 @@
             row.find('textarea').val('');
             row.find('.home-slider-image').val('');
             row.find('.image-preview-container').html("");
-            $(this).closest('tbody').append(row);
 
+            if ($(this).hasClass('parent')) {
+                row.find('.action-wrapper').empty();
+                row.find('.action-wrapper').append('<button class="btn btn-success btn-add-type parent"><i class="dripicons-plus"></i></button><button class="btn btn-danger btn-delete-type parent"><i class="dripicons-minus"></i></button>');
+                let imageRow = row.find('.image-items tr').first();
+                row.find('.image-items tbody').empty();
+                row.find('.image-items tbody').append(imageRow[0].outerHTML);
+                row.find('.image-items tbody')
+                row.find('.row-item').val(1);
+                row.find('.home-slider-image').val('');
+            }
+
+            $(this).closest('tbody').append(row);
 
             let count = parseInt($(this).parents('.section').find('.item-count').val());
             count = count + 1;
             $(this).parents('.section').find('.item-count').val(count);
 
         })
-        $('body').on('click', '.btn-add-child', function (e) {
-            e.preventDefault();
-            let row = $(this).closest('tr').clone();
-            row.find('.action-wrapper').empty();
-            row.find('.action-wrapper').append('<button class="btn btn-success btn-add-child"><i class="dripicons-plus"></i></button><button class="btn btn-danger btn-delete-child"><i class="dripicons-minus"></i></button>');
-            row.find('textarea').val('');
-            row.find('.home-slider-image').val('');
-            row.find('.image-preview-container').html("");
-            $(this).closest('tbody').append(row);
 
-
-            let countItem = parseInt($(this).closest('.image-items').find('.row-item').val());
-            countItem = countItem + 1;
-            $(this).closest('.image-items').find('.row-item').val(countItem);
-            console.log(countItem);
-        })
         $('body').on('click', '.btn-delete-type', function (e) {
             e.preventDefault();
 
@@ -514,6 +478,22 @@
 
             $(this).parents('tr').remove();
         })
+
+        $('body').on('click', '.btn-add-child', function (e) {
+            e.preventDefault();
+            let row = $(this).closest('tr').clone();
+            row.find('.button-wrapper').empty();
+            row.find('.button-wrapper').append('<button class="btn btn-success btn-add-child"><i class="dripicons-plus"></i></button><button class="btn btn-danger btn-delete-child"><i class="dripicons-minus"></i></button>');
+
+            row.find('.image-preview-container').html("");
+            $(this).closest('tbody').append(row);
+            row.find('.home-slider-image').val('');
+
+            let countItem = parseInt($(this).closest('.image-items').find('.row-item').val());
+            countItem = countItem + 1;
+            $(this).closest('.image-items').find('.row-item').val(countItem);
+        })
+
 
         $('body').on('click', '.btn-delete-child', function (e) {
             e.preventDefault();
@@ -525,10 +505,20 @@
             $(this).closest('tr').remove();
         })
 
-        $('body').on('change','.banner-image-multiple',function (){
-            $(this).parent().find('.banner-link').val('');
-
-        })
+        function checkRequired(formId) {
+            let valid = true;
+            $('#' + formId).find('.required').each(function () {
+                if ($(this).val().trim() === '') {
+                    $(this).addClass('error');
+                    $(this).closest('tr').find('.error-message').text('This field cannot be null');
+                    valid = false;
+                } else {
+                    $(this).removeClass('error');
+                    $(this).closest('tr').find('.error-message').text('');
+                }
+            })
+            return valid;
+        }
     </script>
 @endsection
 

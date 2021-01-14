@@ -36,4 +36,8 @@ class MetaKey extends BasicEnum
         }
         return false;
     }
+
+    public static function pageDeleteAbleField() {
+        return [MetaKey::COMPLETE_ITEM['VALUE'],MetaKey::INDEX_COMPLETE_ITEM['VALUE'],MetaKey::IMAGE_ITEM['VALUE'],MetaKey::INDEX_IMAGE_ITEM['VALUE']];
+    }
 }

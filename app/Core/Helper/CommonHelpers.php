@@ -147,7 +147,7 @@ if(!function_exists('getDataSeoOption')) {
 }
 
 if(!function_exists('renderMediaManage')) {
-    function renderMediaManage($inputName , $previewImage = null ) {
+    function renderMediaManage($inputName , $previewImage = null ,$required = true) {
         ob_start();
         ?>
         <div class="form-group media-load-image">
@@ -162,12 +162,13 @@ if(!function_exists('renderMediaManage')) {
                 </div>
             </div>
             <div class="input-group">
-                <input type="text" style="padding: 3px 5px; overflow: hidden" name="<?php echo $inputName ?>" class="form-control required home-slider-image" aria-describedby="button-image" readonly
+                <input type="text" style="padding: 3px 5px; overflow: hidden" name="<?php echo $inputName ?>" class="form-control <?php echo $required ? 'required' : '' ?>  home-slider-image" aria-describedby="button-image" readonly
                        value="<?php echo (isset($previewImage) && !empty($previewImage)) ? $previewImage : "" ?>">
                 <div class="input-group-append">
                     <button class="btn btn-primary waves-effect waves-light btn-popup-media" type="button" onclick="openMediaManager(this)">Select Image</button>
                 </div>
             </div>
+            <?php echo $required ? '<p class="text-danger error-message" style="font-weight: bold"></p>' : ''?>
         </div>
         <?php
         $content = ob_get_contents();

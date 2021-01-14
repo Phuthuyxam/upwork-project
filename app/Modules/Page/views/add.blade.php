@@ -67,6 +67,9 @@
             display: block;
             margin-bottom: 1rem;
         }
+        .image-items .preview-image {
+            width: 20% !important;
+        }
     </style>
 @endsection
 @section('heading')
@@ -125,8 +128,8 @@
                                             </p>
                                         </div>
                                         <div class="form-group">
-                                            <label for="excerpt">Post excerpt</label>
-                                            <textarea type="text" class="form-control" name="post_excerpt" id="excerpt" placeholder="Excerpt" rows="8">{{ old('post_excerpt') }}</textarea>
+                                            <label for="excerpt">Excerpt</label>
+                                            <textarea type="text" class="form-control required" name="post_excerpt" id="excerpt" placeholder="Excerpt" rows="8">{{ old('post_excerpt') }}</textarea>
                                             <p class="text-danger error-message" style="font-weight: bold" id="excerpt-error">
                                                 @error('post_excerpt')
                                                 {{ $message }}
@@ -154,44 +157,19 @@
                                                 <tr>
                                                     <th style="vertical-align: middle; width: 100px">Desktop</th>
                                                     <td>
-{{--                                                        <div class="preview-image">--}}
-{{--                                                            <div class="close">--}}
-{{--                                                                <i class="dripicons-cross"></i>--}}
-{{--                                                            </div>--}}
-{{--                                                        </div>--}}
-{{--                                                        <input type="file" style="padding: 3px 5px; overflow: hidden"--}}
-{{--                                                               class="form-control required banner-image"--}}
-{{--                                                               name="files[]">--}}
-
                                                         {!!  renderMediaManage('files[]') !!}
-
-                                                        <p class="text-danger error-message" style="font-weight: bold">
-                                                            @error('files')
-                                                            {{ $message }}
-                                                            @enderror
-                                                        </p>
                                                     </td>
                                                 </tr>
                                                 <tr>
                                                     <th style="vertical-align: middle; width: 100px">Tablet</th>
                                                     <td>
                                                         {!!  renderMediaManage('files[]') !!}
-                                                        <p class="text-danger error-message" style="font-weight: bold">
-                                                            @error('files')
-                                                            {{ $message }}
-                                                            @enderror
-                                                        </p>
                                                     </td>
                                                 </tr>
                                                 <tr>
                                                     <th style="vertical-align: middle; width: 100px">Mobile</th>
                                                     <td>
                                                         {!!  renderMediaManage('files[]') !!}
-                                                        <p class="text-danger error-message" style="font-weight: bold">
-                                                            @error('files')
-                                                            {{ $message }}
-                                                            @enderror
-                                                        </p>
                                                     </td>
                                                 </tr>
                                                 </tbody>
@@ -250,10 +228,13 @@
                     },
                     success : function (response){
                         $('#loading').hide();
-                        if (response) {
+                        if (response != 'default') {
                             $('#slide').empty();
                             $('#slide').append(response);
                             $('#customTab').show();
+                        }else{
+                            $('#slide').empty();
+                            $('#customTab').hide();
                         }
                     },
                     error : function (e) {
@@ -328,66 +309,6 @@
                 }
             });
 
-            $('body').on('change','.banner-image-multiple',function (){
-                let val = $(this).val();
-                if (val) {
-                    if (validateFileUpload(this)) {
-                        readURLMultiple(this,$(this).parent().find('.preview-image-multiple'));
-                        $(this).removeClass('error');
-                        $(this).removeClass('required');
-                        $(this).parents('td').find('.error-message').text('');
-
-                        let count = $(this).parent().find('.number-image').val() === "" ? 0 :parseInt($(this).parent().find('.number-image').val());
-                        count = $(this).prop('files').length;
-                        $(this).parent().find('.number-image').val(count);
-                    } else{
-                        $(this).parents('td').find('.error-message').text('File must be JPG, GIF or PNG, less than 2MB. Please choose again');
-                        $(this).val('');
-                        $(this).addClass('error');
-                        $(this).addClass('required');
-                        $(this).parent().find('.preview-image-multiple').empty();
-                        $(this).parent().find('.number-image').val(0);
-                    }
-                }else{
-                    $(this).parents('td').find('.error-message').text('This field cannot be null');
-                    $(this).addClass('error');
-                    $(this).addClass('required');
-                    $(this).parent().find('.preview-image-multiple').empty();
-                    $(this).parent().find('.number-image').val(0);
-                }
-            })
-
-
-            $('#tax').on('change',function () {
-                if ($(this).val() == '') {
-                    $(this).addClass('error');
-                    $(this).parents('.form-group').find('.error-message').text('This field cannot be null');
-                }else {
-                    $(this).removeClass('error');
-                    $(this).parents('.form-group').find('.error-message').text('');
-                    $(this).removeClass('required');
-                }
-            })
-
-            CKEDITOR.instances.description.on('change',function (){
-                let value = CKEDITOR.instances.description.getData();
-
-                if (value == '') {
-                    $('#description').parents('.form-group').find('.editor-wrapper').addClass('error');
-                    $('#description').parents('.form-group').find('.error-message').text('This field cannot be null');
-                }else{
-                    $('#description').parents('.form-group').find('.editor-wrapper').removeClass('error');
-                    $('#description').parents('.form-group').find('.error-message').text('');
-                }
-            })
-
-            $('body').on('click', '.preview-image .close', function () {
-                $(this).parent().find('img').remove();
-                $(this).parent().parent().find('input[type=file]').val('');
-                $(this).parent().parent().find('input[type=file]').show();
-
-                $(this).parents('td').find('.banner-image').addClass('required');
-            })
 
             $('.btn-submit').click(function (e) {
                 e.preventDefault();
@@ -403,17 +324,6 @@
                 }
             })
 
-            // $('body').on('change','.required',function (){
-            //     let value = $(this).val();
-            //     if (value.trim() === '') {
-            //         $(this).addClass('error');
-            //         $(this).parent().find('.error-message').text('This field cannot be null');
-            //     }else{
-            //         $(this).removeClass('error');
-            //         $(this).parent().find('.error-message').text('');
-            //     }
-            // })
-
             $('.btn-draft').click(function (e) {
                 e.preventDefault();
                 if (checkRequired('add-form')) {
@@ -428,31 +338,6 @@
                 }
             })
         })
-
-
-        function checkRequired(formId) {
-            let valid = true;
-            $('#' + formId).find('.required').each(function () {
-                console.log(this);
-                if ($(this).val().trim() === '') {
-                    $(this).addClass('error');
-                    $(this).parent().find('.error-message').text('This field cannot be null');
-                    valid = false;
-                } else {
-                    $(this).removeClass('error');
-                    $(this).parent().find('.error-message').text('This field cannot be null');
-                }
-            })
-            // if (CKEDITOR.instances.description.getData() == '') {
-            //     $('#description').parents('.form-group').find('.editor-wrapper').addClass('error');
-            //     $('#description').parents('.form-group').find('.error-message').text('This field cannot be null');
-            //     valid = false;
-            // }else{
-            //     $('#description').parents('.form-group').find('.editor-wrapper').removeClass('error');
-            //     $('#description').parents('.form-group').find('.error-message').text('');
-            // }
-            return valid;
-        }
 
         let rowCount = 1;
         $('body').on('click','.btn-add-type',function (e){
@@ -476,6 +361,8 @@
             row.find('.image-preview-container').html("");
 
             if ($(this).hasClass('parent')) {
+                row.find('.action-wrapper').empty();
+                row.find('.action-wrapper').append('<button class="btn btn-success btn-add-type parent"><i class="dripicons-plus"></i></button><button class="btn btn-danger btn-delete-type parent"><i class="dripicons-minus"></i></button>');
                 let imageRow = row.find('.image-items tr').first();
                 row.find('.image-items tbody').empty();
                 row.find('.image-items tbody').append(imageRow[0].outerHTML);
@@ -483,6 +370,7 @@
                 row.find('.row-item').val(1);
                 row.find('.home-slider-image').val('');
             }
+
             $(this).parents('tbody').append(row);
 
             let count = parseInt($(this).parents('.section').find('.item-count').val());
@@ -498,6 +386,7 @@
             $(this).parents('tr').remove();
 
         })
+
         $('body').on('click', '.btn-add-child', function (e) {
             e.preventDefault();
             let row = $(this).closest('tr').clone();
@@ -513,6 +402,7 @@
             countItem = countItem + 1;
             $(this).closest('.image-items').find('.row-item').val(countItem);
         })
+
         $('body').on('click', '.btn-delete-child', function (e) {
             e.preventDefault();
 
@@ -522,5 +412,20 @@
 
             $(this).closest('tr').remove();
         })
+
+        function checkRequired(formId) {
+            let valid = true;
+            $('#' + formId).find('.required').each(function () {
+                if ($(this).val().trim() === '') {
+                    $(this).addClass('error');
+                    $(this).closest('.form-group').find('.error-message').text('This field cannot be null');
+                    valid = false;
+                } else {
+                    $(this).removeClass('error');
+                    $(this).closest('.form-group').find('.error-message').text('This field cannot be null');
+                }
+            })
+            return valid;
+        }
     </script>
 @endsection

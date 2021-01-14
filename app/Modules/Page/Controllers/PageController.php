@@ -33,6 +33,10 @@ class PageController extends Controller
         $this->termRelationRepository = $termRelationRepository;
     }
 
+    public function index(){
+        return view('Page::index');
+    }
+
     public function add(Request $request) {
         if ($request->isMethod('get')) {
             return view('Page::add');
@@ -98,8 +102,18 @@ class PageController extends Controller
                 }
 
                 if ($request->input('template') == PageTemplateConfigs::ABOUT['VALUE']) {
-//                    $this->createPage($request,$postId,MetaKey::PAGE_TEMPLATE['VALUE'],MetaKey::COMPLETE_ITEM['VALUE'],'items');
-                        $this->createPage($request,$postId,MetaKey::COMPLETE_ITEM['VALUE'],MetaKey::IMAGE_ITEM['VALUE']);
+                    if ($this->createPage($request,$postId,MetaKey::COMPLETE_ITEM['VALUE'],MetaKey::IMAGE_ITEM['VALUE'])) {
+                        $result = true;
+                    }else{
+                        $result = false;
+                    }
+                }
+                if ($request->input('template') == PageTemplateConfigs::HOTEL['VALUE']) {
+                    $this->postMetaRepository->create([
+                        'post_id' => $postId,
+                        'meta_key' => MetaKey::PAGE_TEMPLATE['VALUE'],
+                        'meta_value' => $request->input('template')
+                    ]);
                 }
 
                 if ($result) {
@@ -120,17 +134,57 @@ class PageController extends Controller
             foreach ($pageMeta as $value) {
                 $result[MetaKey::display($value['meta_key'])] = $value['meta_value'];
             }
+
+            if ($result[MetaKey::PAGE_TEMPLATE['NAME']] == PageTemplateConfigs::ABOUT['VALUE']){
+                $imageMap = [];
+                if (isset($result[MetaKey::IMAGE_ITEM['NAME']]) && !empty($result[MetaKey::IMAGE_ITEM['NAME']])){
+                    $imageItem = json_decode($result[MetaKey::IMAGE_ITEM['NAME']]);
+                    $indexImage = json_decode($result[MetaKey::INDEX_IMAGE_ITEM['NAME']]);
+                    $index = $indexImage[0];
+                    foreach ($indexImage as $k => $value) {
+                        foreach ($imageItem as $key => $item) {
+                            if (!array_key_exists($k, $imageMap) || count($imageMap[$k]) < intval($value)) {
+                                $imageMap[$k][] = $item;
+                                unset($imageItem[$key]);
+                            } else {
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                $itemMap = [];
+                if (isset($result[MetaKey::INDEX_COMPLETE_ITEM['NAME']]) && !empty($result[MetaKey::INDEX_COMPLETE_ITEM['NAME']])) {
+                    $items = json_decode($result[MetaKey::COMPLETE_ITEM['NAME']]);
+                    $indexItem = json_decode($result[MetaKey::INDEX_COMPLETE_ITEM['NAME']]);
+                    foreach ($indexItem as $k => $value) {
+                        foreach ($items as $key => $item) {
+                            if (!array_key_exists($k, $itemMap) || count($itemMap[$k]) < intval($value)) {
+                                $itemMap[$k][] = $item;
+                                unset($items[$key]);
+                            } else {
+                                break;
+                            }
+                        }
+                    }
+                }
+                return view('Page::edit',compact('result','slugs','imageMap','itemMap'));
+            }
+
             return view('Page::edit',compact('result','slugs'));
         }else{
             $validate = $request->validate([
                 'post_title' => 'required|max:191',
                 'post_name' => 'required|unique:posts,post_name,'.$id,
-//                'files.*' => 'mimes:jpg,png,gif',
-//                'post_content' => 'required',
                 'post_excerpt' => 'required',
                 'template' => 'required',
             ]);
 
+            $pageMetaMap = [];
+            $pageMeta = $this->postMetaRepository->getByPostId($id)->toArray();
+            foreach ($pageMeta as $value) {
+                $pageMetaMap[MetaKey::display($value['meta_key'])] = $value['meta_value'];
+            }
 
             $post_title = $request->input('post_title');
             $status = $request->input('status') == 0 ? PostStatus::DRAFT['VALUE'] : PostStatus::PUBLIC['VALUE'];
@@ -163,12 +217,28 @@ class PageController extends Controller
                 ]);
             }
 
+            // change template
+            if ($pageMetaMap[MetaKey::PAGE_TEMPLATE['NAME']] != $request->input('template')) {
+                $fields = MetaKey::pageDeleteAbleField();
+                $this->postMetaRepository->deleteFields($id,$fields);
+                $dataTemplate = [
+                    'meta_value' => $request->input('template')
+                ];
+
+                if ($this->postMetaRepository->updateByCondition([['post_id','=',$id],['meta_key' ,'=', MetaKey::PAGE_TEMPLATE['VALUE']]],$dataTemplate)){
+                    $result = true;
+                }else{
+                    $result = false;
+                }
+            }
+
+
             if ($request->input('template') == PageTemplateConfigs::SERVICE['VALUE']) {
-                $this->updatePage($request,$id,MetaKey::COMPLETE_ITEM['VALUE'],MetaKey::IMAGE_ITEM['VALUE']);
+                $this->updatePage($request,$id,MetaKey::COMPLETE_ITEM['VALUE']);
             }
 
             if ($request->input('template') == PageTemplateConfigs::ABOUT['VALUE']) {
-                $this->updatePage($request,$id,MetaKey::COMPLETE_ITEM['VALUE'],'items');
+                $this->updatePage($request,$id,MetaKey::COMPLETE_ITEM['VALUE'],MetaKey::IMAGE_ITEM['VALUE']);
             }
 
             if ($result) {
@@ -183,16 +253,15 @@ class PageController extends Controller
         $template = $request->input('template');
 
         if ($template == PageTemplateConfigs::SERVICE['VALUE']) {
-            if ($request->input('postId')) {
-                $postId = $request->input('postId');
-                $postMeta = $this->postMetaRepository->getMetaValueByCondition([['post_id','=',$postId],['meta_key','=',MetaKey::COMPLETE_ITEM['VALUE']]])->toArray();
-            }
             $html = view(PageTemplateConfigs::SERVICE['VIEW'])->render();
             return response($html);
         }
         if ($template == PageTemplateConfigs::ABOUT['VALUE']) {
             $html = view(PageTemplateConfigs::ABOUT['VIEW'])->render();
             return response($html);
+        }
+        if ($template == PageTemplateConfigs::HOTEL['VALUE']){
+            return response('default');
         }
     }
 
@@ -252,63 +321,93 @@ class PageController extends Controller
 
     }
 
-    private function updatePage($request,$postId,$completeItem,$imageItem) {
+    private function updatePage($request,$postId,$completeItem,$imageItem = null) {
         $result = false;
-        $images = $request->input('images');
-        $descriptions = $request->input('descriptions');
+
         if ($imageItem) {
-            $folderName = 'imageItem';
             $condition = [['post_id','=',$postId],['meta_key' ,'=', $imageItem]];
-            $keyArray = array_keys($request->all());
-            $keyMap = [];
-            foreach ($keyArray as $value) {
-                if (strpos($value,'row')){
-                    $keyMap[] = $value;
+            $images =  $request->input('gallery');
+            $index = $request->input('rowItem');
+            if (isset($images) && !empty($images)) {
+                $dataMeta = [
+                    'meta_value' => json_encode($images)
+                ];
+                if ($this->postMetaRepository->getMetaValueByCondition($condition)){
+                    $this->postMetaRepository->updateByCondition($condition,$dataMeta);
+                }else{
+                    $this->postMetaRepository->create([
+                        'post_id' => $postId,
+                        'meta_key' => $imageItem,
+                        'meta_value' => json_encode($images)
+                    ]);
                 }
+
+                $result = true;
             }
-            if (!empty($keyMap)) {
-                $postMeta = $this->postMetaRepository->getMetaValueByCondition($condition);
-                if ($postMeta) {
-                    $imageMap = $request->input('rowMap');
-                    $imageMeta = json_decode($postMeta['meta_value']);
-                    $itemMap = [];
+            if (isset($index) && !empty($index)) {
+                $indexCondition = [['post_id','=',$postId],['meta_key' ,'=', MetaKey::INDEX_IMAGE_ITEM['VALUE']]];
+                $dataMeta = [
+                    'meta_value' => json_encode($index)
+                ];
 
-                    foreach ($imageMap as $key => $value) {
-                        if ($value == '') {
-
-                        }
-                    }
+                if ($this->postMetaRepository->getMetaValueByCondition($indexCondition)){
+                    $this->postMetaRepository->updateByCondition($indexCondition,$dataMeta);
+                }else{
+                    $this->postMetaRepository->create([
+                        'post_id' => $postId,
+                        'meta_key' => MetaKey::INDEX_IMAGE_ITEM['VALUE'],
+                        'meta_value' => json_encode($index)
+                    ]);
                 }
             }
         }
         if ($completeItem) {
+            $images = $request->input('images');
+            $descriptions = $request->input('descriptions');
             $condition = [['post_id','=',$postId],['meta_key' ,'=', $completeItem]];
             $items = [];
-            foreach ($images as $key => $value) {
-                $items[] = [
-                    'image' => $value,
-                    'desc' => $descriptions[$key]
+            if (isset($images) && !empty($images) && isset($descriptions) && !empty($descriptions)) {
+                foreach ($images as $key => $value) {
+                    $items[] = [
+                        'image' => $value,
+                        'desc' => $descriptions[$key]
+                    ];
+                }
+
+                $dataMeta = [
+                    'meta_value' => json_encode($items)
                 ];
+
+                if ($this->postMetaRepository->getMetaValueByCondition($condition)){
+                    $this->postMetaRepository->updateByCondition($condition,$dataMeta);
+                }else{
+                    $this->postMetaRepository->create([
+                        'post_id' => $postId,
+                        'meta_key' => $completeItem,
+                        'meta_value' => json_encode($items)
+                    ]);
+                }
+                $result = true;
             }
 
-            $dataMeta = [
-                'meta_value' => json_encode($items)
-            ];
             if ($request->input('numbers')) {
+                $numberCondition = [['post_id','=',$postId],['meta_key' ,'=', MetaKey::INDEX_COMPLETE_ITEM['VALUE']]];
                 $dataNumber = [
                     'meta_value' => json_encode($request->input('numbers')),
                 ];
-                $this->postMetaRepository->updateByCondition([['post_id','=',$postId],['meta_key' ,'=', MetaKey::COMPLETE_ITEM['VALUE']]],$dataNumber);
-            }
 
-            if ($this->postMetaRepository->updateByCondition($condition,$dataMeta)){
-                return true;
-            }else{
-                return false;
+                if ($this->postMetaRepository->getMetaValueByCondition($numberCondition)){
+                    $this->postMetaRepository->updateByCondition($numberCondition,$dataNumber);
+                }else{
+                    $this->postMetaRepository->create([
+                        'post_id' => $postId,
+                        'meta_key' => MetaKey::INDEX_COMPLETE_ITEM['VALUE'],
+                        'meta_value' => json_encode($request->input('numbers'))
+                    ]);
+                }
+                $result = true;
             }
         }
-
-        return false;
+        return $result;
     }
-
 }
