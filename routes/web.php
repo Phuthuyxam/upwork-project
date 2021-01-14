@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Route;
 //    return view('welcome');
 //});
 //
-//Route::get('/home-edit', 'PostController@index' );
+//Route::get('/home-edit', 'ClientPostController@index' );
 //
 //Route::get('/home-del', 'HomeController@delete' );
 

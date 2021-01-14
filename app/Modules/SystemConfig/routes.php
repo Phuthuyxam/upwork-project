@@ -6,11 +6,11 @@ Route::group(
     function() {
         Route::prefix('admin/general-setting')->group(function () {
             Route::match(['get','post'],'/{action?}','SystemConfigController@index')->name('system.index');
-//            Route::match(['get','post'],'/add','PostController@add')->name('post.add');
-//            Route::match(['get','post'],'/edit/{id}','PostController@edit')->name('post.edit');
-//            Route::post('/deleteImage','PostController@deleteImage')->name('post.delete.image');
-//            Route::post('/deleteMany','PostController@deleteMany')->name('post.delete.many');
-//            Route::post('/delete','PostController@delete')->name('post.delete');
+//            Route::match(['get','post'],'/add','ClientPostController@add')->name('post.add');
+//            Route::match(['get','post'],'/edit/{id}','ClientPostController@edit')->name('post.edit');
+//            Route::post('/deleteImage','ClientPostController@deleteImage')->name('post.delete.image');
+//            Route::post('/deleteMany','ClientPostController@deleteMany')->name('post.delete.many');
+//            Route::post('/delete','ClientPostController@delete')->name('post.delete');
         });
 
     }

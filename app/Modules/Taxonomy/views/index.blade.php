@@ -17,6 +17,8 @@
         .preview-image {
             position: relative;
             overflow: hidden;
+            background: #ccc;
+            margin-bottom: 1rem;
         }
         .preview-image .close {
             position: absolute;
@@ -77,7 +79,10 @@
                                         @enderror
                                     </p>
                                 </div>
-
+                                <div class="form-group">
+                                    <label>Logo</label>
+                                    {!!  renderMediaManage('logo') !!}
+                                </div>
                                 <div class="form-group">
                                     <label for="description">Description</label>
                                     <textarea name="description" id="description" class="form-control required"

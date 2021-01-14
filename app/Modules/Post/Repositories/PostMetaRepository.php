@@ -43,4 +43,8 @@ class PostMetaRepository extends EloquentRepository {
     public function deleteFields($post_id,$fields) {
         return $this->_model->where('post_id', $post_id)->whereIn('meta_key',$fields)->delete();
     }
+
+    public function findByPostIds($ids){
+        return $this->_model->whereIn('post_id', $ids)->get();
+    }
 }

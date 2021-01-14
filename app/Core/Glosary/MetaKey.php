@@ -15,6 +15,10 @@ class MetaKey extends BasicEnum
     const SLIDE = ['VALUE' => 3, 'NAME' => 'slide' ];
     const ROOM_TYPE = ['VALUE' => 4, 'NAME' => 'room_type'];
     const FACILITY = ['VALUE' => 5, 'NAME' => 'facility'];
+    const THUMBNAIL = ['VALUE' => 13, 'NAME' => 'thumbnail'];
+    const PRICE = ['VALUE' => 14, 'NAME' => 'price'];
+
+    const BRAND_LOGO = ['VALUE' => 15, 'NAME' => 'brand_logo'];
 
     const COMPLETE_ITEM = ['VALUE' => 6,'NAME' => 'item'];
 

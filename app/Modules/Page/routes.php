@@ -10,9 +10,8 @@ Route::group(
             Route::match(['get','post'],'/add','PageController@add')->name('page.add');
             Route::post('/template','PageController@template')->name('page.template');
             Route::match(['get','post'],'/edit/{id}','PageController@edit')->name('page.edit');
-            Route::match(['get','post'],'/about',function (){
-                return view('Page::elements.about');
-            });
+            Route::post('/delete/{id}','PageController@edit')->name('page.delete');
+            Route::post('/delete-many','PageController@deleteMany')->name('page.delete.many');
         });
     }
 );

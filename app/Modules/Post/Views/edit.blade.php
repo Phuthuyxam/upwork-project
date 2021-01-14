@@ -21,7 +21,7 @@
             margin-bottom: 1rem;
             position: relative;
             overflow: hidden;
-            width: 50%;
+            width: 50% !important;
         }
 
         .preview-image .close {
@@ -48,16 +48,11 @@
         }
 
         .action-wrapper {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
+            margin-bottom: 1rem;
         }
 
         .action-wrapper .btn-add {
-            margin-right: 10px;
-        }
-        .hidden {
-            display: none;
+            margin-bottom: 1rem;
         }
     </style>
 @endsection
@@ -138,6 +133,16 @@
                                             </p>
                                         </div>
                                         <div class="form-group">
+                                            <label for="price">Price</label>
+                                            <input type="text" class="form-control" name="price" id="price" placeholder="Price"
+                                                   value="{{ old('price') ? old('price') : $postMetaMap[\App\Core\Glosary\MetaKey::PRICE['VALUE']]}}">
+                                            <p class="text-danger error-message" style="font-weight: bold">
+                                                @error('price')
+                                                {{ $message }}
+                                                @enderror
+                                            </p>
+                                        </div>
+                                        <div class="form-group">
                                             <label for="description">Description</label>
                                             <div class="editor-wrapper">
                                                 <textarea name="post_content" id="description" class="form-control"
@@ -152,6 +157,10 @@
                                             </p>
                                         </div>
                                         <div class="form-group">
+                                            <label for="price">Thumbnail</label>
+                                            {!!  renderMediaManage('thumb',$postMetaMap[\App\Core\Glosary\MetaKey::THUMBNAIL['VALUE']]) !!}
+                                        </div>
+                                        <div class="form-group">
                                             <label for="file">Banner</label>
                                             @php
                                                 $banner = $postMetaMap[\App\Core\Glosary\MetaKey::BANNER['VALUE']];
@@ -161,67 +170,19 @@
                                                 <tr>
                                                     <th style="vertical-align: middle; width: 100px">Desktop</th>
                                                     <td>
-                                                        <div class="preview-image">
-                                                            <div class="close @if($banner[0] == '') {{ 'deleted' }} @endif">
-                                                                <i class="dripicons-cross"></i>
-                                                            </div>
-                                                            @if($banner[0] != '')
-                                                                <img src="{{ asset($banner[0]) }}" alt="">
-                                                            @endif
-                                                        </div>
-                                                        <input type="file" style="padding: 3px 5px; overflow: hidden;"
-                                                               class="form-control banner-image @if($banner[0] != '') {{ 'hidden' }} @else {{ 'required' }} @endif"
-                                                               name="files[]">
-                                                        <input type="hidden" class="banner-link" name="banner[]" data-type="{{ \App\Core\Glosary\MetaKey::BANNER['VALUE'] }}" value="{{ $banner[0] }}">
-                                                        <p class="text-danger error-message" style="font-weight: bold">
-                                                            @error('files')
-                                                            {{ $message }}
-                                                            @enderror
-                                                        </p>
+                                                        {!! renderMediaManage('files[]',$banner[0]) !!}
                                                     </td>
                                                 </tr>
                                                 <tr>
                                                     <th style="vertical-align: middle; width: 100px">Tablet</th>
                                                     <td>
-                                                        <div class="preview-image">
-                                                            <div class="close @if($banner[1] == '') {{ 'deleted' }} @endif">
-                                                                <i class="dripicons-cross"></i>
-                                                            </div>
-                                                            @if($banner[1] != '')
-                                                                <img src="{{ asset($banner[1]) }}" alt="">
-                                                            @endif
-                                                        </div>
-                                                        <input type="file" style="padding: 3px 5px; overflow: hidden;"
-                                                               class="form-control banner-image @if($banner[1] != '') {{ 'hidden' }} @else {{ 'required' }} @endif"
-                                                               name="files[]">
-                                                        <input type="hidden" class="banner-link" name="banner[]" data-type="{{ \App\Core\Glosary\MetaKey::BANNER['VALUE'] }}" value="{{ $banner[1] }}">
-                                                        <p class="text-danger error-message" style="font-weight: bold">
-                                                            @error('files')
-                                                            {{ $message }}
-                                                            @enderror
-                                                        </p>
+                                                        {!! renderMediaManage('files[]',$banner[1]) !!}
                                                     </td>
                                                 </tr>
                                                 <tr>
                                                     <th style="vertical-align: middle; width: 100px">Mobile</th>
                                                     <td>
-                                                        <div class="preview-image">
-                                                            <div class="close @if($banner[2] == '') {{ 'deleted' }} @endif">
-                                                                <i class="dripicons-cross"></i>
-                                                            </div>
-                                                            @if($banner[2] != '')
-                                                                <img src="{{ asset($banner[2]) }}" alt="">
-                                                            @endif
-                                                        </div>
-                                                        <input type="file" style="padding: 3px 5px; overflow: hidden;"
-                                                               class="form-control banner-image @if($banner[2] != '') {{ 'hidden' }} @else {{ 'required' }} @endif"
-                                                               name="files[]">
-                                                        <input type="hidden" class="banner-link" name="banner[]" data-type="{{ \App\Core\Glosary\MetaKey::BANNER['VALUE'] }}" value="{{ $banner[2] }}">
-                                                        <p class="text-danger error-message" style="font-weight: bold">
-                                                            @error('files')
-                                                            {{ $message }}
-                                                            @enderror
-                                                        </p>
+                                                        {!! renderMediaManage('files[]',$banner[2]) !!}
                                                     </td>
                                                 </tr>
                                                 </tbody>
@@ -244,19 +205,9 @@
                                                 @foreach($slides as $key => $value)
                                                     <tr>
                                                         <td>
-                                                            <div class="preview-image">
-                                                                <div class="close">
-                                                                    <i class="dripicons-cross"></i>
-                                                                </div>
-                                                                @if($value != '')
-                                                                    <img src="{{ asset($value) }}" alt="">
-                                                                @endif
-                                                            </div>
-                                                            <input type="file" style="padding: 3px 5px; overflow: hidden;" class="form-control input-image @if($value != '') {{ 'hidden' }} @else {{'required'}} @endif" name="images[]">
-                                                            <input type="hidden" class="banner-link" data-type="{{ \App\Core\Glosary\MetaKey::SLIDE['VALUE'] }}" value="{{ $value }}" name="imageMap[]">
-                                                            <p class="text-danger error-message" style="font-weight: bold"></p>
+                                                            {!! renderMediaManage('images[]',$value) !!}
                                                         </td>
-                                                        <td style="width: 120px; vertical-align: middle">
+                                                        <td style="width: 50px; vertical-align: middle">
                                                             <div class="action-wrapper">
                                                                 <button class="btn btn-success btn-add"><i class="dripicons-plus"></i>
                                                                 </button>
@@ -271,16 +222,9 @@
                                             @else
                                                 <tr>
                                                     <td>
-                                                        <div class="preview-image">
-                                                            <div class="close">
-                                                                <i class="dripicons-cross"></i>
-                                                            </div>
-
-                                                        </div>
-                                                        <input type="file" style="padding: 3px 5px; overflow: hidden;" class="form-control input-image " name="images[]">
-                                                        <p class="text-danger error-message" style="font-weight: bold"></p>
+                                                        {!! renderMediaManage('images[]') !!}
                                                     </td>
-                                                    <td style="width: 120px; vertical-align: middle">
+                                                    <td style="width: 50px; vertical-align: middle">
                                                         <div class="action-wrapper">
                                                             <button class="btn btn-success btn-add"><i class="dripicons-plus"></i>
                                                             </button>
@@ -313,7 +257,7 @@
                                                     <td>
                                                         <input type="number" class="form-control input-type" name="inventories[]" value="{{ $value->inven }}">
                                                     </td>
-                                                    <td style="width: 120px; vertical-align: middle">
+                                                    <td style="width: 50px; vertical-align: middle">
                                                         <div class="action-wrapper">
                                                             <button class="btn btn-success btn-add"><i class="dripicons-plus"></i></button>
                                                             @if($key > 0)
@@ -345,7 +289,7 @@
                                                             <td>
                                                                 <input type="text" class="form-control input-type" name="facilities[]" value="{{ $value }}">
                                                             </td>
-                                                            <td style="width: 120px; vertical-align: middle">
+                                                            <td style="width: 50px; vertical-align: middle">
                                                                 <div class="action-wrapper">
                                                                     <button class="btn btn-success btn-add"><i class="dripicons-plus"></i></button>
                                                                     @if($key > 0)
@@ -378,15 +322,7 @@
                                                 @endphp
                                                 <tr>
                                                     <td style="width: 260px">
-                                                        <div class="preview-image" style="width: 100%;">
-                                                            <div class="close">
-                                                                <i class="dripicons-cross"></i>
-                                                            </div>
-                                                            @if($map->image != '' && !empty($map->image))
-                                                                <img src="{{ asset($map->image) }}"  alt="">
-                                                            @endif
-                                                        </div>
-                                                        <input type="file" class="form-control banner-image @if($map->image != '' && !empty($map->image)) {{ 'hidden' }} @endif" name="map_image"  style="padding: 3px 5px; overflow: hidden">
+                                                        {!! renderMediaManage('map_image',$map->image ? $map->image : null,false) !!}
                                                     </td>
                                                     <td><textarea type="text" class="form-control" name="map_address">{{ old('map_address') ? old('map_address') : $map->address}}</textarea></td>
                                                     <td>
@@ -482,28 +418,6 @@
                     }
                 }
             })
-            // Validate File Input
-            $(".banner-image").change(function () {
-                let val = $(this).val();
-                if (val) {
-                    if (validateFileUpload(this)) {
-                        readURL(this, $(this).parent().find('.preview-image'));
-                        $(this).removeClass('error');
-                        $(this).parents('td').find('.error-message').text('');
-                        $(this).removeClass('required');
-                        $(this).hide();
-                    } else {
-                        $(this).parents('td').find('.error-message').text('File must be JPG, GIF or PNG, less than 2MB. Please choose again');
-                        $(this).parent().find('.preview-image img').remove();
-                        $(this).addClass('error');
-                        $(this).val('');
-                    }
-                } else {
-                    $(this).parents('td').find('.error-message').text('This field cannot be null');
-                    $(this).removeClass('error');
-                    $(this).parent().find('.preview-image img').remove();
-                }
-            });
 
             $('#tax').on('change',function () {
                 if ($(this).val() == '') {
@@ -527,13 +441,6 @@
                 }
             })
 
-            $('body').on('click', '.preview-image .close', function () {
-                $(this).parents('td').find('img').remove();
-                $(this).parents('td').parent().find('input[type=file]').val('');
-                $(this).parents('td').find('input[type=file]').show();
-                $(this).parents('td').find('.input-image').addClass('required');
-                $(this).parents('td').find('.banner-link').val('');
-            })
 
             $('.btn-submit').click(function (e) {
                 e.preventDefault();
@@ -562,11 +469,8 @@
                 let row = $(this).parents('tr').clone();
 
                 $(this).parents('tbody').append(row);
-                row.find('img').remove();
-                row.find('.input-image').val('');
-                row.find('.input-image').show();
-                row.find('.input-image').addClass('required');
-                row.find('.banner-link').val('');
+                row.find('.image-preview-container').empty();
+                row.find('.home-slider-image').val('');
                 row.find('.action-wrapper').empty();
                 row.find('.action-wrapper').append('<button class="btn btn-success btn-add"><i class="dripicons-plus"></i></button><button class="btn btn-danger btn-delete"><i class="dripicons-minus"></i></button>');
 
@@ -579,45 +483,7 @@
                 $(this).parents('tr').remove();
             })
 
-            $('body').on('change', '.input-image', function () {
-                let val = $(this).val();
-                if (val) {
-                    if (validateFileUpload(this)) {
-                        readURL(this, $(this).parent().find('.preview-image'));
-                        $(this).parent().find('.error-message').text('');
-                        $(this).removeClass('error');
-                        $(this).removeClass('required');
-                        $(this).hide();
-                    } else {
-                        $(this).parent().find('.error-message').text('File must be JPG, GIF or PNG, less than 2MB');
-                        $('.preview-image img').remove();
-                        $(this).addClass('error');
-                        $(this).addClass('required');
-                        $(this).val('');
-                        $(this).show();
-                    }
-                } else {
-                    $(this).parent().find('.error-message').text('This field cannot be null');
-                    $(this).addClass('error');
-                    $(this).addClass('required');
-                    $('.preview-image img').remove();
-                    $(this).show();
-                }
-            })
         })
-        function readURL(input, element) {
-            if (input.files && input.files[0]) {
-                let reader = new FileReader();
-                element.find('img').remove();
-                let name = input.files[0].name;
-                reader.onload = function (e) {
-                    let html = '<img style="width: 100%" src="' + e.target.result + '"  title="name" alt="your image" />';
-                    element.append(html);
-                }
-                reader.readAsDataURL(input.files[0]);
-            }
-        }
-
         function checkRequired(formId) {
             let valid = true;
             $('#' + formId).find('.required').each(function () {
@@ -640,7 +506,6 @@
             }
             return valid;
         }
-
 
     </script>
 @endsection

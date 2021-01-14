@@ -18,7 +18,8 @@
             margin-bottom: 1rem;
             position: relative;
             overflow: hidden;
-            width: 50%;
+            width: 50% !important;
+            background: #ccc;
         }
         .preview-image img{
             width: 100%;
@@ -108,6 +109,10 @@
                                 {{ $message }}
                                 @enderror
                             </p>
+                        </div>
+                        <div class="form-group">
+                            <label>Logo</label>
+                            {!!  renderMediaManage('logo',json_decode($logo->meta_value)) !!}
                         </div>
                         <div class="form-group">
                             <label for="description">Description</label>

@@ -36,6 +36,24 @@
             .footer {
                 left: 0;
             }
+            #toTop {
+                width: 35px;
+                height: 35px;
+                background: #fff;
+                position: fixed;
+                bottom: 10px;
+                right: 10px;
+                display: none;
+                border: 1px solid #102447;
+                border-radius: 5px;
+                text-align: center;
+                padding: 6px 0;
+                z-index: 999;
+            }
+            #toTop a{
+                color: #102447;
+                font-size: 18px;
+            }
         </style>
         @yield('extension_style')
 
@@ -75,7 +93,11 @@
 
         </div>
         <!-- END layout-wrapper -->
-
+        <div id="toTop">
+            <a href="javascript:void(0)">
+                <i class="dripicons-chevron-up"></i>
+            </a>
+        </div>
 
         <!-- JAVASCRIPT -->
         <script src="{{ asset('assets/libs/jquery/jquery.min.js') }}"></script>
@@ -99,6 +121,19 @@
 
         @yield('extension_script')
         @yield('script')
+        <script>
+            $(window).scroll(function() {
+                if ($(this).scrollTop()) {
+                    $('#toTop').fadeIn();
+                } else {
+                    $('#toTop').fadeOut();
+                }
+            });
+
+            $("#toTop").click(function() {
+                $("html, body").animate({scrollTop: 0}, 1000);
+            });
+        </script>
     </body>
 
 </html>

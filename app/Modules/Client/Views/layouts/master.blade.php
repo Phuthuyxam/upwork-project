@@ -22,7 +22,6 @@
     <link rel="stylesheet" href="{{ asset('client/css/all.min.css') }}">
     <link rel="stylesheet" href="{{ asset('client/css/bootstrap-datepicker.min.css') }}">
     <link rel="stylesheet" href="{{ asset('client/css/jquery.fancybox.min.css') }}">
-    <!-- <link rel="stylesheet" href="css/prettydropdowns.css"> -->
     <link rel="stylesheet" href="{{ asset('client/css/style.css') }}">
     @yield('style')
 </head>
@@ -42,7 +41,6 @@
 <script src="{{ asset('client/js/jquery.lazy.min.js') }}"></script>
 <script src="{{ asset('client/js/bootstrap-datepicker.min.js') }}"></script>
 <script src="{{ asset('client/js/jquery.fancybox.min.js') }}"></script>
-<!-- <script src="js/jquery.prettydropdowns.js"></script> -->
 <script src="{{ asset('client/js/custom.js') }}"></script>
 @yield('script')
 

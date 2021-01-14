@@ -56,8 +56,14 @@ class TaxonomyController extends Controller
                 'description' => $request->input('description'),
             ];
 
-            if ($this->termTaxonomyRepository->create($dataTermTax)) {
-                return redirect()->back()->with('message', 'success|Successfully add "' . $request->input('name') . '" category');
+            $dataTermMeta = [
+                'term_id' => $termId,
+                'meta_key' => MetaKey::BRAND_LOGO['VALUE'],
+                'meta_value' => $request->input('logo') ? json_encode($request->input('logo')) : ''
+            ];
+
+            if ($this->termTaxonomyRepository->create($dataTermTax) && $this->termMetaRepository->create($dataTermMeta)) {
+                return redirect()->back()->with('message', 'success|Successfully add "' . $request->input('name') . '" brand');
             } else {
                 return redirect()->back()->with('message', 'danger|Something wrong try again!');
             }
@@ -92,7 +98,8 @@ class TaxonomyController extends Controller
             ];
             $taxonomy = $this->termTaxonomyRepository->getByTermId($id);
             $slugs = $this->termRepository->getAllSlug();
-            return view('Taxonomy::edit',compact('slugs','result','taxonomy'));
+            $logo = $this->termMetaRepository->getInstantModel()->where([['term_id','=',$id],['meta_key','=',MetaKey::BRAND_LOGO['VALUE']]])->first();
+            return view('Taxonomy::edit',compact('slugs','result','taxonomy','logo'));
         }else{
             $validateRule = [
                 'name' => 'required|max:191',
@@ -122,7 +129,11 @@ class TaxonomyController extends Controller
                 $dataTermTax = [
                     'description' => $request->input('description'),
                 ];
-                if ($this->termTaxonomyRepository->updateByTermId($id,$dataTermTax)) {
+                $dataTermMeta = [
+                    'meta_key' => MetaKey::BRAND_LOGO['VALUE'],
+                    'meta_value' => $request->input('logo') ? json_encode($request->input('logo')) : ''
+                ];
+                if ($this->termTaxonomyRepository->updateByTermId($id,$dataTermTax) && $this->termMetaRepository->updateByTermId($id,$dataTermMeta)) {
                     $result = true;
                 }
                 if ($result) {
@@ -169,7 +180,13 @@ class TaxonomyController extends Controller
                         'description' => $request->input('description'),
                     ];
 
-                    if ($this->termTaxonomyRepository->create($dataTermTax)) {
+                    $dataTermMeta = [
+                        'term_id' => $id,
+                        'meta_key' => MetaKey::BRAND_LOGO['VALUE'],
+                        'meta_value' => $request->input('logo') ? json_encode($request->input('logo')) : ''
+                    ];
+
+                    if ($this->termTaxonomyRepository->create($dataTermTax) && $this->termMetaRepository->create($dataTermMeta)) {
                         $transUrl = renderTranslationUrl(route('taxonomy.edit', ['id' => $id]), $request->translation);
 
                         return [ 'redirect_url' => $transUrl,
@@ -178,6 +195,7 @@ class TaxonomyController extends Controller
                     } else {
                         return false;
                     }
+
                 }
             } catch (\Throwable $th) {
                 return false;

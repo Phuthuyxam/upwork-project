@@ -48,11 +48,8 @@ class PostController extends Controller
             $validate = $request->validate([
                 'post_title' => 'required|max:191',
                 'post_name' => 'required|unique:posts',
-                'file.*' => 'required|mimes:jpg,png,gif',
                 'post_content' => 'required',
-                'images.*' => 'mimes:jpg,png,gif',
                 'taxonomy' => 'required',
-                'rate' => 'required|max:1'
             ]);
 
             $post_title = $request->input('post_title');
@@ -70,25 +67,6 @@ class PostController extends Controller
             $postId = $this->posRepository->create($dataPost)->id;
             if ($postId) {
                 $result = true;
-                // Slider
-                $images = $request->file('images');
-                $imageMap = [];
-                if ($request->hasFile('images')) {
-                    foreach ($images as $value) {
-                        $value->storeAs('public/posts/' . $postId .'/slides', $value->getClientOriginalName());
-                        $imageMap[] = 'storage/posts/' . $postId . '/slides/' . $value->getClientOriginalName();
-                    }
-                }
-
-                // Banner
-                $file = $request->file('file');
-                $fileMap = [];
-                foreach ($file as $value) {
-                    $fileName = $value->getClientOriginalName();
-                    $value->storeAs('public/posts/' . $postId . '/banner', $fileName);
-                    $fileMap[] = 'storage/posts/' . $postId . '/banner/'.$fileName;
-                }
-
                 // Room Type
                 $types = $request->input('room_types');
                 $inventories = $request->input('inventories');
@@ -103,18 +81,8 @@ class PostController extends Controller
                     }
                 }
 
-                // Facilities
-                $facilities = $request->input('facilities');
-
-                // Map
-                if ($request->hasFile('map_image')) {
-                    $mapImage = $request->file('map_image');
-                    $mapImage->storeAs('public/posts/' . $postId .'/map', $mapImage->getClientOriginalName());
-                    $mapImg = 'storage/posts/' . $postId . '/map/' . $mapImage->getClientOriginalName();
-                }
-
                 $dataMap = [
-                    'image' => isset($mapImg) ? $mapImg : '',
+                    'image' => $request->input('map_image') ? $request->input('map_image') : '',
                     'address' => $request->input('map_address') ? $request->input('map_address') : '',
                     'location' => [
                         'lat' => $request->input('map_lat') ? $request->input('map_lat') : '',
@@ -122,19 +90,18 @@ class PostController extends Controller
                     ]
                 ];
 
-
                 // Save post meta
                 $dataPostMeta = [
                     [
                         'post_id' => $postId,
                         'meta_key' => MetaKey::BANNER['VALUE'],
-                        'meta_value' => json_encode($fileMap),
-                        'created_at' => date('Y-m-d H:i:s')
+                        'meta_value' => $request->input('files') ? json_encode($request->input('files')) : '',
+                        'created_at' => date('Y-m-d H:i:s'),
                     ],
                     [
                         'post_id' => $postId,
                         'meta_key' => MetaKey::SLIDE['VALUE'],
-                        'meta_value' => !empty($imageMap) ? json_encode($imageMap) : '',
+                        'meta_value' => $request->input('images') ? json_encode($request->input('images')) : '',
                         'created_at' => date('Y-m-d H:i:s')
                     ],
                     [
@@ -146,7 +113,7 @@ class PostController extends Controller
                     [
                         'post_id' => $postId,
                         'meta_key' => MetaKey::FACILITY['VALUE'],
-                        'meta_value' => !empty($facilities) ? json_encode($facilities) : '',
+                        'meta_value' => $request->input('facilities') ? json_encode($request->input('facilities')) : '',
                         'created_at' => date('Y-m-d H:i:s')
                     ],
                     [
@@ -160,7 +127,19 @@ class PostController extends Controller
                         'meta_key' => MetaKey::RATE['VALUE'],
                         'meta_value' => $request->input('rate') ? $request->input('rate') : 0,
                         'created_at' => date('Y-m-d H:i:s')
-                    ]
+                    ],
+                    [
+                        'post_id' => $postId,
+                        'meta_key' => MetaKey::THUMBNAIL['VALUE'],
+                        'meta_value' => $request->input('thumb') ? json_encode($request->input('thumb')) : '',
+                        'created_at' => date('Y-m-d H:i:s')
+                    ],
+                    [
+                        'post_id' => $postId,
+                        'meta_key' => MetaKey::PRICE['VALUE'],
+                        'meta_value' => $request->input('price') ? json_encode($request->input('price')) : '',
+                        'created_at' => date('Y-m-d H:i:s')
+                    ],
                 ];
 
                 if ($this->postMetaRepository->insert($dataPostMeta)) {
@@ -180,7 +159,7 @@ class PostController extends Controller
 
             if ($result) {
                 Log::info('user '.Auth::id().' has created hotel '. $postId);
-                return redirect('admin/post/edit/' . $postId)->with('message', 'success|Successfully create  "' . $request->input('post_title') . '" post');
+                return redirect('admin/hotels/edit/' . $postId)->with('message', 'success|Successfully create  "' . $request->input('post_title') . '" hotel');
             } else {
                 return redirect()->back()->with('message', 'danger|Something wrong try again!');
             }
@@ -204,9 +183,7 @@ class PostController extends Controller
             $validate = $request->validate([
                 'post_title' => 'required|max:191',
                 'post_name' => 'required|unique:posts,post_name,'.$id,
-                'file.*' => 'mimes:jpg,png,gif',
                 'post_content' => 'required',
-                'images.*' => 'mimes:jpg,png,gif',
                 'taxonomy' => 'required'
             ]);
 
@@ -227,60 +204,25 @@ class PostController extends Controller
 
             if ($this->posRepository->update($id,$dataPost)) {
                 $result = false;
-                $images = $request->file('images');
-
-                $condition = [['post_id','=',$id],['meta_key' ,'=', MetaKey::SLIDE['VALUE']]];
-                $postMeta = $this->postMetaRepository->getMetaValueByCondition($condition);
 
                 //Save Slider
-                if ($request->hasFile('images')) {
-                    $imageMap = $request->input('imageMap');
-                    $imageMeta = json_decode($postMeta['meta_value']);
-                    $itemMap = [];
-
-                    foreach ($imageMap as $key => $value) {
-                        if ($value == '') {
-                            $images[$key]->storeAs('public/pages/' . $id . '/slides', $images[$key]->getClientOriginalName());
-                            $itemMap[$key] = 'storage/pages/' . $id . '/slides/' . $images[$key]->getClientOriginalName();
-                        }else{
-                            if ($imageMap >= $images) {
-                                $itemMap[$key] = $imageMeta[$key];
-                            }
-                        }
-                    }
+                if ($request->input('images')) {
+                    $condition = [['post_id','=',$id],['meta_key' ,'=', MetaKey::SLIDE['VALUE']]];
                     $dataPostMeta = [
-                        'meta_value' => json_encode($itemMap)
+                        'meta_value' => json_encode($request->input('images'))
                     ];
                     if ($this->postMetaRepository->updateByCondition($condition,$dataPostMeta)) {
                         $result = true;
-                    }
-                }else{
-                    // delete
-                    $imageMap = $request->input('imageMap');
-                    if (!empty($imageMap)) {
-                        $condition = [['post_id','=',$id],['meta_key' ,'=', MetaKey::SLIDE['VALUE']]];
-                        $dataPostMeta = [
-                            'meta_value' => json_encode($imageMap)
-                        ];
-
-                        if ($this->postMetaRepository->updateByCondition($condition,$dataPostMeta)) {
-                            $result = true;
-                        }
+                    }else{
+                        $result = false;
                     }
                 }
 
                 //Save Banner
-                $file = $request->file('files');
-                if ($request->hasFile('files')) {
-                    $postMeta = $this->postMetaRepository->getMetaValueByCondition([['post_id', '=', $id], ['meta_key', '=', MetaKey::BANNER['VALUE']]]);
-                    $bannerMeta = json_decode($postMeta['meta_value']);
-                    foreach ($file as $key => $value) {
-                        $value->storeAs('public/posts/' . $id . '/banner/', $value->getClientOriginalName());
-                        $bannerMeta[$key] = 'storage/posts/' . $id. '/banner/' . $value->getClientOriginalName();
-                    }
+                if ($request->input('files')) {
                     $condition = [['post_id','=',$id],['meta_key' ,'=', MetaKey::BANNER['VALUE']]];
                     $dataPostMeta = [
-                        'meta_value' => json_encode($bannerMeta)
+                        'meta_value' => json_encode($request->input('files'))
                     ];
 
                     if ($this->postMetaRepository->updateByCondition($condition,$dataPostMeta)) {
@@ -312,8 +254,8 @@ class PostController extends Controller
                 }
 
                //Save Facilities
-                $facilities = $request->input('facilities');
-                if (!empty($facilities)) {
+                if ($request->input('facilities')) {
+                    $facilities = $request->input('facilities');
                     $condition = [['post_id','=',$id],['meta_key' ,'=', MetaKey::FACILITY['VALUE']]];
                     $dataPostMeta =[
                         'meta_value' => json_encode($facilities)
@@ -324,11 +266,32 @@ class PostController extends Controller
                 }
 
                 // Save rate
-                $rate = $request->input('rate');
-                if (!empty($rate)) {
+                if ($request->input('rate')) {
                     $condition = [['post_id','=',$id],['meta_key' ,'=', MetaKey::RATE['VALUE']]];
                     $dataPostMeta =[
-                        'meta_value' => $rate
+                        'meta_value' => $request->input('rate')
+                    ];
+                    if ($this->postMetaRepository->updateByCondition($condition,$dataPostMeta)) {
+                        $result = true;
+                    }
+                }
+
+                // Save price
+                if ($request->input('price')) {
+                    $condition = [['post_id','=',$id],['meta_key' ,'=', MetaKey::PRICE['VALUE']]];
+                    $dataPostMeta =[
+                        'meta_value' => json_encode($request->input('price'))
+                    ];
+                    if ($this->postMetaRepository->updateByCondition($condition,$dataPostMeta)) {
+                        $result = true;
+                    }
+                }
+
+                // Save thumbnail
+                if ($request->input('thumb')) {
+                    $condition = [['post_id','=',$id],['meta_key' ,'=', MetaKey::THUMBNAIL['VALUE']]];
+                    $dataPostMeta =[
+                        'meta_value' => json_encode($request->input('thumb'))
                     ];
                     if ($this->postMetaRepository->updateByCondition($condition,$dataPostMeta)) {
                         $result = true;
@@ -337,13 +300,8 @@ class PostController extends Controller
 
                 // Save map
                 $mapCondition = [['post_id','=',$id],['meta_key' ,'=', MetaKey::LOCATION['VALUE']]];
-                if ($request->hasFile('map_image')) {
-                    $image = $request->file('map_image');
-                    $image->storeAs('public/posts/' . $id . '/map/', $image->getClientOriginalName());
-                    $image = 'storage/posts/' . $id . '/map/'. $image->getClientOriginalName();
-                }
                 $dataMap = [
-                    'image' => isset($image) && $image != '' ? $image : '',
+                    'image' => $request->input('map_image') ? $request->input('map_image') : '',
                     'address' => $request->input('map_address') ? $request->input('map_address') : '',
                     'location' => [
                         'lat' => $request->input('map_lat') ? $request->input('map_lat') : '',

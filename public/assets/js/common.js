@@ -29,60 +29,6 @@ function changeToSlug(str)
     return slug;
 }
 
-function validateFileUpload(input)
-{
-    let allowed_extensions = ["jpg","png","gif","jpeg",'svg'];
-    if (input.files) {
-        let filesAmount = input.files.length;
-        for (let i = 0; i < filesAmount; i++) {
-            let file_extension = input.files[i].name.split('.').pop().toLowerCase();
-            if (!allowed_extensions.includes(file_extension)) {
-                return false;
-            }
-            if (input.files[i].size >= maxFileSize) {
-                return false;
-            }
-        }
-    }
-    return true;
-}
-
-function readURLMultiple(input, element) {
-
-    if (input.files) {
-        let filesAmount = input.files.length;
-        $(element).empty();
-        for (let i = 0; i < filesAmount; i++) {
-            let reader = new FileReader();
-
-            reader.onload = function(event) {
-                let html = '<div class="items">' +
-                    '<img  style="width: 100%" src="' + event.target.result + '" title="'+name+'" alt="your image" />'+
-                    '</div>';
-
-                $(element).append(html);
-            }
-
-            reader.readAsDataURL(input.files[i]);
-        }
-    }
-}
-
-function readURL(input, element) {
-    if (input.files && input.files[0]) {
-        element.find('img').remove();
-        let reader = new FileReader();
-        let name = input.files[0].name;
-        reader.onload = function (e) {
-
-            let html = '<img id="image" style="width: 100%" src="' + e.target.result + '" title="'+name+'" alt="your image" />';
-            element.append(html);
-        }
-        reader.readAsDataURL(input.files[0]);
-    }
-}
-
-
 // load image media manager
 function openMediaManager(btnElm) {
     window.open('/file-manager/fm-button', 'fm', 'width=1400,height=800');
