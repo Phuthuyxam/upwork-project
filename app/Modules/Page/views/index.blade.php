@@ -15,6 +15,7 @@
 @endsection
 @section('content')
     <div class="content-wrapper">
+        @include('backend.elements.languages')
         <div class="container-fluid">
             <div class="card">
                 <div class="card-body">

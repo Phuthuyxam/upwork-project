@@ -47,7 +47,7 @@ if(!function_exists('generatePrefixLanguage')) {
 }
 
 if(!function_exists('renderTranslationUrl')) {
-    function renderTranslationUrl($url, $langCode) {
+    function renderTranslationUrl($url, $langCode, $mode = false) {
         if(empty(parse_url($url))) return false;
         $urlParse = parse_url($url);
         if(!isset($urlParse['path']) || empty($urlParse['path']))  return  $urlParse['scheme'] . "://" . $urlParse['host'] . ((isset($urlParse['port']) && !empty($urlParse['port']) ) ? ":" . $urlParse['port'] : "" ) . "/" . $langCode;

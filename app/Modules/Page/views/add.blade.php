@@ -77,6 +77,7 @@
 @endsection
 @section('content')
     <div class="content-wrapper">
+        @include('backend.elements.languages')
         <div class="container-fluid">
             {!! displayAlert(Session::get('message'))  !!}
             <div class="alert alert-danger alert-common" style="display: none;">

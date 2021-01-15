@@ -1,4 +1,7 @@
 @extends('backend.default')
+@section('title')
+    Theme setting
+@endsection
 @section('style')
     <style>
         .error {

@@ -75,6 +75,32 @@
     <div class="content-wrapper">
         <div class="container-fluid">
             {!! displayAlert(Session::get('message'))  !!}
+
+            @php
+                $languages = \App\Core\Glosary\LocationConfigs::getAll();
+                $currentLang = app()->getLocale();
+
+            @endphp
+            @if(isset($languages) && !empty($languages))
+                <div class="card">
+                    <div class="card-body">
+                        <div class="tab-translate">
+                    <b><i class="dripicons-flag"></i> Make translation</b>
+                    <select id="make-translation">
+                        <option value="0">---choose language---</option>
+                        @foreach($languages as $lan)
+                            @if($lan['VALUE'] != $currentLang)
+                                <option value="{{ $lan['VALUE'] }}" data-display="{{ $lan['DISPLAY'] }}">
+                                    {{ $lan['DISPLAY'] }}
+                                </option>
+                            @endif
+                        @endforeach
+                    </select>
+                </div>
+                    </div>
+                </div>
+            @endif
+
             <div class="alert alert-danger alert-common" style="display: none;">
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
                         aria-hidden="true">×</span></button>
@@ -231,10 +257,11 @@
                             <div class="card-footer"
                                  style="display: flex; align-items: center; justify-content: space-between">
                                 <input type="hidden" id="publishStatus" name="status">
-                                <button type="submit" class="btn btn-info btn-draft waves-effect waves-light">Save
+                                <input type="hidden" name="translation" id="translation_mode">
+                                <button type="submit" class="btn btn-info btn-draft waves-effect waves-light" id="ptx-save-btn-draf">Save
                                     Draft
                                 </button>
-                                <button type="submit" class="btn btn-primary btn-submit waves-effect waves-light">
+                                <button type="submit" class="btn btn-primary btn-submit waves-effect waves-light" id="ptx-save-btn">
                                     Publish
                                 </button>
                             </div>
@@ -522,6 +549,24 @@
             })
             return valid;
         }
+
+        $('#make-translation').change(function (e){
+            e.preventDefault();
+            let lanCode = $(this).val();
+            if(lanCode === "0") {
+                $('#ptx-save-btn').text("Save");
+                $('#translation_mode').val("");
+                return
+            }
+            let display = $("#make-translation option:selected").data('display');
+            let text = "Are you sure make a translation to " + display + " ? After confirm you will complete with save button";
+            var r = confirm(text);
+            if (r == true) {
+                $('#translation_mode').val(lanCode);
+                $('#ptx-save-btn').text("Publish with "+display);
+                $('#ptx-save-btn-draf').text("Save Draf with "+display);
+            }
+        });
     </script>
 @endsection
 

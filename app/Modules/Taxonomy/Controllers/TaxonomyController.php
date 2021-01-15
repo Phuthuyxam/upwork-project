@@ -5,7 +5,6 @@ namespace App\Modules\Taxonomy\Controllers;
 use App\Core\Glosary\LocationConfigs;
 use App\Core\Glosary\MetaKey;
 use App\Core\Glosary\ResponeCode;
-use App\Core\Glosary\TaxonomyType;
 use App\Http\Controllers\Controller;
 use App\Modules\Setting\Repositories\OptionRepository;
 use App\Modules\Taxonomy\Repositories\TermMetaRepository;
