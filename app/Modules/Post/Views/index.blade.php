@@ -66,7 +66,7 @@
                         </tbody>
                     </table>
                     <div class="pagination-wrapper">
-                        {{ $posts->links('backend.elements.pagination') }}
+                        {{ $posts->links('admin.elements.pagination') }}
                     </div>
                 </div>
             </div>
