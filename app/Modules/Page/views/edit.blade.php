@@ -27,7 +27,7 @@
         .preview-image .close {
             position: absolute;
             top: 5px;
-            left: 5px;
+            right: 5px;
             cursor: pointer;
             background: #9C9C9C;
             border-radius: 100%;
@@ -116,7 +116,9 @@
                                                 {{ $message }}
                                                 @enderror
                                             </p>
+                                            <a href="{{ route('detail',$result['post_name']) }}" style="font-size: 13px" target="_blank">{{ route('detail',$result['post_name']) }}</a>
                                         </div>
+
                                         <div class="form-group">
                                             <label for="slug">Slug</label>
                                             <input type="text" class="form-control required" name="post_name" id="slug"

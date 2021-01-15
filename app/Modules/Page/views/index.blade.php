@@ -22,7 +22,7 @@
                         <a href="{{ route('page.add') }}" class="btn btn-success" style="margin-right: 1rem">Add Page</a>
                         <button class="btn btn-warning btn-delete-many">Delete Selected</button>
                     </div>
-                    <table class="table table-bordered">
+                    <table class="table table-hover">
                         <thead>
                             <tr>
                                 <th style="text-align: center"><input type="checkbox" name="" id="checkAll"></th>
@@ -31,7 +31,7 @@
                                 <th>Status</th>
                                 <th>Created at</th>
                                 <th>Updated at</th>
-                                <th></th>
+                                <th style="text-align: center">Action</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -39,7 +39,7 @@
                                 @foreach($pages as $value)
                                     <tr>
                                         <td style="text-align: center"><input type="checkbox" class="cate-check" data-id="{{ $value->postId }}" name="" id=""></td>
-                                        <td><a href="#">{{ $value->postTitle }}</a></td>
+                                        <td><a href="{{ route('detail',$value->slug) }}" target="_blank">{{ $value->postTitle }}</a></td>
                                         <td>{{ $value->postAuthor }}</td>
                                         <td>{{ \App\Core\Glosary\PostStatus::display($value->postStatus) }}</td>
                                         <td>{{ $value->createdAt }}</td>

@@ -22,7 +22,7 @@
                     <ul>
                         <li class="item"><a href="{{ route('index') }}">Home</a></li>
                         <li class="item active"><span>
-                            <div class="rectangle"></div> About Us
+                            <div class="rectangle"></div> {{ $post->post_title }}
                         </span></li>
                     </ul>
                 </div>

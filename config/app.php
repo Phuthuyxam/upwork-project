@@ -167,6 +167,8 @@ return [
         Illuminate\Translation\TranslationServiceProvider::class,
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
+        OwenIt\Auditing\AuditingServiceProvider::class,
+
 
         /*
          * Package Service Providers...
@@ -239,7 +241,7 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
         'PermissionHelpers' => App\Core\Helper\PermissionHelpers::class,
         'OptionHelpers' => App\Core\Helper\OptionHelpers::class,
-        'FrontendHelpers' => App\Core\Helper\FrontendHelpers::class
+        'FrontendHelpers' => App\Core\Helper\FrontendHelpers::class,
     ],
 
 ];

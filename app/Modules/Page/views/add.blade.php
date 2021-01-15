@@ -39,7 +39,7 @@
         .preview-image-multiple .items .close{
             position: absolute;
             top: 5px;
-            left: 5px;
+            right: 5px;
             cursor: pointer;
             background: #9C9C9C;
             border-radius: 100%;

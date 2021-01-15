@@ -9,6 +9,8 @@
     "license": "MIT",
     "require": {
         "php": "^7.3|^8.0",
+        "ext-fileinfo": "*",
+        "ext-json": "*",
         "alexusmai/laravel-file-manager": "^2.5",
         "fideloper/proxy": "^4.4",
         "fruitcake/laravel-cors": "^2.0",
@@ -16,9 +18,8 @@
         "laravel/framework": "^8.12",
         "laravel/tinker": "^2.5",
         "laravel/ui": "^3.1",
-        "spatie/schema-org": "^3.3",
-      "ext-json": "*",
-        "ext-fileinfo": "*"
+        "owen-it/laravel-auditing": "^12.0",
+        "spatie/schema-org": "^3.3"
     },
     "require-dev": {
         "facade/ignition": "^2.5",

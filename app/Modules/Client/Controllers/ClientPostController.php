@@ -6,6 +6,7 @@ namespace App\Modules\Client\Controllers;
 
 use App\Core\Glosary\MetaKey;
 use App\Core\Glosary\PageTemplateConfigs;
+use App\Core\Glosary\PostType;
 use App\Http\Controllers\Controller;
 use App\Modules\Post\Repositories\PostMetaRepository;
 use App\Modules\Post\Repositories\PostRepository;
@@ -89,6 +90,37 @@ class ClientPostController extends Controller
                 if ($template == PageTemplateConfigs::SERVICE['VALUE']) {
                     return view('Client::service',compact('post','pageMetaMap'));
                 }
+                if ($template == PageTemplateConfigs::HOTEL['VALUE']) {
+                    $posts = $this->postRepository->getInstantModel()->where('post_type',PostType::POST['VALUE'])->get();
+                    $ids = [];
+                    $postsMetaMap = [];
+                    if (count($posts)) {
+                        foreach ($posts->toArray() as $value) {
+                            $ids[] = $value['id'];
+                            $postsMetaMap[$value['id']] = [
+                                'title' => $value['post_title'],
+                                'slug' => $value['post_name']
+                            ];
+                        }
+                    }
+
+                    $postMetas = $this->postMetaRepository->findByPostIds($ids);
+                    if (count($postMetas)) {
+                        foreach ($postsMetaMap as $key => $item) {
+                            foreach ($postMetas->toArray() as $value) {
+                                if ($key == $value['post_id']) {
+                                    if (isset($value['meta_key'])) {
+                                        $postsMetaMap[$key][MetaKey::display($value['meta_key'])] = json_decode($value['meta_value']);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    return view('Client::hotel',compact('post','postsMetaMap','pageMetaMap'));
+                }
+                if ($template == PageTemplateConfigs::DEFAULT['VALUE']) {
+                    return view('Client::hotel',compact('post','pageMetaMap'));
+                }
             }else {
                 $termRelation = $this->termRelationRepository->getInstantModel()->where('object_id', $post->id)->first();
                 $termMeta = $this->termMetaRepository->getInstantModel()->where('term_id', $termRelation->term_taxonomy_id)->get();
@@ -116,7 +148,6 @@ class ClientPostController extends Controller
                     $relatePostMap = $relatePosts->toArray();
                     foreach ($relatePostMap as $key => $value) {
                         $relatePostMetaMap[$value['id']] = [
-                            'id' => $value['id'],
                             'slug' => $value['post_name'],
                             'title' => $value['post_title'],
                         ];

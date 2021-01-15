@@ -5,9 +5,12 @@ namespace App\Modules\Taxonomy\Model;
 
 
 use Illuminate\Database\Eloquent\Model;
+use OwenIt\Auditing\Contracts\Auditable;
 
-class Term extends Model
+class Term extends Model implements Auditable
 {
+    use \OwenIt\Auditing\Auditable;
+
     protected $table = 'terms';
     protected $fillable = ['name','slug'];
 

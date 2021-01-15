@@ -46,7 +46,7 @@ class PostRepository extends EloquentRepository
         return $this->_model->leftJoin('users','users.id','=','posts.post_author')
             ->where('post_type',PostType::PAGE['VALUE'])
             ->select('posts.id as postId', 'posts.post_title as postTitle', 'users.name as postAuthor',
-                'users.id as userId', 'posts.post_status as postStatus',
+                'posts.post_name as slug', 'users.id as userId', 'posts.post_status as postStatus',
                 'posts.created_at as createdAt', 'posts.updated_at as updatedAt')
             ->get();
     }

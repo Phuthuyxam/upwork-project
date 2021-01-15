@@ -22,11 +22,9 @@
                 <div class="breadscrum">
                     <ul>
                         <li class="item"><a href="{{ route('index') }}">Home</a></li>
+                        <li class="item active"><a href="#"><span><div class="rectangle"></div> Our Hotels</span></a>></li>
                         <li class="item active"><span>
-                            <div class="rectangle"></div> Our Hotels
-                        </span></li>
-                        <li class="item active"><span>
-                            <div class="rectangle"></div> Frontel Al Harithia Hotel
+                            <div class="rectangle"></div> {{ $post->post_title }}
                         </span></li>
                     </ul>
                 </div>
