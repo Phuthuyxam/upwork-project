@@ -47,9 +47,27 @@
                                 {!! renderMediaManage('logo') !!}
                             @endif
                         </div>
+
+
+                        <div class="form-group">
+                            <label for="phone">Site Title:</label>
+                            <input type="text" class="form-control" name="site_title" id="site_title" value="{{ isset($result->site_title) ? $result->site_title : "" }}">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="phone">Tagline:</label>
+                            <input type="text" class="form-control" name="site_tagline" id="site_tagline" value="{{ isset($result->site_tagline) ? $result->site_tagline : "" }}">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="phone">Administration Email Address	:</label>
+                            <input type="text" class="form-control" name="site_admin_mail" id="site_admin_mail" value="{{ isset($result->site_admin_mail) ? $result->site_admin_mail : "" }}">
+                        </div>
+
+
                         <div class="form-group">
                             <label for="phone">Phone:</label>
-                            <input type="text" class="form-control" name="phone" id="phone" value="{{ isset($result->phone) ? $result->logo : "" }}">
+                            <input type="text" class="form-control" name="phone" id="phone" value="{{ isset($result->phone) ? $result->phone : "" }}">
                         </div>
                         <div class="form-group">
                             <label for="email">Email:</label>

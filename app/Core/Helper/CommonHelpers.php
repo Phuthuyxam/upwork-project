@@ -78,19 +78,19 @@ if(!function_exists('getDataSeoOption')) {
             $seoRepository );
         $seoDatas = $seoRepository->filter([ ['object_id' , $objectId] , ['seo_type', $seoType]]);
         $resultData = [];
-        if($seoDatas->isNotEmpty()) {
+        if($seoDatas && $seoDatas->isNotEmpty()) {
             foreach ($seoDatas as $seo) {
                 $resultData[$seo->seo_key] = $seo->seo_value;
             }
         }
-
-        $localBusiness = \Spatie\SchemaOrg\Schema::advertiserContentArticle()->name('blog name');
-        $localBusiness->description($resultData[$seoConfig['SEO']['DESC']]);
-        $localBusiness->knowsLanguage(app()->getLocale());
-        $localBusiness->url(url()->current());
-        $localBusiness->sameAs(['https://www.facebook.com/']);
-        $localBusiness->logo('logo');
-        $localBusiness->telephone('0344719081');
+        
+//        $localBusiness = \Spatie\SchemaOrg\Schema::advertiserContentArticle()->name('blog name');
+//        $localBusiness->description($resultData[$seoConfig['SEO']['DESC']]);
+//        $localBusiness->knowsLanguage(app()->getLocale());
+//        $localBusiness->url(url()->current());
+//        $localBusiness->sameAs(['https://www.facebook.com/']);
+//        $localBusiness->logo('logo');
+//        $localBusiness->telephone('0344719081');
 
         ob_start();
         ?>
@@ -138,7 +138,7 @@ if(!function_exists('getDataSeoOption')) {
         <meta name="twitter:label2" content="Est. reading time">
         <meta name="twitter:data2" content="0 minutes">
 
-        <?php echo $localBusiness->toScript() ?>
+        <?php //echo $localBusiness->toScript() ?>
 
         <?php
         $content = ob_get_contents();

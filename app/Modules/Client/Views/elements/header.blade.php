@@ -7,8 +7,9 @@
                 </div>
                 <div class="header-logo">
                     <a href="{{ URL::to('/') }}">
-                        {!! FrontendHelpers::renderImage("http://localhost/Frontel/images/Logo.svg", "Asdad", "asdasd", "Asdasda") !!}
-{{--                        <img src="{{ $systemConfig['logo'] }}" alt="Logo" title="Logo">--}}
+                        @if(isset($systemConfig['logo']) && !empty($systemConfig['logo']))
+                        {!! FrontendHelpers::renderImage($systemConfig['logo']) !!}
+                        @endif
                     </a>
                 </div>
                 <div class="menu-site">

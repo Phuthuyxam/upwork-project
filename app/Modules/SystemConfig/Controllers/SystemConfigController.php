@@ -28,7 +28,10 @@ class SystemConfigController extends Controller
                 'phone' => $request->input('phone'),
                 'email' => $request->input('email_'),
                 'address' => $request->input('address'),
-                'social_link' => $request->input('social_links')
+                'social_link' => $request->input('social_links'),
+                'site_title' => $request->input('site_title'),
+                'site_tagline' => $request->input('site_tagline'),
+                'site_admin_mail' => $request->input('site_admin_mail'),
             ];
 
             $option = [
