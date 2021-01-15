@@ -130,7 +130,7 @@ class OptionController extends Controller
             'heading' => $request->option_our_hotel_heading,
             'url'   => $request->option_our_hotel_url,
         ];
-        if(isset($request->option_home_hotel_banner) && !empty($request->option_home_hotel_banner)) {
+        if(isset($request->option_home_hotel_banner) && !empty($request->option_home_hotel_banner) ) {
             $hotel_banner = $request->option_home_hotel_banner;
             $hotel_logo = $request->option_home_hotel_logo;
             foreach ($hotel_banner as $key => $h_banner) {
@@ -150,7 +150,20 @@ class OptionController extends Controller
             'sign'      => $request->option_our_message_sign,
         ];
 
-        $homeData['map'] = $request->option_home_map;
+        $homeData['our_brand'] = [
+            'title' => $request->option_our_brand_title,
+            'heading' => $request->option_our_brand_heading,
+        ];
+        if(isset($request->option_home_brand_banner) && !empty($request->option_home_brand_banner)) {
+            $brand_banner = $request->option_home_brand_banner;
+            $brand_url = $request->option_home_brand_url;
+            foreach ($brand_banner as $key => $b_banner) {
+                $homeData['our_brand']['brands'][] = [
+                    'banner' => $b_banner,
+                    'url'  => $brand_url[$key]
+                ];
+            }
+        }
 
         if(isset($request->option_type) && $request->option_type == 'homepage_setting') {
             try {

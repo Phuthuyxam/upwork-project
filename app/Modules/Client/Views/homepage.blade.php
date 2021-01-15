@@ -2,11 +2,6 @@
 @section('seo')
     {!! getDataSeoOption(-99, 'homepage', $seoDefault) !!}
 @endsection
-@section('schema')
-    <script type="application/ld+json" class="schema-graph">
-        {"@context":"https://schema.org","@graph":[{"@type":"WebSite","@id":"https://voucher.bepantoan.vn/#website","url":"https://voucher.bepantoan.vn/","name":"bepantoan- voucher","description":"Just another WordPress site","potentialAction":[{"@type":"SearchAction","target":"https://voucher.bepantoan.vn/?s={search_term_string}","query-input":"required name=search_term_string"}],"inLanguage":"en-US"},{"@type":"ImageObject","@id":"https://voucher.bepantoan.vn/#primaryimage","inLanguage":"en-US","url":"https://voucher.bepantoan.vn/wp-content/uploads/2020/11/logo-bepantoan.png","width":350,"height":108},{"@type":"WebPage","@id":"https://voucher.bepantoan.vn/#webpage","url":"https://voucher.bepantoan.vn/","name":"Home page - bepantoan- voucher","isPartOf":{"@id":"https://voucher.bepantoan.vn/#website"},"primaryImageOfPage":{"@id":"https://voucher.bepantoan.vn/#primaryimage"},"datePublished":"2020-11-29T03:58:54+00:00","dateModified":"2021-01-05T06:39:17+00:00","inLanguage":"en-US","potentialAction":[{"@type":"ReadAction","target":["https://voucher.bepantoan.vn/"]}]}]}
-    </script>
-@endsection
 @section('content')
     <div class="content-wrapper">
         <section class="home-slider-wrapper">
@@ -208,30 +203,40 @@
                 </div>
             </section>
         @endif
-        <section class="brand-wrapper">
-            <div class="container">
-                <div class="home-hotel-heading" style="display: block;">
-                    <div class="heading">
-                        <h3 class="tt-uper">more yet to come</h3>
-                        <h2 class="tt-uper fw-bold">our brands</h2>
+
+        {{-- brand client show --}}
+
+        @if(isset($page->our_brand) && !empty($page->our_brand))
+            @php
+                $brands = $page->our_brand;
+            @endphp
+            <section class="brand-wrapper">
+                <div class="container">
+                    <div class="home-hotel-heading" style="display: block;">
+                        <div class="heading">
+                            <h3 class="tt-uper">{{ isset($brands->heading) && !empty($brands->heading) ? $brands->heading : "" }}</h3>
+                            <h2 class="tt-uper fw-bold">{{ isset($brands->title) && !empty($brands->title) ? $brands->title : "" }}</h2>
+                        </div>
+                    </div>
+                    <div class="brand-content">
+                        @if(isset($brands->brands) && !empty($brands->brands))
+
+                        <div class="brand-slider">
+                            @foreach($brands->brands as $brand)
+                                <div class="item">
+                                    <a href="{{ $brand->url }}">
+                                        {!! \App\Core\Helper\FrontendHelpers::renderImage($brand->banner) !!}
+                                    </a>
+                                </div>
+                            @endforeach
+                        </div>
+                        @endif
                     </div>
                 </div>
-                <div class="brand-content">
-                    <div class="brand-slider">
-                        <div class="item"><img src="images/FRONTEL WWL.png" alt=""></div>
-                        <div class="item"><img src="images/makanlogo.png" alt=""></div>
-                        <div class="item"><img src="images/LL.png" alt=""></div>
-                        <div class="item"><img src="images/MaskGroup1.png" alt=""></div>
-                        <div class="item"><img src="images/Venue.png" alt=""></div>
-                        <div class="item"><img src="images/FRONTEL WWL.png" alt=""></div>
-                        <div class="item"><img src="images/makanlogo.png" alt=""></div>
-                        <div class="item"><img src="images/LL.png" alt=""></div>
-                        <div class="item"><img src="images/MaskGroup1.png" alt=""></div>
-                        <div class="item"><img src="images/Venue.png" alt=""></div>
-                    </div>
-                </div>
-            </div>
-        </section>
+            </section>
+        @endif
+
+
         <section class="map-wrapper">
             <div class="location-search-wrapper">
                 <div class="search-input">

@@ -16,6 +16,9 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     @yield('seo')
     @yield('schema')
+    <script type="application/ld+json" class="schema-graph">
+        {"@context":"https://schema.org","@graph":[{"@type":"WebSite","@id":"{{url()->to("/")}}/#website","url":"{{ url()->to("/") }}","name":"{{$systemConfig['site_title']}}","description":"{{ $systemConfig['site_tagline'] }}","potentialAction":[{"@type":"SearchAction","target":"","query-input":"required name="}],"inLanguage":"en-US"},{"@type":"ImageObject","@id":"{{ url()->to("/") }}/#primaryimage","inLanguage":"en-US","url":"{{ $systemConfig['logo'] }}","width":350,"height":108},{"@type":"WebPage","@id":"{{ url()->to("/") }}/#webpage","url":"{{ url()->to("/") }}","name":"{{ $systemConfig['site_title'] }}","isPartOf":{"@id":"{{ url()->to('/') }}/#website"},"primaryImageOfPage":{"@id":"{{ url()->to("/") }}/#primaryimage"},"datePublished":"2021-01-05T06:39:17+00:00","dateModified":"2021-01-05T06:39:17+00:00","inLanguage":"en-US","potentialAction":[{"@type":"ReadAction","target":["{{ url()->to("/") }}"]}]}]}
+    </script>
     <link rel="stylesheet" href="{{ asset('client/css/bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ asset('client/css/slick.css') }}">
     <link rel="stylesheet" href="{{ asset('client/css/animate.min.css') }}">

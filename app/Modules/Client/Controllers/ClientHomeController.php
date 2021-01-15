@@ -39,6 +39,7 @@ class ClientHomeController extends Controller
 //        ];
 
         $page = json_decode($this->optionRepository->getByKey('home')->option_value);
+
 //        return view('Client::homepage',compact('seoDefault'));
 //        return view('Client::homepage',compact('page'));
 
