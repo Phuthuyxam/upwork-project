@@ -7,11 +7,11 @@ namespace App\Modules\Client\Controllers;
 use App\Core\Glosary\SeoConfigs;
 use App\Core\Helper\OptionHelpers;
 use App\Http\Controllers\Controller;
-<<<<<<< Updated upstream
+
 use App\Modules\Setting\Repositories\OptionRepository;
-=======
+
 use Spatie\SchemaOrg\Graph;
->>>>>>> Stashed changes
+
 
 class ClientHomeController extends Controller
 {
@@ -27,7 +27,7 @@ class ClientHomeController extends Controller
         if($systemConfig && json_decode($systemConfig, true)){
             $systemConfig = json_decode($systemConfig, true);
         }
-<<<<<<< Updated upstream
+
 
 //        dd($systemConfig);
 //        $seoDefault = [
@@ -40,8 +40,8 @@ class ClientHomeController extends Controller
 
         $page = json_decode($this->optionRepository->getByKey('home')->option_value);
 //        return view('Client::homepage',compact('seoDefault'));
-        return view('Client::homepage',compact('page'));
-=======
+//        return view('Client::homepage',compact('page'));
+
         $seoDefault = [
             $seoConfig['SEO']['FOCUS_KEYPHARE'] => $systemConfig['site_title'],
             $seoConfig['SEO']['TITLE'] => $systemConfig['site_title'],
@@ -56,8 +56,7 @@ class ClientHomeController extends Controller
             $seoConfig['SOCIAL']['TWITTER']['DESCRIPTION'] => $systemConfig['site_tagline'],
             $seoConfig['SOCIAL']['TWITTER']['IMAGE'] => $systemConfig['logo']
         ];
-        return view('Client::homepage',compact('seoDefault'));
->>>>>>> Stashed changes
+        return view('Client::homepage',compact('page', 'seoDefault'));
     }
 
 }
