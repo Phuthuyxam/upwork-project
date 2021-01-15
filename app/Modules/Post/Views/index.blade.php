@@ -25,11 +25,11 @@
             <div class="card">
                 <div class="card-body">
                     <div class="action-wrapper">
-                        <a href="{{ route('post.add',\App\Core\Glosary\PostType::POST['VALUE']) }}" style="margin-right: 1rem" class="btn btn-success">Add post</a>
+                        <a href="{{ route('post.add') }}" style="margin-right: 1rem" class="btn btn-success">Add post</a>
                         <button class="btn btn-warning btn-delete-many" disabled>Delete Selected</button>
                     </div>
 
-                    <table id="datatable" class="table table-bordered" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
+                    <table id="datatable" class="table table-hover" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
                         <thead>
                             <tr>
                                 <th style="text-align: center"><input type="checkbox" name="" id="checkAll"></th>
@@ -39,7 +39,7 @@
                                 <th>Status</th>
                                 <th>Created at</th>
                                 <th>Updated at</th>
-                                <th></th>
+                                <th>Action</th>
                             </tr>
                         </thead>
 
@@ -54,7 +54,7 @@
                                     <td>{{ \App\Core\Glosary\PostStatus::display($value['postStatus']) }}</td>
                                     <td>{{ $value['createdAt'] }}</td>
                                     <td>{{ $value['updatedAt'] }}</td>
-                                    <td>
+                                    <td style="width: 100px">
                                         <div class="btn-wrapper" style="display: flex; align-items: center;justify-content: center">
                                             <a href="{{ route('post.edit',$value['postId']) }}" target="_blank" class="btn btn-primary btn-edit" style="margin-right: 10px">Edit</a>
                                             <button class="btn btn-danger btn-delete" data-id="{{ $value['postId'] }}">Delete</button>

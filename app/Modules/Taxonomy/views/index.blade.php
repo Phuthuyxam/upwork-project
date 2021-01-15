@@ -103,9 +103,26 @@
                 <div class="col-8">
                     <div class="card">
                         <div class="card-body">
-                            <button class="btn btn-warning btn-delete-many" style="float: right; margin-bottom: 1rem" disabled>Delete Selected</button>
+                            @if(isset($categories) && count($categories))
+                            <div class="default-category">
+                                <div class="row">
+                                    <div class="col-8">
+                                        <span style="font-weight: bold">Default Category :</span>
+                                        <select class="form-control" id="default-category" style="display: inline-block;width: 200px;margin: 0 1rem">
+                                            @foreach($categories as $value)
+                                                <option value="{{ $value->term_id }}" {{ $defaultCategory->option_value == $value->term_id ? 'selected' :'' }}>{{ $value->name }}</option>
+                                            @endforeach
+                                        </select>
+                                        <button class="btn btn-success btn-save">Save</button>
+                                    </div>
+                                    <div class="col-4">
+                                        <button class="btn btn-warning btn-delete-many" style="float: right; margin-bottom: 1rem" disabled>Delete Selected</button>
+                                    </div>
+                                </div>
+                            </div>
+                            @endif
                             <div class="table-wrapper">
-                                <table class="table table-striped table-hover" id="cate-table">
+                                <table class="table table-hover" id="cate-table">
                                     <thead>
                                         <tr>
                                             <th><input type="checkbox" name="" id="checkAll"></th>
@@ -120,15 +137,21 @@
                                         @if(isset($categories) && !empty($categories))
                                             @foreach($categories as $value)
                                                 <tr>
-                                                    <td><input type="checkbox" class="cate-check" data-id="{{ $value->term_id }}" name="" id=""></td>
+                                                    <td>
+                                                        @if($defaultCategory->option_value != $value->term_id )
+                                                            <input type="checkbox" class="cate-check" data-id="{{ $value->term_id }}" name="" id="">
+                                                        @endif
+                                                    </td>
                                                     <td><a href="#">{{ $value->name }}</a></td>
 {{--                                                    <td><a href="#" target="_blank"><i class="dripicons-web"></i> Make translation</a></td>--}}
                                                     <td>{{ $value->slug }}</td>
 {{--                                                    <td></td>--}}
-                                                    <td>
-                                                        <div class="btn-wrapper" style="display: flex; align-items: center;justify-content: center">
+                                                    <td style="width: 100px">
+                                                        <div class="btn-wrapper" style="display: flex; align-items: center;">
                                                             <a href="{{ route('taxonomy.edit',$value->term_id) }}" class="btn btn-primary btn-edit" style="margin-right: 10px">Edit</a>
-                                                            <button class="btn btn-danger btn-delete" data-id="{{ $value->term_id }}">Delete</button>
+                                                            @if($defaultCategory->option_value != $value->term_id )
+                                                                <button class="btn btn-danger btn-delete" data-id="{{ $value->term_id }}">Delete</button>
+                                                            @endif
                                                         </div>
                                                     </td>
                                                 </tr>
@@ -150,6 +173,7 @@
 @section('script')
     <script>
         const slugs = JSON.parse('{!! json_encode($slugs) !!}');
+        const defaultCategory = {{ $defaultCategory->option_value }};
         $(document).ready(function (){
             // Validate Name
             $('#name').on('change',function (){
@@ -343,6 +367,52 @@
                     })
                 }
             })
+        })
+
+        $('.btn-save').click(function (){
+            let val = $('#default-category').val();
+            if (val != defaultCategory) {
+                Swal.fire({
+                    text: 'Do you want to change default category ?',
+                    type: 'info',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes'
+                }).then((result) => {
+                    if (result.value) {
+                        $('#loading').show();
+                        $.ajax({
+                            type : 'POST',
+                            url : '{{ route('taxonomy.change.default') }}',
+                            data : {
+                                _token : '{{ csrf_token() }}',
+                                id : val
+                            },
+                            success: function (response){
+                                $('#loading').hide();
+                                if (response == 200) {
+                                    Swal.fire({
+                                        type: 'success',
+                                        text: 'Category has been deleted.',
+                                    }).then(() => {
+                                        window.location.href= '{{ route('taxonomy.index') }}';
+                                    })
+                                }else{
+                                    Swal.fire({
+                                        type: 'error',
+                                        title: 'Oops... !',
+                                        text: 'Something went wrong.',
+                                    })
+                                }
+                            },
+                            error: function (e) {
+                                console.log(e);
+                            }
+                        })
+                    }
+                })
+            }
         })
 
         function checkRequired(formId) {

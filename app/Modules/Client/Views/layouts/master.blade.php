@@ -14,7 +14,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     @yield('seo')
-{{--    <title>Frontel</title>--}}
+    <title>@yield('title')</title>
     <link rel="stylesheet" href="{{ asset('client/css/bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ asset('client/css/slick.css') }}">
     <link rel="stylesheet" href="{{ asset('client/css/animate.min.css') }}">
