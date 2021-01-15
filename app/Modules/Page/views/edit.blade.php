@@ -92,7 +92,8 @@
                                            role="tab">Common</a>
                                     </li>
                                     <li class="nav-item" id="customTab"
-                                        @if ($result['page_template'] == \App\Core\Glosary\PageTemplateConfigs::HOTEL['VALUE']) style="display: none" @endif>
+                                        @if ($result['page_template'] == \App\Core\Glosary\PageTemplateConfigs::HOTEL['VALUE']
+                                            || $result['page_template'] == \App\Core\Glosary\PageTemplateConfigs::DEFAULT['VALUE'] ) style="display: none" @endif>
                                         <a class="nav-link " data-toggle="tab" href="#slide" role="tab">Custom
                                             Setting</a>
                                     </li>

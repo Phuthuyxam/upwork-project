@@ -35,4 +35,8 @@ class TermRelationRepository extends EloquentRepository {
     public function deleteByPostId($postId) {
         return $this->_model->where('object_id',$postId)->delete();
     }
+
+    public function getByTermId($termId) {
+        return $this->_model->where('term_taxonomy_id',$termId)->get();
+    }
 }

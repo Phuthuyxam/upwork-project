@@ -38,16 +38,16 @@
                             @if(!empty($pages))
                                 @foreach($pages as $value)
                                     <tr>
-                                        <td style="text-align: center"><input type="checkbox" class="cate-check" data-id="{{ $value->id }}" name="" id=""></td>
-                                        <td><a href="#">{{ $value->post_title }}</a></td>
-                                        <td>{{ $value->name }}</td>
-                                        <td>{{ \App\Core\Glosary\PostStatus::display($value->post_status) }}</td>
-                                        <td>{{ $value->created_at }}</td>
-                                        <td>{{ $value->updated_at }}</td>
+                                        <td style="text-align: center"><input type="checkbox" class="cate-check" data-id="{{ $value->postId }}" name="" id=""></td>
+                                        <td><a href="#">{{ $value->postTitle }}</a></td>
+                                        <td>{{ $value->postAuthor }}</td>
+                                        <td>{{ \App\Core\Glosary\PostStatus::display($value->postStatus) }}</td>
+                                        <td>{{ $value->createdAt }}</td>
+                                        <td>{{ $value->updatedAt }}</td>
                                         <td style="width: 150px">
                                             <div class="btn-wrapper" style="display: flex; align-items: center;justify-content: center">
-                                                <a href="{{ route('page.edit',$value->id) }}" target="_blank" class="btn btn-primary btn-edit" style="margin-right: 10px">Edit</a>
-                                                <button class="btn btn-danger btn-delete" data-id="{{ $value->id }}">Delete</button>
+                                                <a href="{{ route('page.edit',$value->postId) }}" target="_blank" class="btn btn-primary btn-edit" style="margin-right: 10px">Edit</a>
+                                                <button class="btn btn-danger btn-delete" data-id="{{ $value->postId }}">Delete</button>
                                             </div>
                                         </td>
                                     </tr>

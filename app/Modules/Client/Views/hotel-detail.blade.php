@@ -1,5 +1,9 @@
 @extends('Client::layouts.master')
+@section('title')
+    {{ $post->post_title }}
+@endsection
 @section('content')
+{{--    @dd($relatePostMetaMap)--}}
     <div class="content-wrapper">
         <section class="banner-wrapper">
             <div class="banner-image">
@@ -7,13 +11,13 @@
                 <picture>
                     <source srcset="{{ $postMetaMap['banner'][2] }}" media="(max-width: 415px)">
                     <source srcset="{{ $postMetaMap['banner'][1] }}" media="(max-width: 768px)">
-                    <img src="{{ $postMetaMap['banner'][0] }}" alt="hotel-banner">
+                    {!! \App\Core\Helper\FrontendHelpers::renderImage($postMetaMap['banner'][0]) !!}
                 </picture>
                 @endif
             </div>
             <div class="banner-content">
                 <div class="banner-title">
-                    <img src="{{ $termMetaMap[\App\Core\Glosary\MetaKey::BRAND_LOGO['NAME']] }}" alt="">
+                    {!! \App\Core\Helper\FrontendHelpers::renderImage($termMetaMap[\App\Core\Glosary\MetaKey::BRAND_LOGO['NAME']]) !!}
                 </div>
                 <div class="breadscrum">
                     <ul>
@@ -44,10 +48,9 @@
                                     @foreach($slides as $value)
                                         <div class="item">
                                             <div class="image-zoom">
-                                                <img src="images/Group3832.svg" alt="">
+                                                <img src="{{ asset('client/images/Group3832.svg') }}" alt="">
                                             </div>
-                                            <img src="{{ $value }}" class="thumb" alt="detail-hotel"
-                                                 title="detail-hotel">
+                                            {!! \App\Core\Helper\FrontendHelpers::renderImage($value) !!}
                                         </div>
                                     @endforeach
                                 @endif
@@ -55,10 +58,10 @@
                             <div class="slider-nav-wrapper">
                                 <div class="blur-side">
                                     <div class="left">
-                                        <img src="images/Rectangle901-Copy.png" alt="">
+                                        <img src="{{ asset('client/images/Rectangle901-Copy.png') }}" alt="">
                                     </div>
                                     <div class="right">
-                                        <img src="images/Rectangle901.png" alt="">
+                                        <img src="{{ asset('client/images/Rectangle901.png') }}" alt="">
                                     </div>
                                 </div>
                                 <div class="slider-nav">
@@ -68,8 +71,7 @@
                                         @endphp
                                         @foreach($slides as $value)
                                             <div class="item">
-                                                <img src="{{ $value }}" class="thumb" alt="detail-hotel"
-                                                     title="detail-hotel">
+                                                {!! \App\Core\Helper\FrontendHelpers::renderImage($value) !!}
                                                 <div class="overlay"></div>
                                             </div>
                                         @endforeach
@@ -125,7 +127,7 @@
                                                             @foreach($facilities as $value)
                                                                 <li>
                                                                     <div class="icon">
-                                                                        <img src="images/Group3811.svg" alt="">
+                                                                        <img src="{{ asset('client/images/Group3811.svg') }}" alt="">
                                                                     </div>
                                                                     <p>{{ $value }}</p>
                                                                 </li>
@@ -150,19 +152,19 @@
                         </div>
                     </div>
                     <div class="col-xl-3">
-                        <div class="reservation-form" style="background-image: url(images/MaskGroup31.jpg);">
+                        <div class="reservation-form" style="background-image: url({{ asset('client/images/MaskGroup31.jpg') }});">
                             <h4 class="fw-bold">Your Reservation</h4>
                             <form action="">
                                 <div class="date-input">
                                     <div class="icon-calendar">
-                                        <img src="images/Icon feathercalendar.svg" alt="">
+                                        <img src="{{ asset('client/images/Icon feathercalendar.svg') }}" alt="">
                                     </div>
                                     <input type="text" name="" class="form-control detail-date-picker" value=""
                                            placeholder="Check-In" required="required" title="">
                                 </div>
                                 <div class="date-input">
                                     <div class="icon-calendar">
-                                        <img src="images/Icon feathercalendar.svg" alt="">
+                                        <img src="{{ asset('client/images/Icon feathercalendar.svg') }}" alt="">
                                     </div>
                                     <input type="text" name="" class="form-control detail-date-picker" value=""
                                            placeholder="Check-Out" required="required" title="">
@@ -195,28 +197,30 @@
                             </div>
                             <div class="hotels-content">
                                 <div class="row">
-                                    @foreach($relatePostMap as $key => $value)
+                                    @foreach($relatePostMetaMap as $key => $value)
                                     <div class="col-xl-4 col-lg-4 col-sm-6">
                                         <div class="hotel-item">
                                             <div class="image">
-                                                <img src="{{ $relatePostMetaMap[$key] }}" alt="hotel1" title="hotel1">
+                                                {!! \App\Core\Helper\FrontendHelpers::renderImage($value[\App\Core\Glosary\MetaKey::THUMBNAIL['NAME']]) !!}
                                                 <div class="view-more-overlay">
-                                                    <a href="#" class="tt-uper" title="title">more info</a>
+                                                    <a href="{{ route('detail',$value['slug']) }}" class="tt-uper" title="title">more info</a>
                                                 </div>
                                             </div>
                                             <div class="content">
                                                 <a href="#" title="title">
                                                     <div class="rate">
-                                                        <i class="fas fa-star" aria-hidden="true"></i>
-                                                        <i class="fas fa-star" aria-hidden="true"></i>
-                                                        <i class="fas fa-star" aria-hidden="true"></i>
-                                                        <i class="fas fa-star" aria-hidden="true"></i>
-                                                        <i class="fas fa-star" aria-hidden="true"></i>
+                                                        @if(isset($value['rate']))
+                                                            @for($i = 0 ; $i < $value['rate']; $i++)
+                                                                <i class="fas fa-star" aria-hidden="true"></i>
+                                                            @endfor
+                                                        @endif
                                                     </div>
                                                     <div class="title">
-                                                        <h3>The Venue Corniche</h3>
-                                                        <p class="city">Jeddah</p>
-                                                        <p class="price">from SAR 850.00 / night</p>
+                                                        <h3>{{ $value['title'] }}</h3>
+                                                        @if($value[\App\Core\Glosary\MetaKey::LOCATION['NAME']] && $value[\App\Core\Glosary\MetaKey::LOCATION['NAME']]->address != '')
+                                                            <p class="city">{{ $value['location']->address }}</p>
+                                                        @endif
+                                                        <p class="price">{{ $value[\App\Core\Glosary\MetaKey::PRICE['NAME']] }}</p>
                                                     </div>
                                                 </a>
                                             </div>

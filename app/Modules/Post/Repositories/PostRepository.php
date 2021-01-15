@@ -43,7 +43,12 @@ class PostRepository extends EloquentRepository
     }
 
     public function getPages(){
-        return $this->_model->join('users','users.id','=','posts.post_author')->where('post_type',PostType::PAGE['VALUE'])->get();
+        return $this->_model->leftJoin('users','users.id','=','posts.post_author')
+            ->where('post_type',PostType::PAGE['VALUE'])
+            ->select('posts.id as postId', 'posts.post_title as postTitle', 'users.name as postAuthor',
+                'users.id as userId', 'posts.post_status as postStatus',
+                'posts.created_at as createdAt', 'posts.updated_at as updatedAt')
+            ->get();
     }
 
     public function getBySlug($slug) {

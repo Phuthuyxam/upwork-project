@@ -21,7 +21,7 @@
                 </td>
                 <td>
                     <div class="form-group">
-                        <textarea class="form-control required" name="descriptions[]">{{ $value->desc }}</textarea>
+                        <textarea class="form-control required" style="height: 100px" name="descriptions[]">{{ $value->desc }}</textarea>
                         <p class="text-danger error-message" style="font-weight: bold">
                         </p>
                     </div>
@@ -45,7 +45,7 @@
             </td>
             <td>
                 <div class="form-group">
-                    <textarea class="form-control required" name="descriptions[]"></textarea>
+                    <textarea class="form-control required" style="height: 100px" name="descriptions[]"></textarea>
                     <p class="text-danger error-message" style="font-weight: bold">
                     </p>
                 </div>

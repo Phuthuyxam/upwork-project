@@ -14,4 +14,8 @@ class OptionRepository extends EloquentRepository {
             return OptionAr::class;
         return Option::class;
     }
+
+    public function getDefaultCategory(){
+        return $this->_model->where('option_key','default_category')->first();
+    }
 }
