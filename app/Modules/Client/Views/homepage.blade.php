@@ -1,7 +1,18 @@
 @extends('Client::layouts.master')
+<<<<<<< Updated upstream
 {{--@section('seo')--}}
 {{--    {!! getDataSeoOption(-99, 'homepage', $seoDefault) !!}--}}
 {{--@endsection--}}
+=======
+@section('seo')
+    {!! getDataSeoOption(-99, 'homepage', $seoDefault) !!}
+@endsection
+@section('schema')
+    <script type="application/ld+json" class="schema-graph">
+        {"@context":"https://schema.org","@graph":[{"@type":"WebSite","@id":"https://voucher.bepantoan.vn/#website","url":"https://voucher.bepantoan.vn/","name":"bepantoan- voucher","description":"Just another WordPress site","potentialAction":[{"@type":"SearchAction","target":"https://voucher.bepantoan.vn/?s={search_term_string}","query-input":"required name=search_term_string"}],"inLanguage":"en-US"},{"@type":"ImageObject","@id":"https://voucher.bepantoan.vn/#primaryimage","inLanguage":"en-US","url":"https://voucher.bepantoan.vn/wp-content/uploads/2020/11/logo-bepantoan.png","width":350,"height":108},{"@type":"WebPage","@id":"https://voucher.bepantoan.vn/#webpage","url":"https://voucher.bepantoan.vn/","name":"Home page - bepantoan- voucher","isPartOf":{"@id":"https://voucher.bepantoan.vn/#website"},"primaryImageOfPage":{"@id":"https://voucher.bepantoan.vn/#primaryimage"},"datePublished":"2020-11-29T03:58:54+00:00","dateModified":"2021-01-05T06:39:17+00:00","inLanguage":"en-US","potentialAction":[{"@type":"ReadAction","target":["https://voucher.bepantoan.vn/"]}]}]}
+    </script>
+@endsection
+>>>>>>> Stashed changes
 @section('content')
     <div class="content-wrapper">
         <section class="home-slider-wrapper">
