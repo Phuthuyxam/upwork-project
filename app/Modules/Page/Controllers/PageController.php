@@ -184,17 +184,17 @@ class PageController extends Controller
                 // make translation
                 if(isset($request->translation) && !empty($request->translation) && LocationConfigs::checkLanguageCode($request->translation)) {
                     // check has record in relationship
-                    $translationMapping = $this->translationRelationRepository->filter([['to_object_id',$id] , ['to_lang', $currentLang] , ['from_lang' , $request->translation], ['type' , 'post']]);
-                    if($translationMapping && $translationMapping->isNotEmpty()) {
-                        $transUrl = renderTranslationUrl(route('page.edit', ['id' => $translationMapping[0]->from_object_id]), $request->translation);
-                        return redirect()->to($transUrl)->with('message', 'warning|Warning! when creating the translation. A record already exists. Please edit with this one.');
-                    }
-
-                    $translationMapping = $this->translationRelationRepository->filter([['from_object_id',$id] , ['to_lang', $currentLang] , ['from_lang' , $request->translation], ['type' , 'post']]);
+                    $translationMapping = $this->translationRelationRepository->filter([['from_object_id',$id] , ['from_lang', $currentLang] , ['to_lang' , $request->translation], ['type' , 'post']]);
                     if($translationMapping && $translationMapping->isNotEmpty()) {
                         $transUrl = renderTranslationUrl(route('page.edit', ['id' => $translationMapping[0]->to_object_id]), $request->translation);
                         return redirect()->to($transUrl)->with('message', 'warning|Warning! when creating the translation. A record already exists. Please edit with this one.');
                     }
+
+//                    $translationMapping = $this->translationRelationRepository->filter([['to_object_id',$id] , ['from_lang', $currentLang] , ['to_lang' , $request->translation], ['type' , 'post']]);
+//                    if($translationMapping && $translationMapping->isNotEmpty()) {
+//                        $transUrl = renderTranslationUrl(route('page.edit', ['id' => $translationMapping[0]->to_object_id]), $request->translation);
+//                        return redirect()->to($transUrl)->with('message', 'warning|Warning! when creating the translation. A record already exists. Please edit with this one.');
+//                    }
 
                         $translation = $this->translationSave($request);
                         if($translation){
