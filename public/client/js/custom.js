@@ -1,34 +1,5 @@
-const locations = [
-    {
-        name: 'Frontel Al Harithia Hotel',
-        image: 'images/Mask Group 21.png',
-        address: '123 abc def',
-        city: 'Medina',
-        rate: 5,
-        location: { lat: -31.56391, lng: 147.154312 }
-    },
-    {
-        name: 'Frontel Al Hotel',
-        image: 'images/Mask Group 21.png',
-        address: '123 abc def',
-        city: 'London',
-        rate: 3,
-        location: { lat: -32.56391, lng: 147.154312 }
-    }
-];
 
 $(document).ready(function () {
-    $('.lazy').Lazy({
-        // your configuration goes here
-        scrollDirection: 'vertical',
-        effect: 'fadeIn',
-        effectTime: 1000,
-        threshold: 200,
-        visibleOnly: true,
-        onError: function (element) {
-            console.log('error loading ' + element.data('src'));
-        }
-    });
 
     // Home slide
     $('.home-slider').slick({
@@ -55,7 +26,7 @@ $(document).ready(function () {
         arrows: false,
         customPaging: function (slider, i) {
             return '<div class="dot"></div>';
-        }, 
+        },
         responsive: [
             {
                 breakpoint: 769,
@@ -187,120 +158,3 @@ $(document).ready(function () {
     // }
 
 });
-function initMap() {
-    const maxZoom = 15;
-    const minZoom = 3;
-    var zoom = 4;
-    const map = new google.maps.Map(document.getElementById("map"), {
-        zoom: zoom,
-        center: { lat: -28.024, lng: 140.887 },
-        mapTypeControlOptions: { mapTypeIds: [] },
-        fullscreenControl: false,
-        streetViewControl: false,
-        maxZoom: maxZoom,
-        minZoom: minZoom,
-        zoomControl: false
-    });
-
-    google.maps.event.addListener(map, 'zoom_changed', function () {
-        zoom = map.getZoom();
-        var height = (zoom - minZoom) / (maxZoom - minZoom) * 100 + '%';
-        $('.zoom-controls').find('.zoom-level').height(height);
-    });
-
-    const input = document.getElementById("search");
-    const searchBox = new google.maps.places.SearchBox(input);
-    const infowindow = new google.maps.InfoWindow();
-    const infowindowContent = document.getElementById("infowindow-content");
-
-
-    map.addListener("bounds_changed", () => {
-        searchBox.setBounds(map.getBounds());
-    });
-
-    searchBox.addListener("places_changed", () => {
-        const places = searchBox.getPlaces();
-        if (places.length == 0) {
-            return;
-        }
-
-        // For each place, get the icon, name and location.
-        const bounds = new google.maps.LatLngBounds();
-        places.forEach((place) => {
-            if (!place.geometry) {
-                console.log("Returned place contains no geometry");
-                return;
-            }
-
-            if (place.geometry.viewport) {
-                // Only geocodes have viewport.
-                bounds.union(place.geometry.viewport);
-            } else {
-                bounds.extend(place.geometry.location);
-            }
-        });
-        map.fitBounds(bounds);
-        map.setZoom(maxZoom);
-
-    });
-
-    const markers = locations.map((location, i) => {
-        var marker = new google.maps.Marker({
-            position: location.location,
-            icon: "images/Group 3219.png",
-            map: map
-        });
-
-        marker.addListener("click", () => {
-            if ($(window).width() < 600) {
-                html = `
-                    <p class="fw-bold">`+ location.name + `</p>
-                    <p>`+ location.address + `</p>
-                    <p>`+ location.city + `</p>
-                `;
-                infowindow.setContent(html);
-                infowindow.open(map, marker);
-            } else {
-                map.setZoom(maxZoom);
-                map.setCenter(marker.getPosition());
-
-                var rate = "";
-                var star = '<i class="fas fa-star"></i>';
-                for (var i = 0; i < location.rate; i++) {
-                    rate += star;
-                }
-                $('#location').show();
-                $('#location').addClass('animate__animated');
-                $('#location').addClass('animate__slideInLeft');
-                $('#location').removeClass('animate__slideOutLeft');
-                $('#location').find('img').attr('src', location.image);
-                $('#location').find('.name').text(location.name);
-                $('#location').find('.city').text(location.city);
-                $('#location').find('.rate').html(rate);
-            }
-        });
-    });
-    $('.zoom-controls .zoom-level').height((zoom - minZoom) / (maxZoom - minZoom) * 100 + '%');
-    $('.zoom-controls .plus').click(function () {
-        if (zoom < maxZoom) {
-            zoom = zoom + 1;
-            map.setZoom(zoom);
-            var height = (zoom - minZoom) / (maxZoom - minZoom) * 100 + '%';
-            $(this).parents('.zoom-controls').find('.zoom-level').height(height);
-        } else {
-            zoom = maxZoom;
-        }
-    })
-
-    $('.zoom-controls .minus').click(function () {
-        if (zoom > minZoom) {
-            zoom = zoom - 1;
-            map.setZoom(zoom);
-            var height = (zoom - minZoom) / (maxZoom - minZoom) * 100 + '%';
-            $(this).parents('.zoom-controls').find('.zoom-level').height(height);
-        } else {
-            zoom = minZoom;
-        }
-
-    })
-}
