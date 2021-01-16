@@ -1,0 +1,10 @@
+{
+    "contact_form_label_email" : "Email Us",
+    "contact_form_label_phone" : "Call Us",
+    "contact_form_label_submit" : "Send Message",
+    "contact_form_placeholder_name" : "Your Name",
+    "contact_form_placeholder_email" : "Your Email",
+    "contact_form_placeholder_phone" : "Your Phone",
+    "contact_form_placeholder_project" : "Your Project",
+    "contact_form_placeholder_message" : "Your Message"
+}

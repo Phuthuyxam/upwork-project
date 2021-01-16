@@ -7,12 +7,15 @@ namespace App\Modules\Client\Controllers;
 use App\Core\Glosary\MetaKey;
 use App\Core\Glosary\PageTemplateConfigs;
 use App\Core\Glosary\PostType;
+use App\Core\Helper\OptionHelpers;
 use App\Http\Controllers\Controller;
 use App\Modules\Post\Repositories\PostMetaRepository;
 use App\Modules\Post\Repositories\PostRepository;
 use App\Modules\Taxonomy\Repositories\TermMetaRepository;
 use App\Modules\Taxonomy\Repositories\TermRelationRepository;
 use App\Modules\Taxonomy\Repositories\TermRepository;
+use Illuminate\Http\Request;
+use Mail;
 
 class ClientPostController extends Controller
 {
@@ -180,4 +183,27 @@ class ClientPostController extends Controller
             return view('Client::pages.404');
         }
     }
+
+    public function saveContactForm(Request $request) {
+
+        $this->validate($request, [
+            'contact_name' => 'required',
+            'contact_email' => 'required|email',
+            'contact_phone' => 'required|regex:/(0)[0-9]/|not_regex:/[a-z]/|min:9'
+        ]);
+
+        $systemConfig = OptionHelpers::getSystemConfigByKey('general');
+        if($systemConfig && json_decode($systemConfig,true))
+            $systemConfig = json_decode($systemConfig, true);
+
+        $input = $request->all();
+        Mail::send('mail_temaplate.contact', ['name'=>$input["contact_name"], 'email'=>$input["contact_email"], 'phone'=>$input['contact_phone'],'project' => $input['contact_project'] ,'contact_message' => $input['contact_message'] ], function ($message) {
+            $message->from('youremail@your_domain');
+            $message->to('youremail@your_domain', 'Your Name')
+                ->subject('Your Website Contact Form');
+        });
+        Session::flash('flash_message', 'Send message successfully!');
+
+    }
+
 }

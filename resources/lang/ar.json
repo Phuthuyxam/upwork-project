@@ -1,0 +1,10 @@
+{
+    "contact_form_label_email" : " البريد الالكتروني",
+    "contact_form_label_phone" : " اتصل بنا",
+    "contact_form_label_submit" : "ارسال الرسالة",
+    "contact_form_placeholder_name" : "اسمك",
+    "contact_form_placeholder_email" : "بريدك الالكتروني",
+    "contact_form_placeholder_phone" : "رقم هاتفك",
+    "contact_form_placeholder_project" : "الموضوع",
+    "contact_form_placeholder_message" : "رسالتك"
+}
