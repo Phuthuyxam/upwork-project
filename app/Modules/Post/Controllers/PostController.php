@@ -221,10 +221,10 @@ class PostController extends Controller
                     // make record relationship translation
                     if(isset($translation['post_id']) && !empty($translation['post_id'])) {
                         $translationRecord = [
-                            'to_object_id' => $id,
-                            'from_object_id' => $translation['post_id'],
-                            'to_lang' => $currentLang,
-                            'from_lang' => app()->getLocale(),
+                            'to_object_id' => $translation['post_id'],
+                            'from_object_id' => $id,
+                            'to_lang' => app()->getLocale(),
+                            'from_lang' => $currentLang,
                             'type' => 'post',
                         ];
                         if($this->translationRelationRepository->create($translationRecord))
