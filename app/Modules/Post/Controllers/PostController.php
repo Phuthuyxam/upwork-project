@@ -165,7 +165,7 @@ class PostController extends Controller
 
             if ($result) {
                 Log::info('user '.Auth::id().' has created hotel '. $postId);
-                return redirect('admin/hotels/edit/' . $postId)->with('message', 'success|Successfully create  "' . $request->input('post_title') . '" hotel');
+                return redirect(route('post.edit', ['id' => $postId]))->with('message', 'success|Successfully create  "' . $request->input('post_title') . '" hotel');
             } else {
                 return redirect()->back()->with('message', 'danger|Something wrong try again!');
             }
