@@ -81,9 +81,22 @@ class ClientHomeController extends Controller
                         }
                     }
                 }
+                foreach ($postMap as $value) {
+                    $mapData[] = [
+                        'name' => $value['name'],
+                        'image' => $value[MetaKey::LOCATION['NAME']]->image,
+                        'address' => $value[MetaKey::LOCATION['NAME']]->address,
+                        'city' => $value[MetaKey::LOCATION['NAME']]->city,
+                        'rate' => $value[MetaKey::RATE['NAME']],
+                        'location' => [
+                            'lat' => floatval($value[MetaKey::LOCATION['NAME']]->location->lat),
+                            'lng' => floatval($value[MetaKey::LOCATION['NAME']]->location->long)
+                        ]
+                    ];
+                }
             }
         }
-        return view('Client::homepage',compact('page', 'seoDefault','currentLanguage'));
+        return view('Client::homepage',compact('page', 'seoDefault','currentLanguage','mapData'));
     }
 
 }
