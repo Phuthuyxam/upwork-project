@@ -36,7 +36,7 @@
                                 <th style="text-align: center"><input type="checkbox" name="" id="checkAll"></th>
                                 <th>Title</th>
                                 <th>Author</th>
-                                <th>Category</th>
+{{--                                <th>Category</th>--}}
                                 <th>Status</th>
                                 <th>Created at</th>
                                 <th>Updated at</th>
@@ -51,7 +51,7 @@
                                     <td style="text-align: center"><input type="checkbox" class="cate-check" data-id="{{ $value['postId'] }}" name="" id=""></td>
                                     <td><a href="{{ route('post.edit',$value['postId']) }}">{{ $value['postTitle'] }}</a></td>
                                     <td>{{ $value['userName'] }}</td>
-                                    <td>{{ $value['termName'] }}</td>
+{{--                                    <td>{{ $value['termName'] }}</td>--}}
                                     <td>{{ \App\Core\Glosary\PostStatus::display($value['postStatus']) }}</td>
                                     <td>{{ $value['createdAt'] }}</td>
                                     <td>{{ $value['updatedAt'] }}</td>
