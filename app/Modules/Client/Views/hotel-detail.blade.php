@@ -33,7 +33,7 @@
                 </div>
                 <div class="breadscrum">
                     <ul>
-                        <li class="item"><a href="{{ route('index') }}">الصفحة الرئيسية</a></li>
+                        <li class="item"><a href="{{ route('index') }}">{{ $currentLanguage == 'en' ? 'home' : 'الصفحة الرئيسية' }}</a></li>
                         <li class="item active"><a href="#"><span><div class="rectangle"></div>  الصفحة الرئيسية </span></a></li>
                         <li class="item active"><span>
                             <div class="rectangle"></div> {{ $post->post_title }}

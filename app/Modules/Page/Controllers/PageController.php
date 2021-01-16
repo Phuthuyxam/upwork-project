@@ -293,7 +293,8 @@ class PageController extends Controller
             $html = view(PageTemplateConfigs::ABOUT['VIEW'])->render();
             return response($html);
         }
-        if ($template == PageTemplateConfigs::HOTEL['VALUE'] || $template == PageTemplateConfigs::DEFAULT['VALUE']){
+        if ($template == PageTemplateConfigs::HOTEL['VALUE'] || $template == PageTemplateConfigs::DEFAULT['VALUE']
+        || $template == PageTemplateConfigs::CONTACT['VALUE']){
             return response('default');
         }
     }
