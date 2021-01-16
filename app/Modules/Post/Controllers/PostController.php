@@ -89,6 +89,7 @@ class PostController extends Controller
                 $dataMap = [
                     'image' => $request->input('map_image') ? $request->input('map_image') : '',
                     'address' => $request->input('map_address') ? $request->input('map_address') : '',
+                    'city' => $request->input('map_city') ? $request->input('map_city') : '',
                     'location' => [
                         'lat' => $request->input('map_lat') ? $request->input('map_lat') : '',
                         'long' => $request->input('map_long') ? $request->input('map_long') : ''

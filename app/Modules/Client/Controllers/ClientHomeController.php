@@ -4,10 +4,14 @@
 namespace App\Modules\Client\Controllers;
 
 
+use App\Core\Glosary\MetaKey;
+use App\Core\Glosary\PostType;
 use App\Core\Glosary\SeoConfigs;
 use App\Core\Helper\OptionHelpers;
 use App\Http\Controllers\Controller;
 
+use App\Modules\Post\Repositories\PostMetaRepository;
+use App\Modules\Post\Repositories\PostRepository;
 use App\Modules\Setting\Repositories\OptionRepository;
 
 use Spatie\SchemaOrg\Graph;
@@ -17,9 +21,15 @@ class ClientHomeController extends Controller
 {
 
     protected $optionRepository;
-    public function __construct(OptionRepository $optionRepository)
+    protected $postRepository;
+    protected $postMetaRepository;
+
+    public function __construct(OptionRepository $optionRepository, PostRepository $postRepository,
+                                PostMetaRepository $postMetaRepository)
     {
         $this->optionRepository = $optionRepository;
+        $this->postRepository = $postRepository;
+        $this->postMetaRepository = $postMetaRepository;
     }
     public function index() {
         $systemConfig = OptionHelpers::getSystemConfigByKey('general');
@@ -27,21 +37,12 @@ class ClientHomeController extends Controller
         if($systemConfig && json_decode($systemConfig, true)){
             $systemConfig = json_decode($systemConfig, true);
         }
-
-
-//        dd($systemConfig);
-//        $seoDefault = [
-//            'SEO' => [
-//                'TITLE' => $systemConfig['site_title'],
-//                'DESC' => $systemConfig['']
-//
-//            ]
-//        ];
-
-        $page = json_decode($this->optionRepository->getByKey('home')->option_value);
-
-//        return view('Client::homepage',compact('seoDefault'));
-//        return view('Client::homepage',compact('page'));
+        $currentLanguage = app()->getLocale();
+        if ($this->optionRepository->getByKey('home')) {
+            $page = json_decode($this->optionRepository->getByKey('home')->option_value);
+        }else{
+            return view('Client::pages.404');
+        }
 
         $seoDefault = [
             $seoConfig['SEO']['FOCUS_KEYPHARE'] => $systemConfig['site_title'],
@@ -57,7 +58,32 @@ class ClientHomeController extends Controller
             $seoConfig['SOCIAL']['TWITTER']['DESCRIPTION'] => $systemConfig['site_tagline'],
             $seoConfig['SOCIAL']['TWITTER']['IMAGE'] => $systemConfig['logo']
         ];
-        return view('Client::homepage',compact('page', 'seoDefault'));
+
+        $posts = $this->postRepository->getInstantModel()->where('post_type',PostType::POST['VALUE'])->get();
+        if (count($posts)) {
+            $ids = [];
+            $postMap = [];
+            foreach ($posts->toArray() as $value) {
+                $ids[] = $value['id'];
+                $postMap[$value['id']] = [
+                    'name' => $value['post_title'],
+                ];
+            }
+            $postMeta = $this->postMetaRepository->findByPostIds($ids);
+            $mapData = [];
+            if (count($postMeta)) {
+                foreach ($postMap as $key => $value){
+                    foreach ($postMeta->toArray() as $item) {
+                        if ($key == $item['post_id']) {
+                            if ($item['meta_key']) {
+                                $postMap[$key][MetaKey::display($item['meta_key'])] = json_decode($item['meta_value']);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return view('Client::homepage',compact('page', 'seoDefault','currentLanguage'));
     }
 
 }

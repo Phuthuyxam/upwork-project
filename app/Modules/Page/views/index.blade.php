@@ -187,7 +187,7 @@
                                         title: 'Deleted !',
                                         text: 'Category has been deleted.',
                                     }).then((result) => {
-                                        window.location.href= '{{ route('post.index') }}';
+                                        window.location.href= '{{ route('page.index') }}';
                                     })
                                 }else{
                                     Swal.fire({

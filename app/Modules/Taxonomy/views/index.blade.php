@@ -85,7 +85,7 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="description">Description</label>
-                                    <textarea name="description" id="description" class="form-control required"
+                                    <textarea name="description" id="description" class="form-control"
                                               style="width: 100%; height: 90px" placeholder="Description">{{ old('description') }}</textarea>
                                     <p style="font-style: italic; font-size: 12px">Description for your category.
                                         Totally optional</p>
@@ -203,13 +203,6 @@
                         $('#slug-error').text('');
                         $(this).removeClass('error');
                     }
-                }
-            })
-            // Validate File Input
-            $('#description').on('change',function () {
-                if ($(this).val().trim() !== '') {
-                    $(this).removeClass('error');
-                    $('#description-error').text('')
                 }
             })
 

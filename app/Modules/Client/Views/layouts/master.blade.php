@@ -8,7 +8,7 @@
 
 @endphp
 <!DOCTYPE html>
-<html lang="en">
+@yield('html')
 
 <head>
     <meta charset="UTF-8">

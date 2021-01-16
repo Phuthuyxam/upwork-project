@@ -285,31 +285,17 @@
                     $('#excerpt-error').text('');
                 }
             })
-            // Validate File Input
-            $('body').on('change',".banner-image",function () {
-                let val = $(this).val();
-                if (val) {
-                    if (validateFileUpload(this)) {
-                        readURL(this, $(this).parent().find('.preview-image'));
-                        $(this).removeClass('error');
-                        $(this).parents('td').find('.error-message').text('');
-                        $(this).removeClass('required');
-                        if (!$(this).hasClass('multiple')) {
-                            $(this).hide();
-                        }
-                    } else {
-                        $(this).parents('td').find('.error-message').text('File must be JPG, GIF or PNG, less than 2MB');
-                        $(this).parent().find('.preview-image img').remove();
-                        $(this).val('');
-                        $(this).addClass('error');
-                    }
-                } else {
-                    $(this).parents('td').find('.error-message').text('This field cannot be null');
-                    $(this).removeClass('error');
-                    $(this).parent().find('.preview-image img').remove();
-                }
-            });
 
+            $('body').on('change', '.required', function () {
+                let value = $(this).val();
+                if (value.trim() === '') {
+                    $(this).addClass('error');
+                    $(this).parent().find('.error-message').text('This field cannot be null');
+                } else {
+                    $(this).removeClass('error');
+                    $(this).parent().find('.error-message').text('');
+                }
+            })
 
             $('.btn-submit').click(function (e) {
                 e.preventDefault();
@@ -423,7 +409,7 @@
                     valid = false;
                 } else {
                     $(this).removeClass('error');
-                    $(this).closest('.form-group').find('.error-message').text('This field cannot be null');
+                    $(this).closest('.form-group').find('.error-message').text('');
                 }
             })
             return valid;

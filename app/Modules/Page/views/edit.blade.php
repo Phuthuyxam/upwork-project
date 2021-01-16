@@ -142,7 +142,7 @@
                                                 {{ $message }}
                                                 @enderror
                                             </p>
-                                            <a href="{{ route('detail',$result['post_name']) }}" style="font-size: 13px" target="_blank">{{ route('detail',$result['post_name']) }}</a>
+                                            <a href="{{ route('detail',$result['post_name']) }}" style="font-size: 13px" target="_blank">{{ urldecode(route('detail',$result['post_name'])) }}</a>
                                         </div>
 
                                         <div class="form-group">
@@ -355,27 +355,6 @@
                     $('#excerpt-error').text('');
                 }
             })
-            // Validate File Input
-            $('body').on('change', ".banner-image", function () {
-                let val = $(this).val();
-                if (val) {
-                    if (validateFileUpload(val)) {
-                        readURL(this, $(this).parent().find('.preview-image'));
-                        $(this).removeClass('error');
-                        $(this).parents('td').find('.error-message').text('');
-                        $(this).removeClass('required');
-                        $(this).hide();
-                    } else {
-                        $(this).parents('td').find('.error-message').text('File extension is not allow');
-                        $(this).parent().find('.preview-image img').remove();
-                        $(this).addClass('error');
-                    }
-                } else {
-                    $(this).parents('td').find('.error-message').text('This field cannot be null');
-                    $(this).removeClass('error');
-                    $(this).parent().find('.preview-image img').remove();
-                }
-            });
 
             $('#tax').on('change', function () {
                 if ($(this).val() == '') {
@@ -386,14 +365,6 @@
                     $(this).parents('.form-group').find('.error-message').text('');
                     $(this).removeClass('required');
                 }
-            })
-
-            $('body').on('click', '.preview-image .close', function () {
-                $(this).parent().find('img').remove();
-                $(this).parent().parent().find('input[type=file]').val('');
-                $(this).parent().parent().find('input[type=file]').show();
-                $(this).parent().parent().find('.banner-link').val('');
-                $(this).parents('td').find('.banner-image').addClass('required');
             })
 
             $('.btn-submit').click(function (e) {
@@ -468,7 +439,6 @@
                     $(this).parent().find('.error-message').text('');
                 }
             })
-
         })
 
         $('body').on('click', '.btn-add-type', function (e) {
@@ -564,7 +534,7 @@
             if (r == true) {
                 $('#translation_mode').val(lanCode);
                 $('#ptx-save-btn').text("Publish with "+display);
-                $('#ptx-save-btn-draf').text("Save Draf with "+display);
+                $('#ptx-save-btn-draf').text("Save Draft with "+display);
             }
         });
     </script>

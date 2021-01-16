@@ -1,8 +1,20 @@
 @extends('Client::layouts.master')
+@section('html')
+    @if($currentLanguage == 'en')
+    <html lang="en">
+    @else
+        <html lang="ar" dir="rtl">
+    @endif
+@endsection
+@section('style')
+    @if($currentLanguage == 'ar')
+        <link rel="stylesheet" href="{{ asset('client/css/arab.css') }}">
+    @endif
+@endsection
 @section('title')
     {{ $post->post_title }}
 @endsection
-@section('content')
+    @section('content')
     <div class="content-wrapper">
         <section class="banner-wrapper">
             <div class="banner-image">
@@ -16,11 +28,11 @@
             </div>
             <div class="banner-content">
                 <div class="banner-title">
-                    <h1>About Us</h1>
+                    <h1>{{ $post->post_title }}</h1>
                 </div>
                 <div class="breadscrum">
                     <ul>
-                        <li class="item"><a href="{{ route('index') }}">Home</a></li>
+                        <li class="item"><a href="{{ route('index') }}">الصفحة الرئيسية</a></li>
                         <li class="item active"><span>
                             <div class="rectangle"></div> {{ $post->post_title }}
                         </span></li>
@@ -45,7 +57,7 @@
                                 <div class="diamond">
                                     <i class="fal fa-eye"></i>
                                 </div>
-                                <h2 class="fw-bold">Our Vision</h2>
+                                <h2 class="fw-bold">{{ $currentLanguage == 'en' ? 'Our Vision' : 'رؤيتنا' }}</h2>
                             </div>
                             <div class="row">
                                 @foreach($itemMap[0] as $item)
@@ -71,7 +83,7 @@
                                 <div class="diamond">
                                     <i class="fal fa-bullseye-arrow"></i>
                                 </div>
-                                <h2 class="fw-bold">Our Mission</h2>
+                                <h2 class="fw-bold">{{ $currentLanguage == 'en' ? 'Our Missions' : 'مهمتنا' }}</h2>
                             </div>
                             <div class="row">
                                 @foreach($itemMap[1] as $item)
@@ -99,7 +111,7 @@
                                 <div class="diamond">
                                     <i class="fal fa-award"></i>
                                 </div>
-                                <h2 class="fw-bold">Our Awards</h2>
+                                <h2 class="fw-bold"> {{ $currentLanguage == 'en' ? 'Our Awards' : 'جوائزنا' }}</h2>
                             </div>
                              @foreach($imageMap as $value)
                                 <div class="row">

@@ -1,4 +1,16 @@
 @extends('Client::layouts.master')
+@section('html')
+    @if($currentLanguage == 'en')
+        <html lang="en">
+    @else
+        <html lang="ar" dir="rtl">
+    @endif
+@endsection
+@section('style')
+    @if($currentLanguage == 'ar')
+        <link rel="stylesheet" href="{{ asset('client/css/arab.css') }}">
+    @endif
+@endsection
 @section('seo')
     {!! getDataSeoOption(-99, 'homepage', $seoDefault) !!}
 @endsection
@@ -119,7 +131,7 @@
                                     <div class="diamond">
                                         <i class="fas fa-long-arrow-alt-right"></i>
                                     </div>
-                                    <span class="tt-uper">see more services</span>
+                                    <span class="tt-uper">{{ $currentLanguage == 'en' ? 'see more services' : 'اطلع على المزيد من الخدمات' }}</span>
                                 </a>
                             </div>
                         </div>
@@ -140,7 +152,7 @@
                             <div class="diamond">
                                 <i class="fas fa-long-arrow-alt-right" aria-hidden="true"></i>
                             </div>
-                            <span class="tt-uper">see more details</span>
+                            <span class="tt-uper">{{ $currentLanguage == 'en' ? 'see more details' : 'اطلع على المزيد' }}</span>
                         </a>
                     </div>
                 </div>

@@ -298,6 +298,7 @@
                                                 <tr>
                                                     <th rowspan="2" style="text-align: center; vertical-align: middle">Image</th>
                                                     <th rowspan="2" style="text-align: center; vertical-align: middle">Address</th>
+                                                    <th rowspan="2" style="text-align: center; vertical-align: middle">City</th>
                                                     <th colspan="2" style="text-align: center; vertical-align: middle">Location</th>
                                                 </tr>
                                                 <tr>
@@ -311,6 +312,7 @@
                                                         {!!  renderMediaManage('map_image',null,false) !!}
                                                     </td>
                                                     <td><textarea type="text" class="form-control" name="map_address">{{ old('map_address') }}</textarea></td>
+                                                    <td><input type="text" class="form-control" name="map_city">{{ old('map_city') }}</td>
                                                     <td>
                                                         <input type="number" class="form-control" name="map_lat" value="{{ old('map_lat') }}">
                                                     </td>
