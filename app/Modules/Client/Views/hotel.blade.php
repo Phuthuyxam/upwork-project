@@ -1,4 +1,4 @@
-@extends('Client::layouts.master')
+@extends('Client::layouts.master', ['translationMode' => $translationMode])
 @section('title')
     {{ $post->post_title }}
 @endsection

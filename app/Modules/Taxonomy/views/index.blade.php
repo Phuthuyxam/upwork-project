@@ -173,7 +173,7 @@
 @section('script')
     <script>
         const slugs = JSON.parse('{!! json_encode($slugs) !!}');
-        const defaultCategory = {{ $defaultCategory->option_value }};
+        const defaultCategory = '{{ !empty($defaultCategory) ?  $defaultCategory->option_value : "" }}';
         $(document).ready(function (){
             // Validate Name
             $('#name').on('change',function (){

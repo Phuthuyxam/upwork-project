@@ -189,6 +189,13 @@ class PageController extends Controller
                         $transUrl = renderTranslationUrl(route('page.edit', ['id' => $translationMapping[0]->from_object_id]), $request->translation);
                         return redirect()->to($transUrl)->with('message', 'warning|Warning! when creating the translation. A record already exists. Please edit with this one.');
                     }
+
+                    $translationMapping = $this->translationRelationRepository->filter([['from_object_id',$id] , ['to_lang', $currentLang] , ['from_lang' , $request->translation], ['type' , 'post']]);
+                    if($translationMapping && $translationMapping->isNotEmpty()) {
+                        $transUrl = renderTranslationUrl(route('page.edit', ['id' => $translationMapping[0]->to_object_id]), $request->translation);
+                        return redirect()->to($transUrl)->with('message', 'warning|Warning! when creating the translation. A record already exists. Please edit with this one.');
+                    }
+
                         $translation = $this->translationSave($request);
                         if($translation){
                             // make record relationship translation

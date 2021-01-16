@@ -36,6 +36,7 @@ class ClientPostController extends Controller
 
     public function detail($slug){
         if ($this->postRepository->getBySlug($slug)) {
+            $translationMode = [ "mode" => "post" , "slug" => $slug ];
             $post = $this->postRepository->getBySlug($slug);
             $postMeta = $this->postMetaRepository->getByPostId($post->id);
             $postMetaMap = [];
@@ -85,10 +86,10 @@ class ClientPostController extends Controller
                             }
                         }
                     }
-                    return view('Client::about',compact('post','pageMetaMap','imageMap','itemMap'));
+                    return view('Client::about',compact('post','pageMetaMap','imageMap','itemMap', 'translationMode'));
                 }
                 if ($template == PageTemplateConfigs::SERVICE['VALUE']) {
-                    return view('Client::service',compact('post','pageMetaMap'));
+                    return view('Client::service',compact('post','pageMetaMap','translationMode'));
                 }
                 if ($template == PageTemplateConfigs::HOTEL['VALUE']) {
                     $posts = $this->postRepository->getInstantModel()->where('post_type',PostType::POST['VALUE'])->get();
@@ -116,10 +117,10 @@ class ClientPostController extends Controller
                             }
                         }
                     }
-                    return view('Client::hotel',compact('post','postsMetaMap','pageMetaMap'));
+                    return view('Client::hotel',compact('post','postsMetaMap','pageMetaMap','translationMode'));
                 }
                 if ($template == PageTemplateConfigs::DEFAULT['VALUE']) {
-                    return view('Client::hotel',compact('post','pageMetaMap'));
+                    return view('Client::hotel',compact('post','pageMetaMap', 'translationMode'));
                 }
             }else {
                 $termRelation = $this->termRelationRepository->getInstantModel()->where('object_id', $post->id)->first();
@@ -168,7 +169,8 @@ class ClientPostController extends Controller
                         }
                     }
                 }
-                return view('Client::hotel-detail', compact('post', 'postMetaMap', 'termMetaMap', 'relatePostMetaMap', 'relatePostMap'));
+
+                return view('Client::hotel-detail', compact('post', 'postMetaMap', 'termMetaMap', 'relatePostMetaMap', 'relatePostMap', 'translationMode'));
             }
         }else{
             return view('Client::pages.404');

@@ -3,6 +3,7 @@
 namespace App\Modules\Post\Model;
 
 use App\Modules\Taxonomy\Model\TermRelationship;
+use App\Modules\Translations\Model\TranslationRelationship;
 use Illuminate\Database\Eloquent\Model;
 use OwenIt\Auditing\Contracts\Auditable;
 
@@ -16,5 +17,9 @@ class Post extends Model implements Auditable
 
     public function postMeta() {
         return $this->hasMany(PostMeta::class,'post_id');
+    }
+
+    public function postTranslation() {
+        return $this->hasMany(TranslationRelationship::class, 'to_object_id');
     }
 }

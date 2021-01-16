@@ -48,11 +48,32 @@ if(!function_exists('generatePrefixLanguage')) {
 
 if(!function_exists('renderTranslationUrl')) {
     function renderTranslationUrl($url, $langCode, $mode = false) {
+        if($mode) {
+            $slug = $mode['slug'];
+            $post = new \App\Modules\Post\Repositories\PostRepository();
+            $translationRelationRepository = new \App\Modules\Translations\Repositories\TranslationRelationshipRepository();
+            $record = $post->getBySlug($slug);
+            if($record != null) {
+                $translationMapping = $translationRelationRepository->getInstantModel()->where('to_object_id', $record->id)->orWhere('from_object_id', $record->id)->get();
+                if($translationMapping && $translationMapping->isNotEmpty()) {
+                    $postTransalation = ( $translationMapping[0]->to_object_id == $record->id ? $translationMapping[0]->from_object_id : $translationMapping[0]->to_object_id );
+                    app()->setLocale($langCode);
+                    $newPostTrans = $post->setModel();
+
+                    $postTransalationObject = $post->getInstantModel()->find($postTransalation);
+
+                    if($postTransalationObject != null)
+                    $url = route('detail', ['slug' => $postTransalationObject->post_name]);
+
+                }
+            }
+        }
         if(empty(parse_url($url))) return false;
         $urlParse = parse_url($url);
         if(!isset($urlParse['path']) || empty($urlParse['path']))  return  $urlParse['scheme'] . "://" . $urlParse['host'] . ((isset($urlParse['port']) && !empty($urlParse['port']) ) ? ":" . $urlParse['port'] : "" ) . "/" . $langCode;
         $serverPath = explode('/', $urlParse['path']);
         $firstLevel = $serverPath[1];
+
         if((LocationConfigs::checkLanguageCode($firstLevel))){
             $serverPath[1] = $langCode;
             $newPath = implode("/", $serverPath);

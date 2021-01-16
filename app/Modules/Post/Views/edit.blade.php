@@ -371,7 +371,7 @@
                             <div class="card-body">
                                 <div class="status">
                                     <p><i class="dripicons-flag"></i> Status : {{ \App\Core\Glosary\PostStatus::display($post['post_status']) }}</p>
-                                    <a href="#" target="_blank"><i class="dripicons-web"></i> Make translation</a>
+{{--                                    <a href="#" target="_blank"><i class="dripicons-web"></i> Make translation</a>--}}
                                 </div>
                             </div>
                             <div class="card-footer" style="display: flex; align-items: center; justify-content: space-between">
@@ -388,7 +388,7 @@
                                     <select name="taxonomy" id="tax" class="form-control required">
                                         <option value="">Select Category</option>
                                         @foreach($taxonomy as $value)
-                                            <option value="{{ $value['id'] }}" {{ $value['id'] == $term_id['term_taxonomy_id'] ? 'selected':'' }}>{{ $value['name'] }}</option>
+                                            <option value="{{ $value['id'] }}" {{ isset($term_id['term_taxonomy_id']) && $value['id'] == $term_id['term_taxonomy_id'] ? 'selected':'' }}>{{ $value['name'] }}</option>
                                         @endforeach
                                     </select>
                                     <p class="text-danger error-message" style="font-weight: bold">
