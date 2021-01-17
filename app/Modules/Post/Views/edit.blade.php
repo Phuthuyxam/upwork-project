@@ -352,7 +352,7 @@
                                                         {!! renderMediaManage('map_image',$map->image ? $map->image : null,false) !!}
                                                     </td>
                                                     <td><textarea type="text" class="form-control" name="map_address">{{ old('map_address') ? old('map_address') : $map->address}}</textarea></td>
-                                                    <td><input type="text" class="form-control" name="map_city">{{ old('map_city') }}</td>
+                                                    <td><input type="text" class="form-control" name="map_city">{{ old('map_city') ? old('map_city') : $map->city }}</td>
                                                     <td>
                                                         <input type="number" class="form-control" name="map_lat" value="{{ old('map_lat') ? old('map_lat') : $map->location->lat }}">
                                                     </td>
