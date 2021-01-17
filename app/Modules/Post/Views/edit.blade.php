@@ -64,29 +64,41 @@
         <div class="container-fluid">
             {!! displayAlert(Session::get('message'))  !!}
 
-            @php
-                $languages = \App\Core\Glosary\LocationConfigs::getAll();
-                $currentLang = app()->getLocale();
-
-            @endphp
-            @if(isset($languages) && !empty($languages))
+            @if(isset($translationRecord) && $translationRecord != false)
                 <div class="card">
                     <div class="card-body">
                         <div class="tab-translate">
-                            <b><i class="dripicons-flag"></i> Make translation</b>
-                            <select id="make-translation">
-                                <option value="0">---choose language---</option>
-                                @foreach($languages as $lan)
-                                    @if($lan['VALUE'] != $currentLang)
-                                        <option value="{{ $lan['VALUE'] }}" data-display="{{ $lan['DISPLAY'] }}">
-                                            {{ $lan['DISPLAY'] }}
-                                        </option>
-                                    @endif
-                                @endforeach
-                            </select>
+                            <a href="{{ $translationRecord['url'] }}"><i class="dripicons-flag"></i> Go to translation record {{ \App\Core\Glosary\LocationConfigs::getLanguageByCode($translationRecord['lang_code'])['DISPLAY'] }}</a>
                         </div>
                     </div>
                 </div>
+            @else
+
+                @php
+                    $languages = \App\Core\Glosary\LocationConfigs::getAll();
+                    $currentLang = app()->getLocale();
+
+                @endphp
+                @if(isset($languages) && !empty($languages))
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="tab-translate">
+                                <b><i class="dripicons-flag"></i> Make translation</b>
+                                <select id="make-translation">
+                                    <option value="0">---choose language---</option>
+                                    @foreach($languages as $lan)
+                                        @if($lan['VALUE'] != $currentLang)
+                                            <option value="{{ $lan['VALUE'] }}" data-display="{{ $lan['DISPLAY'] }}">
+                                                {{ $lan['DISPLAY'] }}
+                                            </option>
+                                        @endif
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                @endif
+
             @endif
 
             <div class="alert alert-danger alert-common" style="display: none;">

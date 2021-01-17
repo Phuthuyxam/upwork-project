@@ -184,7 +184,21 @@ class PostController extends Controller
             $slugs = $this->termRepository->getAllSlug();
             $taxonomy = $this->termRepository->getAll();
             $term_id = $this->termRelationRepository->getByObjectId($id);
-            return view('Post::edit', compact('post', 'postMetaMap','slugs','taxonomy','term_id'));
+            $postRecod = $this->posRepository->find($id);
+            if(LocationConfigs::getLanguageDefault()['VALUE'] == app()->getLocale()){
+                $translationPost = $postRecod->postFromTranslation;
+            }
+
+            $translationPost = $postRecod->postToTranslation;
+
+            if(!empty($translationPost) && $translationPost->isNotEmpty()){
+                $langCode = (LocationConfigs::getLanguageDefault()['VALUE'] == app()->getLocale()) ?  $translationPost[0]->to_lang : $translationPost[0]->from_lang;
+                $langId = (LocationConfigs::getLanguageDefault()['VALUE'] == app()->getLocale()) ?  $translationPost[0]->from_object_id : $translationPost[0]->to_object_id;
+                $translationRecord = [ 'url' => renderTranslationUrl(route('page.edit' , $langId), $langCode) , 'lang_code' => $langCode ];
+            } else {
+                $translationRecord = false;
+            }
+            return view('Post::edit', compact('post', 'postMetaMap','slugs','taxonomy','term_id','translationRecord'));
         }else {
             $currentLang = app()->getLocale();
             $validateRule = [
@@ -372,11 +386,19 @@ class PostController extends Controller
                 $taxonomy = $request->input('taxonomy');
                 if (!empty($taxonomy)) {
                     $condition = [['object_id','=',$id]];
-                    $dataTermRelation = [
-                        'term_taxonomy_id' => $request->input('taxonomy')
-                    ];
-                    if ($this->termRelationRepository->updateByCondition($condition,$dataTermRelation)) {
-                        $result = true;
+
+                    // check record
+                    $record =  $this->termRelationRepository->getInstantModel()->where($condition)->get();
+                    if($record && $record->isEmpty()) {
+                        $this->termRelationRepository->create(['object_id' => $id , 'term_taxonomy_id' => $request->input('taxonomy')]);
+                    } else {
+                        $dataTermRelation = [
+                            'term_taxonomy_id' => $request->input('taxonomy')
+                        ];
+
+                        if ($this->termRelationRepository->updateByCondition($condition,$dataTermRelation)) {
+                            $result = true;
+                        }
                     }
                 }
             }
