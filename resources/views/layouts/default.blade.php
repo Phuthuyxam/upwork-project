@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8" />
-    <title>Login | Fonik - Responsive Bootstrap 4 Admin Dashboard</title>
+    <title>Login</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta content="Premium Multipurpose Admin & Dashboard Template" name="description" />
     <meta content="Themesbrand" name="author" />
@@ -31,7 +31,7 @@
                     <div class="card-body">
                         <div class="text-center mt-4">
                             <div class="mb-3">
-                                <a href="index.html"><img src="{{ asset('assets/images/logo-dark.png') }}" height="30" alt="logo"></a>
+                                <a href="{{ route('index') }}"><img style="width: 50%; height: auto" src="{{ asset('client/images/FRONTEL WWL.png') }}" height="30" alt="logo"></a>
                             </div>
                         </div>
                         @yield('content')
@@ -39,7 +39,6 @@
                 </div>
                 <div class="mt-5 text-center">
                     @yield('route')
-                    <p>© 2018 - 2020 Fonik. Crafted with <i class="mdi mdi-heart text-danger"></i> by Themesbrand</p>
                 </div>
             </div>
         </div>
