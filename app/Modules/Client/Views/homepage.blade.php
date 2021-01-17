@@ -292,14 +292,13 @@
 @section('script')
     <script>
         const locations = JSON.parse('{!!  json_encode($mapData) !!}');
-        console.log(locations);
         function initMap() {
             const maxZoom = 15;
             const minZoom = 3;
             var zoom = 4;
             const map = new google.maps.Map(document.getElementById("map"), {
                 zoom: zoom,
-                center: locations[0].location,
+                center: locations != '' ? locations[0].location : { lat: -28.024, lng: 140.887 },
                 mapTypeControlOptions: { mapTypeIds: [] },
                 fullscreenControl: false,
                 streetViewControl: false,

@@ -60,6 +60,7 @@ class ClientHomeController extends Controller
         ];
 
         $posts = $this->postRepository->getInstantModel()->where('post_type',PostType::POST['VALUE'])->get();
+        $mapData = [];
         if (count($posts)) {
             $ids = [];
             $postMap = [];
@@ -70,7 +71,6 @@ class ClientHomeController extends Controller
                 ];
             }
             $postMeta = $this->postMetaRepository->findByPostIds($ids);
-            $mapData = [];
             if (count($postMeta)) {
                 foreach ($postMap as $key => $value){
                     foreach ($postMeta->toArray() as $item) {
