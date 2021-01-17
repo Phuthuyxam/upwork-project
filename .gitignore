@@ -15,3 +15,4 @@ yarn-error.log
 *.xml
 .idea/upwork-project.iml
 .idea/php.xml
+.DS_Store
