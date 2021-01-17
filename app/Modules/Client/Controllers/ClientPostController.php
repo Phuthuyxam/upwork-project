@@ -6,6 +6,7 @@ namespace App\Modules\Client\Controllers;
 
 use App\Core\Glosary\MetaKey;
 use App\Core\Glosary\PageTemplateConfigs;
+use App\Core\Glosary\PostStatus;
 use App\Core\Glosary\PostType;
 use App\Core\Helper\OptionHelpers;
 use App\Http\Controllers\Controller;
@@ -15,6 +16,7 @@ use App\Modules\Taxonomy\Repositories\TermMetaRepository;
 use App\Modules\Taxonomy\Repositories\TermRelationRepository;
 use App\Modules\Taxonomy\Repositories\TermRepository;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Mail;
 
 class ClientPostController extends Controller
@@ -41,7 +43,13 @@ class ClientPostController extends Controller
         if ($this->postRepository->getBySlug($slug)) {
             $currentLanguage = app()->getLocale();
             $translationMode = [ "mode" => "post" , "slug" => $slug ];
+            $user = Auth::user();
             $post = $this->postRepository->getBySlug($slug);
+
+            if ($user == null && $post->post_status == PostStatus::DRAFT['VALUE']) {
+                return view('Client::pages.404');
+            }
+
             $postMeta = $this->postMetaRepository->getByPostId($post->id);
             $postMetaMap = [];
             foreach ($postMeta as $value) {
@@ -151,7 +159,11 @@ class ClientPostController extends Controller
                 }
                 $relatePostMap = [];
                 $relatePostMetaMap = [];
-                $relatePosts = $this->postRepository->findByIds($ids);
+                if ($user) {
+                    $relatePosts = $this->postRepository->findByIds($ids);
+                }else{
+                    $relatePosts = $this->postRepository->findByIds($ids,false);
+                }
                 if (count($relatePosts)) {
                     $relatePostMap = $relatePosts->toArray();
                     foreach ($relatePostMap as $key => $value) {

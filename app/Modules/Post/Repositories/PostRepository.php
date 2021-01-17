@@ -4,6 +4,7 @@ namespace App\Modules\Post\Repositories;
 
 use App\Core\Glosary\LocationConfigs;
 use App\Core\Glosary\PaginationConfigs;
+use App\Core\Glosary\PostStatus;
 use App\Core\Glosary\PostType;
 use App\Core\Repositories\EloquentRepository;
 use App\Modules\Post\Model\post;
@@ -72,7 +73,11 @@ class PostRepository extends EloquentRepository
         return $this->_model->where('post_name',$slug)->first();
     }
 
-    public function findByIds($ids) {
-        return $this->_model->whereIn('id',$ids)->get();
+    public function findByIds($ids,$draft = true) {
+        if ($draft) {
+            return $this->_model->whereIn('id',$ids)->get();
+        }else{
+            return $this->_model->whereIn('id',$ids)->where('post_status',PostStatus::PUBLIC['VALUE'])->get();
+        }
     }
 }
