@@ -2,7 +2,7 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-12">
-                © 2018 - <script>document.write(new Date().getFullYear())</script> Fonik<span class="d-none d-sm-inline-block"> - Crafted with <i class="mdi mdi-heart text-danger"></i> by Themesbrand.</span>
+                Developed by : Brackets Technology
             </div>
         </div>
     </div>

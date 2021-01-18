@@ -40,127 +40,26 @@ class PageController extends Controller
         $this->translationRelationRepository = $translationRelationRepository;
     }
 
-    public function index(){
-        $pages = $this->postRepository->getPages();
-        return view('Page::index',compact('pages'));
-    }
-
     public function add(Request $request,$template) {
         if ($request->isMethod('get')) {
+            $currentLanguage = generatePrefixLanguage();
             $defaultTemplate = [PageTemplateConfigs::CONTACT['NAME'],PageTemplateConfigs::HOTEL['NAME']];
-            $pages = $this->postRepository->getInstantModel()->where('post_type',PostType::PAGE['VALUE'])->get();
-            $page = [];
-            $pageMetas = [];
-            if (count($pages)) {
-                foreach ($pages as $value) {
-                    $pageMeta = $value->postMeta;
-                    if (count($pageMeta)) {
-                        foreach ($pageMeta->toArray() as $item) {
-                            if ($item['meta_key'] == MetaKey::PAGE_TEMPLATE['VALUE'] && $item['meta_value'] == PageTemplateConfigs::parse($template)['VALUE']){
-                                $page = $value;
-                            }
-                        }
+            $page = $this->postRepository->getInstantModel()->where('post_type',$template)->first();
+            $pageMeta = [];
+            $pageMetaMap = [];
+            if ($page) {
+                $pageMeta = $page->postMeta;
+                if ($pageMeta) {
+                    foreach ($pageMeta->toArray() as $value) {
+                        $pageMetaMap[MetaKey::display($value['meta_key'])] = json_decode($value['meta_value']);
                     }
                 }
             }
-            return view('Page::add',compact('template','defaultTemplate','page','pageMetas'));
-        }else{
-            try {
-                $validate = $request->validate([
-                    'post_title' => 'required|max:191',
-                    'post_name' => 'required|unique:posts'
-                ]);
-                $pageTemplate = PageTemplateConfigs::parse($template)['VALUE'];
-                $post_title = $request->input('post_title');
-                $status = $request->input('status') == 0 ? PostStatus::DRAFT['VALUE'] : PostStatus::PUBLIC['VALUE'];
-                $result = false;
-
-                $dataPost = [
-                    'post_title' => $post_title,
-                    'post_name' => $request->input('post_name'),
-                    'post_author' => Auth::id(),
-                    'post_status' => $status,
-                    'post_excerpt' => $request->input('post_excerpt'),
-                    'post_content' => $request->input('post_content'),
-                    'post_type' => $template
-                ];
-                $postId = $this->postRepository->create($dataPost)->id;
-                if ($postId) {
-                    $result = false;
-                    $files = $request->input('files');
-                    if (isset($files) && !empty($files)){
-                        $dataMeta = [
-                            [
-                                'post_id' => $postId,
-                                'meta_key' => MetaKey::BANNER['VALUE'],
-                                'meta_value' => json_encode($files),
-                                'created_at' => date('Y-m-d H:i:s')
-                            ],
-
-                            [
-                                'post_id' => $postId,
-                                'meta_key' => MetaKey::PAGE_TEMPLATE['VALUE'],
-                                'meta_value' => $pageTemplate,
-                                'created_at' => date('Y-m-d H:i:s')
-                            ],
-                        ];
-                        $this->postMetaRepository->getInstantModel()->insert($dataMeta);
-                    }
-
-                    if ($pageTemplate == PageTemplateConfigs::SERVICE['VALUE']) {
-
-                        $this->createPage($request,$postId,MetaKey::COMPLETE_ITEM['VALUE']);
-
-                    }else if ($pageTemplate == PageTemplateConfigs::ABOUT['VALUE']) {
-
-                        $this->createPage($request,$postId,MetaKey::COMPLETE_ITEM['VALUE'],MetaKey::IMAGE_ITEM['VALUE']);
-
-                    }
-                    Log::info('User '.Auth::id().' has created page'.$postId);
-                    return redirect()->route('page.add',$pageTemplate)->with('message', 'success|Successfully create  "'. $request->input('post_title').'" page');
-                }
-            }catch (\Throwable $th){
-                return redirect()->back()->with('message', 'danger|Something wrong try again!');
-            }
-
-        }
-    }
-
-    public function edit(Request $request,$id){
-        if ($request->isMethod('get')) {
-            $page = $this->postRepository->find($id);
-            $result = $page->toArray();
-            $slugs = $this->postRepository->getAllSlugs();
-
-            if(LocationConfigs::getLanguageDefault()['VALUE'] == app()->getLocale()){
-                $translationPost = $page->postFromTranslation;
-            }
-
-            $translationPost = $page->postToTranslation;
-
-            if(!empty($translationPost) && $translationPost->isNotEmpty()){
-                $langCode = (LocationConfigs::getLanguageDefault()['VALUE'] == app()->getLocale()) ?  $translationPost[0]->to_lang : $translationPost[0]->from_lang;
-                $langId = (LocationConfigs::getLanguageDefault()['VALUE'] == app()->getLocale()) ?  $translationPost[0]->from_object_id : $translationPost[0]->to_object_id;
-                $translationRecord = [ 'url' => renderTranslationUrl(route('page.edit' , $langId), $langCode) , 'lang_code' => $langCode ];
-            } else {
-                $translationRecord = false;
-            }
-
-
-
-
-
-            $pageMeta = $page->postMeta->toArray();
-
-            foreach ($pageMeta as $value) {
-                $result[MetaKey::display($value['meta_key'])] = $value['meta_value'];
-            }
-
-            if ($result[MetaKey::PAGE_TEMPLATE['NAME']] == PageTemplateConfigs::ABOUT['VALUE']){
+            if ($template == PageTemplateConfigs::ABOUT['NAME']) {
                 $imageMap = [];
-                if (isset($result[MetaKey::IMAGE_ITEM['NAME']]) && !empty($result[MetaKey::IMAGE_ITEM['NAME']])){
-                    $imageItem = json_decode($result[MetaKey::IMAGE_ITEM['NAME']]);
-                    $indexImage = json_decode($result[MetaKey::INDEX_IMAGE_ITEM['NAME']]);
+                if (isset($pageMetaMap[MetaKey::IMAGE_ITEM['NAME']]) && !empty($pageMetaMap[MetaKey::IMAGE_ITEM['NAME']])){
+                    $imageItem = $pageMetaMap[MetaKey::IMAGE_ITEM['NAME']];
+                    $indexImage = $pageMetaMap[MetaKey::INDEX_IMAGE_ITEM['NAME']];
                     $index = $indexImage[0];
                     foreach ($indexImage as $k => $value) {
                         foreach ($imageItem as $key => $item) {
@@ -175,9 +74,9 @@ class PageController extends Controller
                 }
 
                 $itemMap = [];
-                if (isset($result[MetaKey::INDEX_COMPLETE_ITEM['NAME']]) && !empty($result[MetaKey::INDEX_COMPLETE_ITEM['NAME']])) {
-                    $items = json_decode($result[MetaKey::COMPLETE_ITEM['NAME']]);
-                    $indexItem = json_decode($result[MetaKey::INDEX_COMPLETE_ITEM['NAME']]);
+                if (isset($pageMetaMap[MetaKey::INDEX_COMPLETE_ITEM['NAME']]) && !empty($pageMetaMap[MetaKey::INDEX_COMPLETE_ITEM['NAME']])) {
+                    $items = $pageMetaMap[MetaKey::COMPLETE_ITEM['NAME']];
+                    $indexItem = $pageMetaMap[MetaKey::INDEX_COMPLETE_ITEM['NAME']];
                     foreach ($indexItem as $k => $value) {
                         foreach ($items as $key => $item) {
                             if (!array_key_exists($k, $itemMap) || count($itemMap[$k]) < intval($value)) {
@@ -189,139 +88,99 @@ class PageController extends Controller
                         }
                     }
                 }
-                return view('Page::edit',compact('result','slugs','imageMap','itemMap','translationRecord'));
+                return view('Page::add',compact('template','defaultTemplate','pageMetaMap','imageMap','itemMap','page'));
             }
-
-            return view('Page::edit',compact('result','slugs', 'translationRecord'));
+            return view('Page::add',compact('template','defaultTemplate','page','pageMetaMap'));
         }else{
             try {
-                $currentLang = app()->getLocale();
-                $validateRule = [
-                    'post_title' => 'required|max:191',
-                    'post_name' => 'required|unique:posts,post_name,'.$id,
-                    'post_excerpt' => 'required',
-                    'template' => 'required',
-                ];
-                $prefixLanguage = generatePrefixLanguage();
-                if(isset($prefixLanguage) && !empty($prefixLanguage) && LocationConfigs::checkLanguageCode(str_replace("/","",$prefixLanguage))
-                    && LocationConfigs::getLanguageDefault()['VALUE'] != str_replace("/","",$prefixLanguage))
-                    $validateRule['post_name'] = "required|unique:posts_". str_replace("/","",$prefixLanguage) .",post_name," . $id;
-                $validate = $request->validate($validateRule);
-                // make translation
-                if(isset($request->translation) && !empty($request->translation) && LocationConfigs::checkLanguageCode($request->translation)) {
-                    // check has record in relationship
-                    $translationMapping = $this->translationRelationRepository->filter([['from_object_id',$id] , ['from_lang', $currentLang] , ['to_lang' , $request->translation], ['type' , 'post']]);
-                    if($translationMapping && $translationMapping->isNotEmpty()) {
-                        $transUrl = renderTranslationUrl(route('page.edit', ['id' => $translationMapping[0]->to_object_id]), $request->translation);
-                        return redirect()->to($transUrl)->with('message', 'warning|Warning! when creating the translation. A record already exists. Please edit with this one.');
-                    }
 
-//                    $translationMapping = $this->translationRelationRepository->filter([['to_object_id',$id] , ['from_lang', $currentLang] , ['to_lang' , $request->translation], ['type' , 'post']]);
-//                    if($translationMapping && $translationMapping->isNotEmpty()) {
-//                        $transUrl = renderTranslationUrl(route('page.edit', ['id' => $translationMapping[0]->to_object_id]), $request->translation);
-//                        return redirect()->to($transUrl)->with('message', 'warning|Warning! when creating the translation. A record already exists. Please edit with this one.');
-//                    }
+                $page = $this->postRepository->getInstantModel()->where('post_type',$template)->first();
 
-                        $translation = $this->translationSave($request);
-                        if($translation){
-                            // make record relationship translation
-                            if(isset($translation['post_id']) && !empty($translation['post_id'])) {
-                                $translationRecord = [
-                                    'to_object_id' => $translation['post_id'],
-                                    'from_object_id' => $id,
-                                    'to_lang' => app()->getLocale(),
-                                    'from_lang' => $currentLang,
-                                    'type' => 'post',
-                                ];
-                                if($this->translationRelationRepository->create($translationRecord))
-                                    return redirect()->to($translation['redirect_url'])->with('message', $translation['message']);
-                                return redirect()->back()->with('message', 'danger|Something wrong when make a translation record try again!');
-                            }
-                            return redirect()->to($translation['redirect_url'])->with('message', $translation['message']);
-                        }
-                    return redirect()->back()->with('message', 'danger|Something wrong when make a translation record try again!');
-                }
-
-
-                $pageMetaMap = [];
-                $pageMeta = $this->postMetaRepository->getByPostId($id)->toArray();
-                foreach ($pageMeta as $value) {
-                    $pageMetaMap[MetaKey::display($value['meta_key'])] = $value['meta_value'];
-                }
-
-                $post_title = $request->input('post_title');
-                $status = $request->input('status') == 0 ? PostStatus::DRAFT['VALUE'] : PostStatus::PUBLIC['VALUE'];
-                $result = false;
-
-                // Save Post
-                $dataPost = [
-                    'post_title' => $post_title,
-                    'post_name' => $request->input('post_name'),
-                    'post_author' => Auth::id(),
-                    'post_excerpt' => $request->input('post_excerpt'),
-                    'post_status' => $status,
-                    'post_content' => $request->input('post_content'),
-                    'post_type' => PostType::PAGE['VALUE']
-                ];
-
-                if ($this->postRepository->update($id,$dataPost)) {
-                    $result = true;
-                }
-                // update image
-                $metaImages = $this->postMetaRepository->getInstantModel()->where([['post_id', $id] , ['meta_key', MetaKey::PAGE_TEMPLATE['VALUE']]])->get();
-                if($metaImages->isNotEmpty()) {
-                    $this->postMetaRepository->getInstantModel()->where([['post_id', $id] , ['meta_key', MetaKey::BANNER['VALUE']]])
-                        ->update(['meta_value' => json_encode($request->input('files'))]);
-                }else{
-                    $this->postMetaRepository->getInstantModel()->create([
-                        'post_id' => $id,
-                        'meta_key' => MetaKey::BANNER['VALUE'],
-                        'meta_value' => json_encode($request->input('files'))
+                if ($page) {
+                    $validate = $request->validate([
+                        'post_title' => 'required|max:191',
+                        'post_name' => 'required|unique:posts,id,'.$page->id,
+                        'post_excerpt' => 'required',
                     ]);
-                }
+                    $pageTemplate = PageTemplateConfigs::parse($template)['VALUE'];
+                    $status = $request->input('status') == 0 ? PostStatus::DRAFT['VALUE'] : PostStatus::PUBLIC['VALUE'];
 
-                // change template
-                if ($pageMetaMap[MetaKey::PAGE_TEMPLATE['NAME']] != $request->input('template')) {
-                    $fields = MetaKey::pageDeleteAbleField();
-                    $this->postMetaRepository->deleteFields($id,$fields);
-                    $dataTemplate = [
-                        'meta_value' => $request->input('template')
+                    // Save Post
+                    $dataPost = [
+                        'post_title' => $request->input('post_title'),
+                        'post_name' => $request->input('post_name'),
+                        'post_author' => Auth::id(),
+                        'post_excerpt' => $request->input('post_excerpt'),
+                        'post_status' => $status,
+                        'post_content' => $request->input('post_content')
                     ];
 
-                    $this->postMetaRepository->updateByCondition([['post_id','=',$id],['meta_key' ,'=', MetaKey::PAGE_TEMPLATE['VALUE']]],$dataTemplate);
+                    $this->postRepository->update($page->id,$dataPost);
+
+                    $metaImages = $this->postMetaRepository->getInstantModel()->where([['post_id', $page->id] , ['meta_key', MetaKey::BANNER['VALUE']]])->get();
+                    if($metaImages->isNotEmpty()) {
+                        $this->postMetaRepository->getInstantModel()->where([['post_id', $page->id] , ['meta_key', MetaKey::BANNER['VALUE']]])
+                            ->update(['meta_value' => json_encode($request->input('files'))]);
+                    }else{
+                        $this->postMetaRepository->getInstantModel()->create([
+                            'post_id' => $page->id,
+                            'meta_key' => MetaKey::BANNER['VALUE'],
+                            'meta_value' => json_encode($request->input('files'))
+                        ]);
+                    }
+                    if ($template == PageTemplateConfigs::SERVICE['NAME']) {
+                        $this->updatePage($request,$page->id,MetaKey::COMPLETE_ITEM['VALUE']);
+                    }
+
+                    if ($template == PageTemplateConfigs::ABOUT['NAME']) {
+                        $this->updatePage($request,$page->id,MetaKey::COMPLETE_ITEM['VALUE'],MetaKey::IMAGE_ITEM['VALUE']);
+                    }
+
+                    return redirect()->route('page.add',$template)->with('message', 'success|Successfully create  "'. $request->input('post_title').'" page');
+                }else{
+                    $post_title = $request->input('post_title');
+                    $status = $request->input('status') == 0 ? PostStatus::DRAFT['VALUE'] : PostStatus::PUBLIC['VALUE'];
+
+                    $dataPost = [
+                        'post_title' => $post_title,
+                        'post_name' => $request->input('post_name'),
+                        'post_author' => Auth::id(),
+                        'post_status' => $status,
+                        'post_excerpt' => $request->input('post_excerpt'),
+                        'post_content' => $request->input('post_content'),
+                        'post_type' => $template
+                    ];
+                    $postId = $this->postRepository->create($dataPost)->id;
+                    if ($postId) {
+                        $result = false;
+                        $files = $request->input('files');
+                        if (isset($files) && !empty($files)){
+                            $dataMeta =
+                                [
+                                    'post_id' => $postId,
+                                    'meta_key' => MetaKey::BANNER['VALUE'],
+                                    'meta_value' => json_encode($files)
+                                ];
+                            $this->postMetaRepository->create($dataMeta);
+                        }
+
+                        if ($pageTemplate == PageTemplateConfigs::SERVICE['VALUE']) {
+
+                            $this->createPage($request,$postId,MetaKey::COMPLETE_ITEM['VALUE']);
+
+                        }else if ($pageTemplate == PageTemplateConfigs::ABOUT['VALUE']) {
+
+                            $this->createPage($request,$postId,MetaKey::COMPLETE_ITEM['VALUE'],MetaKey::IMAGE_ITEM['VALUE']);
+
+                        }
+                        Log::info('User '.Auth::id().' has created page'.$postId);
+                        return redirect()->route('page.add',$template)->with('message', 'success|Successfully create  "'. $request->input('post_title').'" page');
+                    }
                 }
-
-
-                if ($request->input('template') == PageTemplateConfigs::SERVICE['VALUE']) {
-                    $this->updatePage($request,$id,MetaKey::COMPLETE_ITEM['VALUE']);
-                }
-
-                if ($request->input('template') == PageTemplateConfigs::ABOUT['VALUE']) {
-                    $this->updatePage($request,$id,MetaKey::COMPLETE_ITEM['VALUE'],MetaKey::IMAGE_ITEM['VALUE']);
-                }
-
-                Log::info('User '.Auth::id().' has updated page'.$id);
-                return redirect()->back()->with('message', 'success|Successfully update  "'. $request->input('post_title').'" page');
-            }catch (\Throwable $th) {
+            }catch (\Throwable $th){
                 return redirect()->back()->with('message', 'danger|Something wrong try again!');
             }
-        }
-    }
 
-    public function template(Request $request) {
-        $template = $request->input('template');
-
-        if ($template == PageTemplateConfigs::SERVICE['VALUE']) {
-            $html = view(PageTemplateConfigs::SERVICE['VIEW'])->render();
-            return response($html);
-        }
-        if ($template == PageTemplateConfigs::ABOUT['VALUE']) {
-            $html = view(PageTemplateConfigs::ABOUT['VIEW'])->render();
-            return response($html);
-        }
-        if ($template == PageTemplateConfigs::HOTEL['VALUE'] || $template == PageTemplateConfigs::DEFAULT['VALUE']
-        || $template == PageTemplateConfigs::CONTACT['VALUE']){
-            return response('default');
         }
     }
 
@@ -471,38 +330,6 @@ class PageController extends Controller
         return $result;
     }
 
-    public function deleteMany(Request $request) {
-        $data = $request->input('ids');
-        if ($data != '') {
-            $valid = false;
-            $ids = explode(',',$data);
-            if ($this->posRepository->deleteMany('id',$ids)) $valid = true;
-            if ($this->postMetaRepository->deleteMany('post_id',$ids)) $valid = true;
-            if ($valid) {
-                return response(ResponeCode::SUCCESS['CODE']);
-                Log::info('user '.Auth::id().' has deleted page ['.$data.']');
-            }else{
-                return response(ResponeCode::SERVERERROR['CODE']);
-            }
-        }else{
-            return response(ResponeCode::BADREQUEST['CODE']);
-        }
-    }
-
-    public function delete(Request $request)
-    {
-        $id = $request->input('id');
-        try {
-            if (isset($id) && !empty($id)) {
-                $this->posRepository->delete($id);
-                $this->postMetaRepository->deleteByPostId($id);
-            }
-            Log::info('user '.Auth::id().' has deleted post '.$id);
-            return response(ResponeCode::SUCCESS['CODE']);
-        } catch (\Throwable $th) {
-            return response(ResponeCode::SERVERERROR['CODE']);
-        }
-    }
 
     // translation
     public function translationSave(Request $request) {
@@ -587,9 +414,5 @@ class PageController extends Controller
         } catch (\Throwable $th) {
             return false;
         }
-
-
-
-
     }
 }

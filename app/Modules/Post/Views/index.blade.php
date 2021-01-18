@@ -57,7 +57,7 @@
                                     <td>{{ $value['updatedAt'] }}</td>
                                     <td style="width: 100px">
                                         <div class="btn-wrapper" style="display: flex; align-items: center;justify-content: center">
-                                            <a href="{{ route('post.edit',$value['postId']) }}" target="_blank" class="btn btn-primary btn-edit" style="margin-right: 10px">Edit</a>
+                                            <a href="{{ route('post.edit',$value['postId']) }}" class="btn btn-primary btn-edit" style="margin-right: 10px">Edit</a>
                                             <button class="btn btn-danger btn-delete" data-id="{{ $value['postId'] }}">Delete</button>
                                         </div>
                                     </td>

@@ -5,10 +5,10 @@
             <div class="navbar-brand-box">
                 <a href="{{ route('dashboard') }}" class="logo logo-light">
                     <span class="logo-sm">
-                        <img src="{{ asset('assets/images/logo-sm.png') }}" alt="" height="22">
+                        <img src="{{ asset('client/images/logo22.png') }}" alt="" style="width: 100%;">
                     </span>
                     <span class="logo-lg">
-                        <img src="{{ asset('assets/images/logo-light.png') }}" alt="" height="20">
+                        <img src="{{ json_decode(\App\Core\Helper\OptionHelpers::getSystemConfigByKey('general'))->logo }}" alt="" style="width: 100%;">
                     </span>
                 </a>
             </div>
@@ -43,9 +43,6 @@
                 <div class="dropdown-menu dropdown-menu-right">
                     <!-- item-->
                     <a class="dropdown-item" href="#"><i class="dripicons-user font-size-16 align-middle mr-2"></i> Profile</a>
-                    <a class="dropdown-item" href="#"><i class="dripicons-wallet font-size-16 align-middle mr-2"></i> My Wallet</a>
-                    <a class="dropdown-item d-block" href="#"><span class="badge badge-success float-right">5</span><i class="dripicons-gear font-size-16 align-middle mr-2"></i> Settings</a>
-                    <a class="dropdown-item" href="#"><i class="dripicons-lock font-size-16 align-middle mr-2"></i> Lock screen</a>
                     <a class="dropdown-item" href="{{ route('logout') }}"
                        onclick="event.preventDefault();
                                                  document.getElementById('logout-form').submit();">
