@@ -22,23 +22,62 @@
                         </a>
                     </li>
                 @endif
-
-                @if(PermissionHelpers::canAccess(route('page.index')))
+                @if(PermissionHelpers::canAccess(route('option.index')))
                     <li>
-                        <a href="javascript: void(0);" class="waves-effect has-arrow">
+                        <a href="{{ route('option.index') }}"  class="waves-effect">
                             <i class="dripicons-checklist"></i>
-                            <span> Pages </span>
+                            <span>Home</span>
                         </a>
-                        <ul class="sub-menu" aria-expanded="false">
-                            @if(PermissionHelpers::canAccess(route('page.add')))
-                                <li><a href="{{ route('page.add') }}">Create</a></li>
-                            @endif
-                            @if(PermissionHelpers::canAccess(route('page.index')))
-                                <li><a href="{{ route('page.index') }}">All Pages</a></li>
-                            @endif
-                        </ul>
                     </li>
                 @endif
+                @if(PermissionHelpers::canAccess(route('page.add',\App\Core\Glosary\PageTemplateConfigs::SERVICE['NAME'])))
+                    <li>
+                        <a href="{{ route('page.add',\App\Core\Glosary\PageTemplateConfigs::SERVICE['NAME']) }}"  class="waves-effect">
+                            <i class="dripicons-checklist"></i>
+                            <span>Our Services</span>
+                        </a>
+                    </li>
+                @endif
+                @if(PermissionHelpers::canAccess(route('page.add',\App\Core\Glosary\PageTemplateConfigs::ABOUT['NAME'])))
+                    <li>
+                        <a href="{{ route('page.add',\App\Core\Glosary\PageTemplateConfigs::ABOUT['NAME']) }}"  class="waves-effect">
+                            <i class="dripicons-checklist"></i>
+                            <span>About Us</span>
+                        </a>
+                    </li>
+                @endif
+                @if(PermissionHelpers::canAccess(route('page.add',\App\Core\Glosary\PageTemplateConfigs::CONTACT['NAME'])))
+                    <li>
+                        <a href="{{ route('page.add',\App\Core\Glosary\PageTemplateConfigs::CONTACT['NAME']) }}"  class="waves-effect">
+                            <i class="dripicons-checklist"></i>
+                            <span>Contact Us</span>
+                        </a>
+                    </li>
+                @endif
+                @if(PermissionHelpers::canAccess(route('page.add',\App\Core\Glosary\PageTemplateConfigs::HOTEL['NAME'])))
+                    <li>
+                        <a href="{{ route('page.add',\App\Core\Glosary\PageTemplateConfigs::HOTEL['NAME']) }}"  class="waves-effect">
+                            <i class="dripicons-checklist"></i>
+                            <span>Our Hotels</span>
+                        </a>
+                    </li>
+                @endif
+{{--                @if(PermissionHelpers::canAccess(route('page.index')))--}}
+{{--                    <li>--}}
+{{--                        <a href="javascript: void(0);" class="waves-effect has-arrow">--}}
+{{--                            <i class="dripicons-checklist"></i>--}}
+{{--                            <span> Pages </span>--}}
+{{--                        </a>--}}
+{{--                        <ul class="sub-menu" aria-expanded="false">--}}
+{{--                            @if(PermissionHelpers::canAccess(route('page.add')))--}}
+{{--                                <li><a href="{{ route('page.add') }}">Create</a></li>--}}
+{{--                            @endif--}}
+{{--                            @if(PermissionHelpers::canAccess(route('page.index')))--}}
+{{--                                <li><a href="{{ route('page.index') }}">All Pages</a></li>--}}
+{{--                            @endif--}}
+{{--                        </ul>--}}
+{{--                    </li>--}}
+{{--                @endif--}}
                 @if(PermissionHelpers::canAccess(route('post.add'))
                     || PermissionHelpers::canAccess(route('post.index')) )
                 <li>
