@@ -45,18 +45,18 @@ class ClientHomeController extends Controller
         }
 
         $seoDefault = [
-            $seoConfig['SEO']['FOCUS_KEYPHARE'] => $systemConfig['site_title'],
-            $seoConfig['SEO']['TITLE'] => $systemConfig['site_title'],
-            $seoConfig['SEO']['DESC'] => $systemConfig['site_tagline'],
+            $seoConfig['SEO']['FOCUS_KEYPHARE'] => isset($systemConfig['site_title']) ? $systemConfig['site_title'] : "" ,
+            $seoConfig['SEO']['TITLE'] => isset($systemConfig['site_title']) ? $systemConfig['site_title'] : "",
+            $seoConfig['SEO']['DESC'] => isset($systemConfig['site_tagline']) ? $systemConfig['site_tagline'] : "",
             $seoConfig['SEO']['CANONICAL_URL'] => \url()->to("/"),
-            $seoConfig['SOCIAL']['FACEBOOK']['TITLE'] => $systemConfig['site_title'],
-            $seoConfig['SOCIAL']['FACEBOOK']['DESCRIPTION'] => $systemConfig['site_tagline'],
+            $seoConfig['SOCIAL']['FACEBOOK']['TITLE'] => isset($systemConfig['site_title']) ? $systemConfig['site_title'] : "",
+            $seoConfig['SOCIAL']['FACEBOOK']['DESCRIPTION'] => isset($systemConfig['site_tagline']) ? $systemConfig['site_tagline'] : "",
             'published_time' => '2021-01-05T06:39:17+00:00',
             'modified_time' => '2021-01-05T06:39:17+00:00',
-            $seoConfig['SOCIAL']['FACEBOOK']['IMAGE'] => $systemConfig['logo'],
-            $seoConfig['SOCIAL']['TWITTER']['TITLE'] => $systemConfig['site_title'],
-            $seoConfig['SOCIAL']['TWITTER']['DESCRIPTION'] => $systemConfig['site_tagline'],
-            $seoConfig['SOCIAL']['TWITTER']['IMAGE'] => $systemConfig['logo']
+            $seoConfig['SOCIAL']['FACEBOOK']['IMAGE'] => isset($systemConfig['logo']) ? $systemConfig['logo'] : "",
+            $seoConfig['SOCIAL']['TWITTER']['TITLE'] => isset($systemConfig['site_title']) ? $systemConfig['site_title'] : "",
+            $seoConfig['SOCIAL']['TWITTER']['DESCRIPTION'] => isset($systemConfig['site_tagline']) ? $systemConfig['site_tagline'] : "",
+            $seoConfig['SOCIAL']['TWITTER']['IMAGE'] => isset($systemConfig['logo']) ? $systemConfig['logo'] : ""
         ];
 
         $posts = $this->postRepository->getInstantModel()->where('post_type',PostType::POST['VALUE'])->get();
@@ -81,18 +81,20 @@ class ClientHomeController extends Controller
                         }
                     }
                 }
-                foreach ($postMap as $value) {
-                    $mapData[] = [
-                        'name' => $value['name'],
-                        'image' => $value[MetaKey::LOCATION['NAME']]->image,
-                        'address' => $value[MetaKey::LOCATION['NAME']]->address,
-                        'city' => $value[MetaKey::LOCATION['NAME']]->city,
-                        'rate' => $value[MetaKey::RATE['NAME']],
-                        'location' => [
-                            'lat' => floatval($value[MetaKey::LOCATION['NAME']]->location->lat),
-                            'lng' => floatval($value[MetaKey::LOCATION['NAME']]->location->long)
-                        ]
-                    ];
+                if (isset($postMeta) && !empty($postMeta)) {
+                    foreach ($postMap as $value) {
+                        $mapData[] = [
+                            'name' => isset($value['name']) ? $value['name'] : "",
+                            'image' => isset($value[MetaKey::LOCATION['NAME']]->image) ?  $value[MetaKey::LOCATION['NAME']]->image : "",
+                            'address' => isset($value[MetaKey::LOCATION['NAME']]->address) ? $value[MetaKey::LOCATION['NAME']]->address : "",
+                            'city' => isset($value[MetaKey::LOCATION['NAME']]->city) ? $value[MetaKey::LOCATION['NAME']]->city : "",
+                            'rate' => isset($value[MetaKey::RATE['NAME']]) ? $value[MetaKey::RATE['NAME']] : "",
+                            'location' => [
+                                'lat' => isset($value[MetaKey::LOCATION['NAME']]->location->lat) ? floatval($value[MetaKey::LOCATION['NAME']]->location->lat) : "",
+                                'lng' => isset($value[MetaKey::LOCATION['NAME']]->location->long) ? floatval($value[MetaKey::LOCATION['NAME']]->location->long) : ""
+                            ]
+                        ];
+                    }
                 }
             }
         }

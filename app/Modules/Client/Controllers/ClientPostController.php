@@ -8,6 +8,7 @@ use App\Core\Glosary\MetaKey;
 use App\Core\Glosary\PageTemplateConfigs;
 use App\Core\Glosary\PostStatus;
 use App\Core\Glosary\PostType;
+use App\Core\Glosary\SeoConfigs;
 use App\Core\Helper\OptionHelpers;
 use App\Http\Controllers\Controller;
 use App\Modules\Post\Repositories\PostMetaRepository;
@@ -41,6 +42,7 @@ class ClientPostController extends Controller
 
     public function detail($slug){
         if ($this->postRepository->getBySlug($slug)) {
+
             $currentLanguage = app()->getLocale();
             $translationMode = [ "mode" => "post" , "slug" => $slug ];
             $user = Auth::user();
@@ -51,6 +53,27 @@ class ClientPostController extends Controller
             }
 
             $postMeta = $this->postMetaRepository->getByPostId($post->id);
+            $getBanner = $this->postMetaRepository->filter([['post_id' , $post->id] , ['meta_key', MetaKey::BANNER['VALUE'] ]]);
+            if($getBanner && $getBanner->isNotEmpty()) {
+                $banners = json_decode($getBanner[0]->meta_value , true);
+
+            }
+            $seoConfig = SeoConfigs::getSeoKey();
+            $seoDefault = [
+                $seoConfig['SEO']['FOCUS_KEYPHARE'] => isset($post->post_title) ? $post->post_title : "" ,
+                $seoConfig['SEO']['TITLE'] => isset($post->post_title) ? $post->post_title : "" ,
+                $seoConfig['SEO']['DESC'] => isset($post->post_excerpt) ? $post->post_excerpt : "",
+                $seoConfig['SEO']['CANONICAL_URL'] => \url()->current(),
+                $seoConfig['SOCIAL']['FACEBOOK']['TITLE'] => isset($post->post_title) ? $post->post_title : "",
+                $seoConfig['SOCIAL']['FACEBOOK']['DESCRIPTION'] => isset($post->post_excerpt) ? $post->post_excerpt : "",
+                'published_time' => isset($post->created_at) ? $post->created_at : '2021-01-05T06:39:17+00:00',
+                'modified_time' => isset($post->updated_at) ? $post->updated_at : '2021-01-05T06:39:17+00:00',
+                $seoConfig['SOCIAL']['FACEBOOK']['IMAGE'] => isset($banners[0]) ?  $banners[0] : "",
+                $seoConfig['SOCIAL']['TWITTER']['TITLE'] => isset($post->post_title) ? $post->post_title : "",
+                $seoConfig['SOCIAL']['TWITTER']['DESCRIPTION'] => isset($post->post_excerpt) ? $post->post_excerpt : "",
+                $seoConfig['SOCIAL']['TWITTER']['IMAGE'] => isset($banners[0]) ?  $banners[0] : ""
+            ];
+
             $postMetaMap = [];
             foreach ($postMeta as $value) {
                 $postMetaMap[MetaKey::display($value['meta_key'])] = json_decode($value['meta_value']);
@@ -98,10 +121,10 @@ class ClientPostController extends Controller
                             }
                         }
                     }
-                    return view('Client::about',compact('post','pageMetaMap','imageMap','itemMap', 'translationMode','currentLanguage'));
+                    return view('Client::about',compact('post','pageMetaMap','imageMap','itemMap', 'translationMode','currentLanguage', 'seoDefault'));
                 }
                 if ($template == PageTemplateConfigs::SERVICE['VALUE']) {
-                    return view('Client::service',compact('post','pageMetaMap','translationMode','currentLanguage'));
+                    return view('Client::service',compact('post','pageMetaMap','translationMode','currentLanguage', 'seoDefault'));
                 }
                 if ($template == PageTemplateConfigs::HOTEL['VALUE']) {
                     $posts = $this->postRepository->getInstantModel()->where('post_type',PostType::POST['VALUE'])->get();
@@ -129,17 +152,17 @@ class ClientPostController extends Controller
                             }
                         }
                     }
-                    return view('Client::hotel',compact('post','postsMetaMap','pageMetaMap','translationMode','currentLanguage'));
+                    return view('Client::hotel',compact('post','postsMetaMap','pageMetaMap','translationMode','currentLanguage', 'seoDefault'));
                 }
                 if ($template == PageTemplateConfigs::CONTACT['VALUE']) {
-                    return view('Client::contact',compact('post','pageMetaMap', 'translationMode','currentLanguage'));
+                    return view('Client::contact',compact('post','pageMetaMap', 'translationMode','currentLanguage', 'seoDefault'));
                 }
                 if ($template == PageTemplateConfigs::DEFAULT['VALUE']) {
-                    return view('Client::hotel',compact('post','pageMetaMap', 'translationMode','currentLanguage'));
+                    return view('Client::hotel',compact('post','pageMetaMap', 'translationMode','currentLanguage', 'seoDefault'));
                 }
             }else {
                 $termRelation = $this->termRelationRepository->getInstantModel()->where('object_id', $post->id)->first();
-                $termMeta = $this->termMetaRepository->getInstantModel()->where('term_id', $termRelation->term_taxonomy_id)->get();
+                $termMeta = $termRelation != null ? $this->termMetaRepository->getInstantModel()->where('term_id', $termRelation->term_taxonomy_id)->get() : false ;
                 $termMetaMap = [];
                 if ($termMeta) {
                     foreach ($termMeta->toArray() as $value) {
@@ -147,7 +170,7 @@ class ClientPostController extends Controller
                     }
                 }
 
-                $relatePost = $this->termRelationRepository->getInstantModel()->where('term_taxonomy_id', $termRelation->term_taxonomy_id)->get();
+                $relatePost = $termRelation != null ? $this->termRelationRepository->getInstantModel()->where('term_taxonomy_id', $termRelation->term_taxonomy_id)->get() : false;
                 $ids = [];
                 if ($relatePost) {
                     $relatePost = $relatePost->toArray();
@@ -189,7 +212,7 @@ class ClientPostController extends Controller
                     }
                 }
 
-                return view('Client::hotel-detail', compact('post', 'postMetaMap', 'termMetaMap', 'relatePostMetaMap', 'relatePostMap', 'translationMode','currentLanguage'));
+                return view('Client::hotel-detail', compact('post', 'postMetaMap', 'termMetaMap', 'relatePostMetaMap', 'relatePostMap', 'translationMode','currentLanguage', 'seoDefault'));
             }
         }else{
             return view('Client::pages.404');

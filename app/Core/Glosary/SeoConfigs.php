@@ -12,7 +12,7 @@ class SeoConfigs extends BasicEnum
         'GROUP' => ['KEY' => 'seo.group']
     ];
     const SEOPAGEFIXED = [
-        'HOMEPAGE' => ['FIXID' => 99999999]
+        'HOMEPAGE' => ['FIXID' => -1]
     ];
 
     const SEOKEY = [
@@ -30,7 +30,8 @@ class SeoConfigs extends BasicEnum
             ],
         'SCHEMA' => [
             'PAGE_TYPE' => 'seo_page_type',
-            'ARTICLE_TYPE' => 'seo_article_type'
+            'ARTICLE_TYPE' => 'seo_article_type',
+            'CUSTOM_VALUE' => 'seo_schema_custom'
         ],
         'SOCIAL' => [
             'FACEBOOK' => [

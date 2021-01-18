@@ -50,25 +50,6 @@
                                           id="{{ \App\Core\Glosary\SeoConfigs::SEOKEY['SEO']['DESC'] }}" rows="3"></textarea>
                             </div>
 
-                            <div class="mt-4">
-                                <label class="mb-1">Cornerstone content</label>
-                                <p class="text-muted mb-3 font-size-14">
-                                    Cornerstone content should be the most important and extensive articles on your site.
-                                    <a href="https://yoa.st/1i9?php_version=7.4&platform=wordpress&platform_version=5.5.3&software=free&software_version=15.5&days_active=0-1&user_language=en_US">Learn more about Cornerstone Content. </a>
-                                </p>
-
-                                <div style="display: flex; align-items: center">
-                                    Mark as cornerstone content
-                                    <div style="line-height: 0; margin-left: auto">
-                                        <input type="checkbox" switch="primary"
-                                               name="{{ \App\Core\Glosary\SeoConfigs::SEOKEY['SEO']['CORNERSTONE_CONTENT'] }}"
-                                               id="{{ \App\Core\Glosary\SeoConfigs::SEOKEY['SEO']['CORNERSTONE_CONTENT'] }}">
-                                        <label for="{{ \App\Core\Glosary\SeoConfigs::SEOKEY['SEO']['CORNERSTONE_CONTENT'] }}" data-on-label="On" data-off-label="Off" style="margin: 0"></label>
-                                    </div>
-
-                                </div>
-
-                            </div>
 
 
                             <div class="mt-4">
@@ -147,46 +128,14 @@
                         @if($seoType != \App\Core\Glosary\SeoConfigs::SEOTYPE['GROUP']['KEY'])
                         <div class="tab-pane p-3" id="schema" role="tabpanel">
                             <p class="font-14 mb-0">
-                                <b>Automatically describes your pages using schema.org</b><br>
+                                <b>describes your pages using schema.org</b><br>
                                 This helps search engines understand your website and your content.
                                 You can change some of your settings for this page below.</p>
                             <div class="mt-4">
-                                <label class="mb-1">
-                                    What type of page or content is this?
-                                </label>
-                                <br>
-                                <b>Page Type</b>
-                                <select class="form-control"
-                                        name="{{ \App\Core\Glosary\SeoConfigs::SEOKEY['SCHEMA']['PAGE_TYPE'] }}"
-                                        id="{{ \App\Core\Glosary\SeoConfigs::SEOKEY['SCHEMA']['PAGE_TYPE'] }}">
-                                    <option value="WebPage">Web Page</option>
-                                    <option value="ItemPage">Item Page</option>
-                                    <option value="AboutPage">About Page</option>
-                                    <option value="FAQPage">FAQ Page</option>
-                                    <option value="QAPage">QA Page</option>
-                                    <option value="ProfilePage">Profile Page</option>
-                                    <option value="ContactPage">Contact Page</option>
-                                    <option value="MedicalWebPage">Medical Web Page</option>
-                                    <option value="CollectionPage">Collection Page</option>
-                                    <option value="CheckoutPage">Checkout Page</option>
-                                    <option value="RealEstateListing">Real Estate Listing</option>
-                                    <option value="SearchResultsPage">Search Results Page</option>
-                                </select>
-                                <br>
-                                <b>Article type</b>
-                                <select class="form-control" name="{{ \App\Core\Glosary\SeoConfigs::SEOKEY['SCHEMA']['ARTICLE_TYPE'] }}"
-                                        id="{{ \App\Core\Glosary\SeoConfigs::SEOKEY['SCHEMA']['ARTICLE_TYPE'] }}">
-                                    <option value="Article">Article</option>
-                                    <option value="SocialMediaPosting">Social Media Posting</option>
-                                    <option value="NewsArticle">News Article</option>
-                                    <option value="AdvertiserContentArticle">Advertiser Content Article</option>
-                                    <option value="SatiricalArticle">Satirical Article</option>
-                                    <option value="ScholarlyArticle">Scholary Article</option>
-                                    <option value="TechArticle">Tech Article</option>
-                                    <option value="Report">Report</option>
-                                    <option value="None">None</option>
-                                </select>
-
+                                <textarea class="form-control"
+                                          name="{{ \App\Core\Glosary\SeoConfigs::SEOKEY['SCHEMA']['CUSTOM_VALUE'] }}"
+                                          id="{{ \App\Core\Glosary\SeoConfigs::SEOKEY['SCHEMA']['CUSTOM_VALUE'] }}"
+                                          rows="8"></textarea>
                             </div>
                         </div>
                         @endif
@@ -253,13 +202,6 @@
                                            id="{{ \App\Core\Glosary\SeoConfigs::SEOKEY['SOCIAL']['TWITTER']['TITLE'] }}" class="form-control"/>
                                 </div>
 
-                                <div class="mt-4">
-                                    <label class="mb-1">
-                                        Twitter description
-                                    </label>
-                                    <textarea class="form-control"  name="{{ \App\Core\Glosary\SeoConfigs::SEOKEY['SOCIAL']['TWITTER']['DESCRIPTION'] }}"
-                                              id="{{ \App\Core\Glosary\SeoConfigs::SEOKEY['SOCIAL']['TWITTER']['DESCRIPTION'] }}" rows="3"></textarea>
-                                </div>
                             </div>
 
                         </div>

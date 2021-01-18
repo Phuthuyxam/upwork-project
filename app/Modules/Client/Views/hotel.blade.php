@@ -11,8 +11,8 @@
         <link rel="stylesheet" href="{{ asset('client/css/arab.css') }}">
     @endif
 @endsection
-@section('title')
-    {{ $post->post_title }}
+@section('seo')
+{!! getDataSeoOption($post->id, \App\Core\Glosary\SeoConfigs::SEOTYPE['SINGLE']['KEY'], $seoDefault) !!}
 @endsection
 @section('content')
     <div class="content-wrapper">

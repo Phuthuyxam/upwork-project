@@ -124,13 +124,14 @@
                                 </div>
                             </div>
                         </div>
+            </form>
                         {{-- SEO form for home page --}}
                         @if($key == \App\Core\Glosary\OptionMetaKey::HOME['VALUE'])
                              @include('Seo::seo',['objectId' => \App\Core\Glosary\SeoConfigs::SEOPAGEFIXED['HOMEPAGE']['FIXID'] , 'seoType' => \App\Core\Glosary\SeoConfigs::SEOTYPE['SINGLE']['KEY'] ])
                         @endif
                     </div>
                 </div>
-            </form>
+{{--            </form>--}}
         </div>
     </div>
 @endsection

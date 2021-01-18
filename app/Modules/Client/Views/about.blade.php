@@ -6,14 +6,16 @@
         <html lang="ar" dir="rtl">
     @endif
 @endsection
+
+@section('seo')
+    {!! getDataSeoOption($post->id, \App\Core\Glosary\SeoConfigs::SEOTYPE['SINGLE']['KEY'], $seoDefault) !!}
+@endsection
 @section('style')
     @if($currentLanguage == 'ar')
         <link rel="stylesheet" href="{{ asset('client/css/arab.css') }}">
     @endif
 @endsection
-@section('title')
-    {{ $post->post_title }}
-@endsection
+
     @section('content')
     <div class="content-wrapper">
         <section class="banner-wrapper">

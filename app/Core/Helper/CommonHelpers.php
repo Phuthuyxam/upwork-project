@@ -161,6 +161,8 @@ if(!function_exists('getDataSeoOption')) {
         <meta name="twitter:data1" content="admin">
         <meta name="twitter:label2" content="Est. reading time">
         <meta name="twitter:data2" content="0 minutes">
+        <?php echo isset($resultData[$seoConfig['SCHEMA']['CUSTOM_VALUE']]) ? $resultData[$seoConfig['SCHEMA']['CUSTOM_VALUE']] : false  ?>
+
         <?php
         $content = ob_get_contents();
         ob_get_clean();

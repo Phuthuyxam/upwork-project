@@ -11,8 +11,9 @@
         <link rel="stylesheet" href="{{ asset('client/css/arab.css') }}">
    @endif
 @endsection
-@section('title')
-    {{ $post->post_title }}
+
+@section('seo')
+    {!! getDataSeoOption($post->id, \App\Core\Glosary\SeoConfigs::SEOTYPE['SINGLE']['KEY'], $seoDefault) !!}
 @endsection
 @section('content')
 {{--    @dd($relatePostMetaMap)--}}
@@ -29,7 +30,9 @@
             </div>
             <div class="banner-content">
                 <div class="banner-title">
+                    @if(isset($termMetaMap[\App\Core\Glosary\MetaKey::BRAND_LOGO['NAME']]))
                     {!! \App\Core\Helper\FrontendHelpers::renderImage($termMetaMap[\App\Core\Glosary\MetaKey::BRAND_LOGO['NAME']]) !!}
+                    @endif
                 </div>
                 <div class="breadscrum">
                     <ul>

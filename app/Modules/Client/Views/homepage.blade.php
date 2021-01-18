@@ -12,7 +12,7 @@
     @endif
 @endsection
 @section('seo')
-    {!! getDataSeoOption(-99, 'homepage', $seoDefault) !!}
+    {!! getDataSeoOption(\App\Core\Glosary\SeoConfigs::SEOPAGEFIXED['HOMEPAGE']['FIXID'], \App\Core\Glosary\SeoConfigs::SEOTYPE['SINGLE']['KEY'], $seoDefault) !!}
 @endsection
 @section('content')
     <div class="content-wrapper">
