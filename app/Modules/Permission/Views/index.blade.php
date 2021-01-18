@@ -8,7 +8,7 @@
                 <div class="card-body">
 
                     <h4>
-                        <span class="badge badge-primary"> <i class="mdi mdi-key-plus"></i> Add Permission</span>
+                        <span class="badge badge-primary"> <i class="mdi mdi-key-plus"></i> Add Roles</span>
                     </h4>
 
                     <form class="custom-validation" action="{{ route( 'permission.add' ) }}" method="POST">
@@ -44,9 +44,9 @@
             <div class="card">
                 <div class="card-body">
 
-                    <h4 class="card-title">Permisson list</h4>
+                    <h4 class="card-title">Role list</h4>
                     <p class="card-title-desc">
-                        manager all permission
+                        Manage all Roles
                     </p>
                     {!! displayAlert(Session::get('message'))  !!}
                     <div class="table-responsive">

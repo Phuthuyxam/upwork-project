@@ -3,7 +3,12 @@
         $dataHome = json_decode($dataHome[0]->option_value, true);
     @endphp
 @endif
-
+@section('title')
+    Home page
+@endsection
+@section('heading')
+    <h4 class="page-title font-size-18">Home Page</h4>
+@endsection
 <h4 class="card-title">Home Options</h4>
 <p class="card-title-desc">All setting of home page</p>
 
@@ -43,7 +48,7 @@
                 @if(isset($dataHome['slider']) && !empty($dataHome['slider']))
                     @foreach($dataHome['slider'] as $key => $slider)
                         <tr>
-                            <td>{{ $key + 1 }}</td>
+                            <td class="counter">{{ $key + 1 }}</td>
                             <td style="">
                                 <div class="row">
                                     <div class="col-lg-12" style="margin-bottom: 30px">
@@ -394,137 +399,6 @@
                        value="{{ isset($dataHome['our_hotel']['url']) && !empty($dataHome['our_hotel']['url']) ? $dataHome['our_hotel']['url'] : "" }}"
                        name="option_our_hotel_url">
             </div>
-        </div>
-        <div class="form-group row">
-            <table class="table table-bordered">
-                <thead>
-                    <tr>
-                        <th>Add Hotel</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-
-                @if(isset($dataHome['our_hotel']['hotels']) && !empty($dataHome['our_hotel']['hotels']))
-                    @foreach($dataHome['our_hotel']['hotels'] as $hotel)
-                        <tr>
-                            <td style="">
-                                <div class="row">
-                                    <div class="col-lg-12" style="margin-bottom: 30px">
-                                        <label class="mb-1">
-                                            Logo image
-                                        </label>
-                                        <div class="form-group media-load-image">
-                                            <div class="preview-image" >
-                                                <div class="close" onclick="deleteImagePreview(this)">
-                                                    <i class="dripicons-cross"></i>
-                                                </div>
-                                                <div class="image-preview-container">
-                                                    @if(isset($hotel['logo']) && !empty($hotel['logo']) )
-                                                        <img class="image-preview" style="width: 100%" src="{{ $hotel['logo'] }}" alt="your image">
-                                                    @endif
-                                                </div>
-                                            </div>
-                                            <div class="input-group">
-                                                <input type="text" style="padding: 3px 5px; overflow: hidden" name="option_home_hotel_logo[]" class="form-control required home-slider-image" aria-describedby="button-image" readonly
-                                                value="{{ (isset($hotel['logo']) && !empty($hotel['logo'])) ? $hotel['logo'] : ""  }}">
-                                                <div class="input-group-append">
-                                                    <button class="btn btn-primary waves-effect waves-light btn-popup-media" type="button" onclick="openMediaManager(this)">Select Image</button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-12">
-                                        <label class="mb-1">
-                                            Background image
-                                        </label>
-                                        <div class="form-group media-load-image">
-                                            <div class="preview-image" >
-                                                <div class="close" onclick="deleteImagePreview(this)">
-                                                    <i class="dripicons-cross"></i>
-                                                </div>
-                                                <div class="image-preview-container">
-                                                    @if(isset($hotel['banner']) && !empty($hotel['banner']))
-                                                        <img class="image-preview" style="width: 100%" src="{{ $hotel['banner'] }}" alt="your image">
-                                                    @endif
-                                                </div>
-                                            </div>
-                                            <div class="input-group">
-                                                <input type="text" style="padding: 3px 5px; overflow: hidden" name="option_home_hotel_banner[]" class="form-control required home-slider-image" aria-describedby="button-image" readonly
-                                                value="{{ (isset($hotel['banner']) && !empty($hotel['banner']) ) ? $hotel['banner'] : "" }}">
-                                                <div class="input-group-append">
-                                                    <button class="btn btn-primary waves-effect waves-light btn-popup-media" type="button" onclick="openMediaManager(this)">Select Image</button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </td>
-                            <td style="width: 50px; vertical-align: middle">
-                                <div class="action-wrapper">
-                                    <button type="button" class="btn btn-success btn-add-type"><i class="dripicons-plus"></i></button>
-                                </div>
-                            </td>
-                        </tr>
-                    @endforeach
-                @else
-                    <tr>
-                        <td style="">
-                            <div class="row">
-                                <div class="col-lg-12" style="margin-bottom: 30px">
-                                    <label class="mb-1">
-                                        Logo image
-                                    </label>
-                                    <div class="form-group media-load-image">
-                                        <div class="preview-image" >
-                                            <div class="close" onclick="deleteImagePreview(this)">
-                                                <i class="dripicons-cross"></i>
-                                            </div>
-                                            <div class="image-preview-container">
-                                            </div>
-                                        </div>
-                                        <div class="input-group">
-                                            <input type="text" style="padding: 3px 5px; overflow: hidden" name="option_home_hotel_logo[]" class="form-control required home-slider-image" aria-describedby="button-image" readonly>
-                                            <div class="input-group-append">
-                                                <button class="btn btn-primary waves-effect waves-light btn-popup-media" type="button" onclick="openMediaManager(this)">Select Image</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-lg-12">
-                                    <label class="mb-1">
-                                        Background image
-                                    </label>
-                                    <div class="form-group media-load-image">
-                                        <div class="preview-image" >
-                                            <div class="close" onclick="deleteImagePreview(this)">
-                                                <i class="dripicons-cross"></i>
-                                            </div>
-                                            <div class="image-preview-container">
-                                            </div>
-                                        </div>
-                                        <div class="input-group">
-                                            <input type="text" style="padding: 3px 5px; overflow: hidden" name="option_home_hotel_banner[]" class="form-control required home-slider-image" aria-describedby="button-image" readonly>
-                                            <div class="input-group-append">
-                                                <button class="btn btn-primary waves-effect waves-light btn-popup-media" type="button" onclick="openMediaManager(this)">Select Image</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </td>
-                        <td style="width: 50px; vertical-align: middle">
-                            <div class="action-wrapper">
-                                <button type="button" class="btn btn-success btn-add-type"><i class="dripicons-plus"></i></button>
-                            </div>
-                        </td>
-
-                    </tr>
-                @endif
-
-
-                </tbody>
-            </table>
         </div>
     </div>
 

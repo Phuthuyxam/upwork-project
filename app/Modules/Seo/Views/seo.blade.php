@@ -51,7 +51,6 @@
                             </div>
 
 
-
                             <div class="mt-4">
                                 <label class="mb-1">Allow search engines to show this Post in search results?</label>
                                 <select class="form-control" name="{{ \App\Core\Glosary\SeoConfigs::SEOKEY['SEO']['SHOW_POST_IN_SEARCH'] }}"
@@ -201,7 +200,6 @@
                                     <input type="text" maxlength="25" name="{{ \App\Core\Glosary\SeoConfigs::SEOKEY['SOCIAL']['TWITTER']['TITLE'] }}"
                                            id="{{ \App\Core\Glosary\SeoConfigs::SEOKEY['SOCIAL']['TWITTER']['TITLE'] }}" class="form-control"/>
                                 </div>
-
                             </div>
 
                         </div>

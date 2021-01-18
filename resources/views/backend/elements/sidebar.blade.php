@@ -22,44 +22,49 @@
                         </a>
                     </li>
                 @endif
-                @if(PermissionHelpers::canAccess(route('option.index')))
-                    <li>
-                        <a href="{{ route('option.index',\App\Core\Glosary\OptionMetaKey::HOME['VALUE']) }}"  class="waves-effect">
-                            <i class="dripicons-home "></i>
-                            <span>Home</span>
-                        </a>
-                    </li>
-                @endif
                 @if(PermissionHelpers::canAccess(route('page.add',\App\Core\Glosary\PageTemplateConfigs::SERVICE['NAME'])))
                     <li>
-                        <a href="{{ route('page.add',\App\Core\Glosary\PageTemplateConfigs::SERVICE['NAME']) }}"  class="waves-effect">
+                        <a href="javascript:void(0)"  class="waves-effect has-arrow">
                             <i class="dripicons-checklist"></i>
-                            <span>Our Services</span>
+                            <span>Pages</span>
                         </a>
-                    </li>
-                @endif
-                @if(PermissionHelpers::canAccess(route('page.add',\App\Core\Glosary\PageTemplateConfigs::ABOUT['NAME'])))
-                    <li>
-                        <a href="{{ route('page.add',\App\Core\Glosary\PageTemplateConfigs::ABOUT['NAME']) }}"  class="waves-effect">
-                            <i class="dripicons-checklist"></i>
-                            <span>About Us</span>
-                        </a>
-                    </li>
-                @endif
-                @if(PermissionHelpers::canAccess(route('page.add',\App\Core\Glosary\PageTemplateConfigs::CONTACT['NAME'])))
-                    <li>
-                        <a href="{{ route('page.add',\App\Core\Glosary\PageTemplateConfigs::CONTACT['NAME']) }}"  class="waves-effect">
-                            <i class="dripicons-checklist"></i>
-                            <span>Contact Us</span>
-                        </a>
-                    </li>
-                @endif
-                @if(PermissionHelpers::canAccess(route('page.add',\App\Core\Glosary\PageTemplateConfigs::HOTEL['NAME'])))
-                    <li>
-                        <a href="{{ route('page.add',\App\Core\Glosary\PageTemplateConfigs::HOTEL['NAME']) }}"  class="waves-effect">
-                            <i class="dripicons-checklist"></i>
-                            <span>Our Hotels</span>
-                        </a>
+                        <ul class="sub-menu" aria-expanded="false">
+                            @if(PermissionHelpers::canAccess(route('option.index')))
+                                <li>
+                                    <a href="{{ route('option.index',\App\Core\Glosary\OptionMetaKey::HOME['VALUE']) }}"  class="waves-effect">
+                                        <span>Home</span>
+                                    </a>
+                                </li>
+                            @endif
+                            @if(PermissionHelpers::canAccess(route('page.add',\App\Core\Glosary\PageTemplateConfigs::SERVICE['NAME'])))
+                                <li>
+                                    <a href="{{ route('page.add',\App\Core\Glosary\PageTemplateConfigs::SERVICE['NAME']) }}"  class="waves-effect">
+                                        <span>Our Services</span>
+                                    </a>
+                                </li>
+                            @endif
+                            @if(PermissionHelpers::canAccess(route('page.add',\App\Core\Glosary\PageTemplateConfigs::ABOUT['NAME'])))
+                                <li>
+                                    <a href="{{ route('page.add',\App\Core\Glosary\PageTemplateConfigs::ABOUT['NAME']) }}"  class="waves-effect">
+                                        <span>About Us</span>
+                                    </a>
+                                </li>
+                            @endif
+                            @if(PermissionHelpers::canAccess(route('page.add',\App\Core\Glosary\PageTemplateConfigs::CONTACT['NAME'])))
+                                <li>
+                                    <a href="{{ route('page.add',\App\Core\Glosary\PageTemplateConfigs::CONTACT['NAME']) }}"  class="waves-effect">
+                                        <span>Contact Us</span>
+                                    </a>
+                                </li>
+                            @endif
+                            @if(PermissionHelpers::canAccess(route('page.add',\App\Core\Glosary\PageTemplateConfigs::HOTEL['NAME'])))
+                                <li>
+                                    <a href="{{ route('page.add',\App\Core\Glosary\PageTemplateConfigs::HOTEL['NAME']) }}"  class="waves-effect">
+                                        <span>Our Hotels</span>
+                                    </a>
+                                </li>
+                            @endif
+                        </ul>
                     </li>
                 @endif
 {{--                @if(PermissionHelpers::canAccess(route('page.index')))--}}
@@ -116,6 +121,14 @@
                 </li>
                 @endif
                 <li class="menu-title">Settings</li>
+                @if(PermissionHelpers::canAccess(route('system.booking_type')))
+                    <li>
+                        <a href="{{ route('system.booking_type') }}" class="waves-effect">
+                            <i class="dripicons-checklist"></i>
+                            <span>Booking type setting</span>
+                        </a>
+                    </li>
+                @endif
                 @if(PermissionHelpers::canAccess(route('option.index')))
                     <li>
                         <a href="{{ route('option.index',\App\Core\Glosary\OptionMetaKey::MENU['VALUE']) }}"  class="waves-effect">
@@ -132,14 +145,14 @@
                         </a>
                     </li>
                 @endif
-                <li>
-                    @if(PermissionHelpers::canAccess(route('system.index')))
+                @if(PermissionHelpers::canAccess(route('system.index')))
+                    <li>
                         <a href="{{ route('system.index') }}" class="waves-effect">
                             <i class="dripicons-gear"></i>
                             <span>General setting</span>
                         </a>
-                    @endif
-                </li>
+                    </li>
+                @endif
                 <li class="menu-title">Extra</li>
                 <li>
                     <a href="{{ route('log.index') }}" class="waves-effect">

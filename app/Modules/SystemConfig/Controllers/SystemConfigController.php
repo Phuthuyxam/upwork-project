@@ -56,8 +56,47 @@ class SystemConfigController extends Controller
 
             }
         }
+    }
 
+    public function setBookingType(Request $request) {
+        if ($request->isMethod('get')) {
+            $condition = [['option_key' ,'=', 'booking_type']];
+            $record = $this->systemRepository->findByCondition($condition);
+            if ($record) {
+                $record = json_decode($record->option_value);
+            }
+            return view('SystemConfig::booking',compact('record'));
+        }else{
+            $validate = $request->validate([
+                'type_link' => 'required'
+            ]);
+            $option = [
+                'option_key' => 'booking_type',
+                'option_value' =>json_encode(
+                    [
+                        'type' => $request->input('booking_type'),
+                        'value' => $request->input('type_link')
+                    ]
+                )
+            ];
+            $condition = [['option_key' ,'=', 'booking_type']];
+            $record = $this->systemRepository->findByCondition($condition);
 
+            if ($record == null) {
+                if ($this->systemRepository->create($option)) {
+                    return redirect()->back()->with('message', 'success|Save success.');
+                }else{
+                    return redirect()->back()->with('message', 'danger|Save fail.');
+                }
+            }else{
+                $id = $this->systemRepository->findByCondition($condition)->id;
+                if ($this->systemRepository->update($id,$option)) {
+                    return redirect()->back()->with('message', 'success|Save success.');
+                }else{
+                    return redirect()->back()->with('message', 'danger|Save fail.');
+                }
+            }
+        }
     }
 
 }
