@@ -73,56 +73,55 @@
     <div class="content-wrapper">
         @include('backend.elements.languages')
         <div class="container-fluid">
-            <div class="row">
-                <div class="col-4">
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="tab-heading" style="display: flex; justify-content: space-between;align-items: center">
-                                <h4 class="card-title">Edit Option</h4>
-
-                                @php
-                                    $languages = \App\Core\Glosary\LocationConfigs::getAll();
-                                    $currentLang = app()->getLocale();
-
-                                @endphp
-                                @if(isset($languages) && !empty($languages))
-
-                                <div class="tab-translate">
-                                    <b><i class="dripicons-flag"></i> Make translation</b>
-                                    <select id="make-translation">
-                                        <option value="0">---choose language---</option>
-                                        @foreach($languages as $lan)
-                                            @if($lan['VALUE'] != $currentLang)
-                                                <option value="{{ $lan['VALUE'] }}" data-display="{{ $lan['DISPLAY'] }}">
-                                                    {{ $lan['DISPLAY'] }}
-                                                </option>
-                                            @endif
-                                        @endforeach
-                                    </select>
-                                </div>
-                                @endif
-
-                            </div>
-                            @if(isset($allOption) && !empty($allOption))
-                            <ul class="list-option">
-                                @foreach($allOption as $option)
-                                    <li class="{{ ($option['VALUE'] == $key) ? 'active' : false }}">
-                                        <a href="{{ route('option.index', ['key' => $option['VALUE']]) }}"> {{ $option['DISPLAY'] }} </a>
-                                    </li>
-                                @endforeach
-                            </ul>
-                            @endif
-                        </div>
-                    </div>
-                </div>
-                <div class="col-8">
-                    <div class="card">
-                        <div class="card-body">
-                            {!! displayAlert(Session::get('message'))  !!}
-                            <form action="{{ route('option.save', ['key' => $key]) }}" method="POST">
+            {!! displayAlert(Session::get('message'))  !!}
+            <form action="{{ route('option.save', ['key' => $key]) }}" method="POST">
+                <div class="row">
+                    <div class="col-8">
+                        <div class="card">
+                            <div class="card-body">
                                 @csrf
                                 @include('Setting::elements.'.$key)
+                                {{-- SEO form for home page --}}
+                                @if($key == \App\Core\Glosary\OptionMetaKey::HOME['VALUE'])
+                                    <div class="car">
+                                        <div class="card-body row">
+                                            <div class="col-8">
+                                                @include('Seo::seo',['objectId' => \App\Core\Glosary\SeoConfigs::SEOPAGEFIXED['HOMEPAGE']['FIXID'] , 'seoType' => \App\Core\Glosary\SeoConfigs::SEOTYPE['SINGLE']['KEY'] ])
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="card">
+                            <h4 class="card-title card-header">Edit Option</h4>
+                            <div class="card-body">
+                                <div class="tab-heading" style="display: flex; justify-content: space-between;align-items: center">
+                                    @php
+                                        $languages = \App\Core\Glosary\LocationConfigs::getAll();
+                                        $currentLang = app()->getLocale();
+                                    @endphp
+                                    @if(isset($languages) && !empty($languages))
 
+                                        <div class="tab-translate">
+                                            <b><i class="dripicons-flag"></i> Make translation</b>
+                                            <select id="make-translation">
+                                                <option value="0">---choose language---</option>
+                                                @foreach($languages as $lan)
+                                                    @if($lan['VALUE'] != $currentLang)
+                                                        <option value="{{ $lan['VALUE'] }}" data-display="{{ $lan['DISPLAY'] }}">
+                                                            {{ $lan['DISPLAY'] }}
+                                                        </option>
+                                                    @endif
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    @endif
+                                </div>
+                            </div>
+                            <div class="card-footer">
                                 <div class="submit-section">
                                     <div class="form-group mb-0">
                                         <input type="hidden" name="translation" id="translation_mode">
@@ -133,25 +132,11 @@
                                         </div>
                                     </div>
                                 </div>
-                            </form>
-
-                            {{-- SEO form for home page --}}
-                            @if($key == \App\Core\Glosary\OptionMetaKey::HOME['VALUE'])
-                                <div class="car">
-                                    <div class="card-body row">
-                                        <div class="col-8">
-                                            @include('Seo::seo',['objectId' => \App\Core\Glosary\SeoConfigs::SEOPAGEFIXED['HOMEPAGE']['FIXID'] , 'seoType' => \App\Core\Glosary\SeoConfigs::SEOTYPE['SINGLE']['KEY'] ])
-                                        </div>
-                                    </div>
-                                </div>
-                            @endif
-
-
-
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            </form>
         </div>
     </div>
 @endsection

@@ -19,16 +19,13 @@ class OptionController extends Controller
     }
 
     public function index($key = null) {
-        $allOption = [ OptionMetaKey::MENU, OptionMetaKey::FOOTER];
         if(is_null($key)) $key = OptionMetaKey::MENU['VALUE'];
         $dataMenu = $this->optionRepository->filter([['option_key', OptionMetaKey::MENU['VALUE']]]);
         $dataFooter = $this->optionRepository->filter([['option_key', OptionMetaKey::FOOTER['VALUE']]]);
-        if ($key == OptionMetaKey::HOME['VALUE']) {
-            $dataHome = $this->optionRepository->filter([['option_key', OptionMetaKey::HOME['VALUE']]]);
-            return view('Setting::home', compact('dataHome', 'key'));
-        }
-        return view('Setting::index', compact('allOption', 'key', 'dataMenu', 'dataFooter'));
+        $dataHome = $this->optionRepository->filter([['option_key', OptionMetaKey::HOME['VALUE']]]);
+        return view('Setting::index', compact( 'key', 'dataMenu', 'dataFooter','dataHome'));
     }
+
     public function save($key = null, Request $request) {
         $translation = false;
         if(isset($request->translation) && !empty($request->translation) && LocationConfigs::checkLanguageCode($request->translation)){

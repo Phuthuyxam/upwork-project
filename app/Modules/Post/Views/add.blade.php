@@ -22,6 +22,7 @@
             overflow: hidden;
             width: 50% !important;
             margin-bottom: 1rem;
+            background: #ccc;
         }
 
         .preview-image .close {

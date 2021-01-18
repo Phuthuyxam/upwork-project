@@ -53,8 +53,7 @@ class PostController extends Controller
             $validate = $request->validate([
                 'post_title' => 'required|max:191',
                 'post_name' => 'required|unique:posts',
-                'post_content' => 'required',
-                'taxonomy' => 'required',
+                'post_content' => 'required'
             ]);
 
             $post_title = $request->input('post_title');
@@ -160,7 +159,6 @@ class PostController extends Controller
 
             }
 
-
             if ($result) {
                 Log::info('user '.Auth::id().' has created hotel '. $postId);
                 return redirect(route('post.edit', ['id' => $postId]))->with('message', 'success|Successfully create  "' . $request->input('post_title') . '" hotel');
@@ -180,8 +178,6 @@ class PostController extends Controller
                 $postMetaMap[$value['meta_key']] = json_decode($value['meta_value']);
             }
             $slugs = $this->termRepository->getAllSlug();
-            $taxonomy = $this->termRepository->getAll();
-            $term_id = $this->termRelationRepository->getByObjectId($id);
             $postRecod = $this->posRepository->find($id);
             if(LocationConfigs::getLanguageDefault()['VALUE'] == app()->getLocale()){
                 $translationPost = $postRecod->postFromTranslation;
@@ -196,14 +192,13 @@ class PostController extends Controller
             } else {
                 $translationRecord = false;
             }
-            return view('Post::edit', compact('post', 'postMetaMap','slugs','taxonomy','term_id','translationRecord'));
+            return view('Post::edit', compact('post', 'postMetaMap','slugs','translationRecord'));
         }else {
             $currentLang = app()->getLocale();
             $validateRule = [
                 'post_title' => 'required|max:191',
                 'post_name' => 'required|unique:posts,post_name,'.$id,
                 'post_content' => 'required',
-                'taxonomy' => 'required'
             ];
 
             $prefixLanguage = generatePrefixLanguage();
@@ -360,8 +355,9 @@ class PostController extends Controller
                     }
                 }
 
+                // Save logo
                 if ($request->input('logo')) {
-                    $condition = [['post_id','=',$id],['meta_key' ,'=', MetaKey::THUMBNAIL['VALUE']]];
+                    $condition = [['post_id','=',$id],['meta_key' ,'=', MetaKey::LOGO['VALUE']]];
                     $dataPostMeta =[
                         'meta_value' => json_encode($request->input('logo'))
                     ];

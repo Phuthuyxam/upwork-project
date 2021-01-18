@@ -24,24 +24,8 @@
                 @endif
                 @if(PermissionHelpers::canAccess(route('option.index')))
                     <li>
-                        <a href="{{ route('option.index',) }}"  class="waves-effect">
-                            <i class="dripicons-checklist"></i>
-                            <span>Home</span>
-                        </a>
-                    </li>
-                @endif
-                @if(PermissionHelpers::canAccess(route('option.index')))
-                    <li>
-                        <a href="{{ route('option.index','home') }}"  class="waves-effect">
-                            <i class="dripicons-checklist"></i>
-                            <span>Home</span>
-                        </a>
-                    </li>
-                @endif
-                @if(PermissionHelpers::canAccess(route('option.index')))
-                    <li>
-                        <a href="{{ route('option.index','home') }}"  class="waves-effect">
-                            <i class="dripicons-checklist"></i>
+                        <a href="{{ route('option.index',\App\Core\Glosary\OptionMetaKey::HOME['VALUE']) }}"  class="waves-effect">
+                            <i class="dripicons-home "></i>
                             <span>Home</span>
                         </a>
                     </li>
@@ -98,7 +82,7 @@
                     || PermissionHelpers::canAccess(route('post.index')) )
                 <li>
                     <a href="javascript: void(0);" class="has-arrow waves-effect">
-                        <i class="dripicons-home"></i>
+                        <i class="dripicons-article"></i>
                         <span> Hotels </span>
                     </a>
                     <ul class="sub-menu" aria-expanded="false">
@@ -132,14 +116,22 @@
                 </li>
                 @endif
                 <li class="menu-title">Settings</li>
-                <li>
-                    @if(PermissionHelpers::canAccess(route('option.index')))
-                        <a href="{{ route('option.index') }}" class="waves-effect">
-                            <i class="dripicons-device-desktop"></i>
-                            <span>Theme setting</span>
+                @if(PermissionHelpers::canAccess(route('option.index')))
+                    <li>
+                        <a href="{{ route('option.index',\App\Core\Glosary\OptionMetaKey::MENU['VALUE']) }}"  class="waves-effect">
+                            <i class="dripicons-checklist"></i>
+                            <span>Menu Setting</span>
                         </a>
-                    @endif
-                </li>
+                    </li>
+                @endif
+                @if(PermissionHelpers::canAccess(route('option.index')))
+                    <li>
+                        <a href="{{ route('option.index',\App\Core\Glosary\OptionMetaKey::FOOTER['VALUE']) }}"  class="waves-effect">
+                            <i class="dripicons-checklist"></i>
+                            <span>Footer Setting</span>
+                        </a>
+                    </li>
+                @endif
                 <li>
                     @if(PermissionHelpers::canAccess(route('system.index')))
                         <a href="{{ route('system.index') }}" class="waves-effect">

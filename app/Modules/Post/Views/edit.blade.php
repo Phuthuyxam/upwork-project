@@ -199,6 +199,10 @@
                                             {!!  renderMediaManage('thumb',$postMetaMap[\App\Core\Glosary\MetaKey::THUMBNAIL['VALUE']]) !!}
                                         </div>
                                         <div class="form-group">
+                                            <label for="price">Logo</label>
+                                            {!!  renderMediaManage('logo',$postMetaMap[\App\Core\Glosary\MetaKey::LOGO['VALUE']]) !!}
+                                        </div>
+                                        <div class="form-group">
                                             <label for="file">Banner</label>
                                             @php
                                                 $banner = $postMetaMap[\App\Core\Glosary\MetaKey::BANNER['VALUE']];
@@ -395,25 +399,25 @@
                                 <button type="submit" class="btn btn-primary btn-submit waves-effect waves-light" id="ptx-save-btn">Publish</button>
                             </div>
                         </div>
-                        <div class="card">
-                            <h5 class="card-header mt-0 font-size-16">Select Category</h5>
-                            <div class="card-body">
-                                <div class="form-group">
-                                    <select name="taxonomy" id="tax" class="form-control required">
-                                        <option value="">Select Category</option>
-                                        @foreach($taxonomy as $value)
-                                            <option value="{{ $value['id'] }}" {{ isset($term_id['term_taxonomy_id']) && $value['id'] == $term_id['term_taxonomy_id'] ? 'selected':'' }}>{{ $value['name'] }}</option>
-                                        @endforeach
-                                    </select>
-                                    <p class="text-danger error-message" style="font-weight: bold">
-                                        @error('post_title')
-                                        {{ $message }}
-                                        @enderror
-                                    </p>
-                                </div>
+{{--                        <div class="card">--}}
+{{--                            <h5 class="card-header mt-0 font-size-16">Select Category</h5>--}}
+{{--                            <div class="card-body">--}}
+{{--                                <div class="form-group">--}}
+{{--                                    <select name="taxonomy" id="tax" class="form-control required">--}}
+{{--                                        <option value="">Select Category</option>--}}
+{{--                                        @foreach($taxonomy as $value)--}}
+{{--                                            <option value="{{ $value['id'] }}" {{ isset($term_id['term_taxonomy_id']) && $value['id'] == $term_id['term_taxonomy_id'] ? 'selected':'' }}>{{ $value['name'] }}</option>--}}
+{{--                                        @endforeach--}}
+{{--                                    </select>--}}
+{{--                                    <p class="text-danger error-message" style="font-weight: bold">--}}
+{{--                                        @error('post_title')--}}
+{{--                                        {{ $message }}--}}
+{{--                                        @enderror--}}
+{{--                                    </p>--}}
+{{--                                </div>--}}
 
-                            </div>
-                        </div>
+{{--                            </div>--}}
+{{--                        </div>--}}
                     </div>
                 </div>
             </form>
