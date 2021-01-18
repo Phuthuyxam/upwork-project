@@ -41,6 +41,7 @@ class PageController extends Controller
     }
 
     public function add(Request $request,$template) {
+        $pageTemplate = PageTemplateConfigs::parse($template)['VALUE'];
         if ($request->isMethod('get')) {
             $currentLanguage = generatePrefixLanguage();
             $defaultTemplate = [PageTemplateConfigs::CONTACT['NAME'],PageTemplateConfigs::HOTEL['NAME']];
@@ -66,7 +67,7 @@ class PageController extends Controller
                 if (!empty($translationPost) && $translationPost->isNotEmpty()) {
                     $langCode = (LocationConfigs::getLanguageDefault()['VALUE'] == app()->getLocale()) ? $translationPost[0]->to_lang : $translationPost[0]->from_lang;
                     $langId = (LocationConfigs::getLanguageDefault()['VALUE'] == app()->getLocale()) ? $translationPost[0]->from_object_id : $translationPost[0]->to_object_id;
-                    $translationRecord = ['url' => renderTranslationUrl(route('page.edit', $langId), $langCode), 'lang_code' => $langCode];
+                    $translationRecord = ['url' => renderTranslationUrl(route('page.add', ['template' => $template]), $langCode), 'lang_code' => $langCode];
                 } else {
                     $translationRecord = false;
                 }
@@ -130,7 +131,7 @@ class PageController extends Controller
                         // check has record in relationship
                         $translationMapping = $this->translationRelationRepository->filter([['from_object_id',$page->id] , ['from_lang', $currentLang] , ['to_lang' , $request->translation], ['type' , 'post']]);
                         if($translationMapping && $translationMapping->isNotEmpty()) {
-                            $transUrl = renderTranslationUrl(route('page.edit', ['id' => $translationMapping[0]->to_object_id]), $request->translation);
+                            $transUrl = renderTranslationUrl(route('page.add', ['template' => $template]), $request->translation);
                             return redirect()->to($transUrl)->with('message', 'warning|Warning! when creating the translation. A record already exists. Please edit with this one.');
                         }
 
@@ -156,7 +157,7 @@ class PageController extends Controller
 
 
 
-                    $pageTemplate = PageTemplateConfigs::parse($template)['VALUE'];
+
                     $status = $request->input('status') == 0 ? PostStatus::DRAFT['VALUE'] : PostStatus::PUBLIC['VALUE'];
                     // Save Post
                     $dataPost = [
@@ -400,7 +401,7 @@ class PageController extends Controller
             'post_status' => $status,
             'post_excerpt' => $request->input('post_excerpt'),
             'post_content' => $request->input('post_content'),
-            'post_type' => PostType::PAGE['VALUE']
+            'post_type' => $template
         ];
 
 //        try {

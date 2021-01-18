@@ -8,7 +8,13 @@
                         <img src="{{ asset('client/images/logo22.png') }}" alt="" style="width: 100%;">
                     </span>
                     <span class="logo-lg">
-                        <img src="{{ json_decode(\App\Core\Helper\OptionHelpers::getSystemConfigByKey('general'))->logo }}" alt="" style="width: 100%;">
+                        @php
+                            $dataStystem = json_decode(\App\Core\Helper\OptionHelpers::getSystemConfigByKey('general'));
+                        @endphp
+                        @if(isset($dataStystem->logo))
+                            {!! \App\Core\Helper\FrontendHelpers::renderImage()  !!}
+                        @endif
+
                     </span>
                 </a>
             </div>
