@@ -24,7 +24,23 @@
                 @endif
                 @if(PermissionHelpers::canAccess(route('option.index')))
                     <li>
-                        <a href="{{ route('option.index') }}"  class="waves-effect">
+                        <a href="{{ route('option.index',) }}"  class="waves-effect">
+                            <i class="dripicons-checklist"></i>
+                            <span>Home</span>
+                        </a>
+                    </li>
+                @endif
+                @if(PermissionHelpers::canAccess(route('option.index')))
+                    <li>
+                        <a href="{{ route('option.index','home') }}"  class="waves-effect">
+                            <i class="dripicons-checklist"></i>
+                            <span>Home</span>
+                        </a>
+                    </li>
+                @endif
+                @if(PermissionHelpers::canAccess(route('option.index')))
+                    <li>
+                        <a href="{{ route('option.index','home') }}"  class="waves-effect">
                             <i class="dripicons-checklist"></i>
                             <span>Home</span>
                         </a>
@@ -89,9 +105,9 @@
                         @if(PermissionHelpers::canAccess(route('post.add')))
                             <li><a href="{{ route('post.add') }}">Create</a></li>
                         @endif
-                        @if(PermissionHelpers::canAccess(route('taxonomy.index')))
-                            <li><a href="{{ route('taxonomy.index') }}" class="waves-effect">Brands</a></li>
-                        @endif
+{{--                        @if(PermissionHelpers::canAccess(route('taxonomy.index')))--}}
+{{--                            <li><a href="{{ route('taxonomy.index') }}" class="waves-effect">Brands</a></li>--}}
+{{--                        @endif--}}
                         @if(PermissionHelpers::canAccess(route('post.index')))
                             <li><a href="{{ route('post.index') }}">All Hotels</a></li>
                         @endif

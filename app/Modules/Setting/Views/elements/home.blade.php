@@ -22,7 +22,7 @@
         <a class="nav-link" data-toggle="tab" href="#tab4" role="tab">Message</a>
     </li>
     <li class="nav-item">
-        <a class="nav-link" data-toggle="tab" href="#tab5" role="tab">Patnert</a>
+        <a class="nav-link" data-toggle="tab" href="#tab5" role="tab">Partner</a>
     </li>
 </ul>
 

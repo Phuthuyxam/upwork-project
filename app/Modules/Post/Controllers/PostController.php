@@ -146,20 +146,18 @@ class PostController extends Controller
                         'meta_value' => $request->input('price') ? json_encode($request->input('price')) : '',
                         'created_at' => date('Y-m-d H:i:s')
                     ],
+                    [
+                        'post_id' => $postId,
+                        'meta_key' => MetaKey::LOGO['VALUE'],
+                        'meta_value' => $request->input('logo') ? json_encode($request->input('logo')) : '',
+                        'created_at' => date('Y-m-d H:i:s')
+                    ],
                 ];
 
                 if ($this->postMetaRepository->insert($dataPostMeta)) {
                     $result = true;
                 }
 
-                // Save term relation
-                $dataTermRelation = [
-                    'object_id' => $postId,
-                    'term_taxonomy_id' => $request->input('taxonomy')
-                ];
-                if ($this->termRelationRepository->create($dataTermRelation)) {
-                    $result = true;
-                }
             }
 
 
@@ -362,6 +360,16 @@ class PostController extends Controller
                     }
                 }
 
+                if ($request->input('logo')) {
+                    $condition = [['post_id','=',$id],['meta_key' ,'=', MetaKey::THUMBNAIL['VALUE']]];
+                    $dataPostMeta =[
+                        'meta_value' => json_encode($request->input('logo'))
+                    ];
+                    if ($this->postMetaRepository->updateByCondition($condition,$dataPostMeta)) {
+                        $result = true;
+                    }
+                }
+
                 // Save map
                 $mapCondition = [['post_id','=',$id],['meta_key' ,'=', MetaKey::LOCATION['VALUE']]];
                 $dataMap = [
@@ -380,26 +388,6 @@ class PostController extends Controller
 
                 if ($this->postMetaRepository->updateByCondition($mapCondition,$metaMap)) {
                     $result = true;
-                }
-
-                // Save term relation
-                $taxonomy = $request->input('taxonomy');
-                if (!empty($taxonomy)) {
-                    $condition = [['object_id','=',$id]];
-
-                    // check record
-                    $record =  $this->termRelationRepository->getInstantModel()->where($condition)->get();
-                    if($record && $record->isEmpty()) {
-                        $this->termRelationRepository->create(['object_id' => $id , 'term_taxonomy_id' => $request->input('taxonomy')]);
-                    } else {
-                        $dataTermRelation = [
-                            'term_taxonomy_id' => $request->input('taxonomy')
-                        ];
-
-                        if ($this->termRelationRepository->updateByCondition($condition,$dataTermRelation)) {
-                            $result = true;
-                        }
-                    }
                 }
             }
 

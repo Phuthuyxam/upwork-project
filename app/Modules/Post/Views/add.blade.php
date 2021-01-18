@@ -119,7 +119,7 @@
                                         </div>
                                         <div class="form-group">
                                             <label for="rate">Rate<span style="color: red">*</span></label>
-                                            <input type="number" class="form-control" name="rate" id="rate"
+                                            <input type="number" class="form-control required" name="rate" id="rate"
                                                    placeholder="Rate" max="5" min="0"
                                                    value="{{ old('rate') }}">
                                             <p class="text-danger error-message" style="font-weight: bold">
@@ -130,7 +130,7 @@
                                         </div>
                                         <div class="form-group">
                                             <label for="price">Price<span style="color: red">*</span></label>
-                                            <input type="text" class="form-control" name="price" id="price" placeholder="Price" value="{{ old('price') }}">
+                                            <input type="text" class="form-control required" name="price" id="price" placeholder="Price" value="{{ old('price') }}">
                                             <p class="text-danger error-message" style="font-weight: bold">
                                                 @error('price')
                                                 {{ $message }}
@@ -154,6 +154,10 @@
                                         <div class="form-group">
                                             <label for="price">Thumbnail<span style="color: red">*</span></label>
                                             {!!  renderMediaManage('thumb') !!}
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="price">Logo<span style="color: red">*</span></label>
+                                            {!!  renderMediaManage('logo') !!}
                                         </div>
                                         <div class="form-group">
                                             <label for="file">Banner<span style="color: red">*</span></label>
@@ -341,24 +345,24 @@
                             <button type="submit" class="btn btn-primary btn-submit waves-effect waves-light">Publish</button>
                         </div>
                     </div>
-                    <div class="card">
-                        <h5 class="card-header mt-0 font-size-16">Select Category</h5>
-                        <div class="card-body">
-                            <div class="form-group">
-                                <select name="taxonomy" id="tax" class="form-control required">
-                                    <option value="">Select Category</option>
-                                    @foreach($taxonomy as $value)
-                                        <option value="{{ $value['id'] }}" {{ old('taxonomy') == $value['id'] ? 'selected': '' }}>{{ $value['name'] }}</option>
-                                    @endforeach
-                                </select>
-                                <p class="text-danger error-message" style="font-weight: bold" >
-                                    @error('post_title')
-                                    {{ $message }}
-                                    @enderror
-                                </p>
-                            </div>
-                        </div>
-                    </div>
+{{--                    <div class="card">--}}
+{{--                        <h5 class="card-header mt-0 font-size-16">Select Category</h5>--}}
+{{--                        <div class="card-body">--}}
+{{--                            <div class="form-group">--}}
+{{--                                <select name="taxonomy" id="tax" class="form-control required">--}}
+{{--                                    <option value="">Select Category</option>--}}
+{{--                                    @foreach($taxonomy as $value)--}}
+{{--                                        <option value="{{ $value['id'] }}" {{ old('taxonomy') == $value['id'] ? 'selected': '' }}>{{ $value['name'] }}</option>--}}
+{{--                                    @endforeach--}}
+{{--                                </select>--}}
+{{--                                <p class="text-danger error-message" style="font-weight: bold" >--}}
+{{--                                    @error('post_title')--}}
+{{--                                    {{ $message }}--}}
+{{--                                    @enderror--}}
+{{--                                </p>--}}
+{{--                            </div>--}}
+{{--                        </div>--}}
+{{--                    </div>--}}
                 </div>
             </div>
             </form>
@@ -414,16 +418,22 @@
                 if (val > max) {
                     $(this).val(max);
                 }
-            })
-
-            $('#tax').on('change',function () {
-                if ($(this).val() == '') {
+                if($(this).val() == '') {
                     $(this).addClass('error');
                     $(this).parents('.form-group').find('.error-message').text('This field cannot be null');
-                }else {
+                }else{
                     $(this).removeClass('error');
                     $(this).parents('.form-group').find('.error-message').text('');
-                    $(this).removeClass('required');
+                }
+            })
+
+            $('#price').on('change',function (){
+                if($(this).val() == '') {
+                    $(this).addClass('error');
+                    $(this).parents('.form-group').find('.error-message').text('This field cannot be null');
+                }else{
+                    $(this).removeClass('error');
+                    $(this).parents('.form-group').find('.error-message').text('');
                 }
             })
 
@@ -489,13 +499,13 @@
         function checkRequired(formId) {
             let valid = true;
             $('#' + formId).find('.required').each(function () {
-                if ($(this).val().trim() === '') {
+                if ($(this).val().trim() == '') {
                     $(this).addClass('error');
                     $(this).parents('.form-group').find('.error-message').text('This field cannot be null');
                     valid = false;
                 } else {
                     $(this).removeClass('error');
-                    $(this).parents('.form-group').find('.error-message').text('This field cannot be null');
+                    $(this).parents('.form-group').find('.error-message').text('');
                 }
             })
             if (CKEDITOR.instances.description.getData() == '') {

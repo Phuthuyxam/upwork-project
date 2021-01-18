@@ -31,6 +31,7 @@ class MetaKey extends BasicEnum
 
     const RATE = ['VALUE' => 11, 'NAME' => 'rate'];
     const LOCATION = ['VALUE' => 12, 'NAME' => 'location'];
+    const LOGO = ['VALUE' => 13, 'NAME' => 'location'];
 
     public static function display($value) {
         $oClass = new \ReflectionClass(__CLASS__);
