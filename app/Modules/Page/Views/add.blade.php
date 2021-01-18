@@ -180,9 +180,9 @@
                                     </div>
                                     <div class="tab-pane p-3" id="slide" role="tabpanel">
                                         @if($template == \App\Core\Glosary\PageTemplateConfigs::SERVICE['NAME'])
-                                            @if($pageMetaMap)
+                                            @if(isset($pageMetaMap[\App\Core\Glosary\MetaKey::COMPLETE_ITEM['NAME']]))
                                                 @include('Page::elements.service',
-                                                        ['serviceItem' => $pageMetaMap[\App\Core\Glosary\MetaKey::COMPLETE_ITEM['NAME']]])
+                                                    ['serviceItem' => $pageMetaMap[\App\Core\Glosary\MetaKey::COMPLETE_ITEM['NAME']]])
                                             @else
                                                 @include('Page::elements.service')
                                             @endif
@@ -220,7 +220,7 @@
 @endsection
 @section('script')
     <script>
-        const maxFileSize = '{{ \App\Core\Glosary\MaxFileSize::IMAGE['VALUE'] }}';
+        {{--const maxFileSize = '{{ \App\Core\Glosary\MaxFileSize::IMAGE['VALUE'] }}';--}}
         {{--const slugs = JSON.parse('{!! json_encode($slugs) !!}')--}}
         CKEDITOR.replace('description', {filebrowserImageBrowseUrl: '/file-manager/ckeditor'});
         $(document).ready(function () {
