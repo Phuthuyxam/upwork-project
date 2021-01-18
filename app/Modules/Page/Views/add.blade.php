@@ -1,6 +1,6 @@
 @extends('backend.default')
 @section('title')
-    Add Page
+    {{ \App\Core\Glosary\PageTemplateConfigs::parse($template)['DISPLAY'] }}
 @endsection
 @section('style')
     <style>
@@ -73,7 +73,7 @@
     </style>
 @endsection
 @section('heading')
-    <h4 class="page-title font-size-18">Add Page</h4>
+    <h4 class="page-title font-size-18">{{ \App\Core\Glosary\PageTemplateConfigs::parse($template)['DISPLAY'] }}</h4>
 @endsection
 @section('content')
     <div class="content-wrapper">
@@ -84,7 +84,7 @@
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
                 Some fields need to required. Please check it again !
             </div>
-            <form action="{{ route('page.add') }}" id="add-form" method="post" role="form" enctype="multipart/form-data">
+            <form action="{{ route('page.add',$template) }}" id="add-form" method="post" role="form" enctype="multipart/form-data">
                 <div class="row">
                     <div class="col-9">
                         <div class="card">
@@ -93,19 +93,20 @@
                                     <li class="nav-item" id="commonTab">
                                         <a class="nav-link active" id="commonTab" data-toggle="tab" href="#common" role="tab">Common</a>
                                     </li>
-                                    <li class="nav-item" id="customTab" style="display: none">
+                                    @if(!in_array($template,$defaultTemplate))
+                                    <li class="nav-item" id="customTab">
                                         <a class="nav-link " data-toggle="tab" href="#slide" role="tab">Custom Setting</a>
                                     </li>
-
+                                    @endif
                                 </ul>
                                 <div class="tab-content">
                                     @csrf
                                     <div class="tab-pane active p-3" id="common" role="tabpanel">
                                         <div class="form-group">
-                                            <label for="title">Title</label>
+                                            <label for="title">Title <span style="color: red">*</span></label>
                                             <input type="text" class="form-control required" name="post_title" id="title"
                                                    placeholder="Title"
-                                                   value="{{ old('post_title') }}">
+                                                   value="{{ old('post_title') ? old('post_title') : ( $page ? $page->post_title : '') }}">
                                             <p style="font-style: italic; font-size: 12px">The name is how it appears on your
                                                 website</p>
                                             <p class="text-danger error-message" style="font-weight: bold" id="title-error">
@@ -115,10 +116,10 @@
                                             </p>
                                         </div>
                                         <div class="form-group">
-                                            <label for="slug">Slug</label>
+                                            <label for="slug">Slug <span style="color: red">*</span></label>
                                             <input type="text" class="form-control required" name="post_name" id="slug"
                                                    placeholder="Slug"
-                                                   value="{{ old('post_name') }}">
+                                                   value="{{ old('post_name') ? old('post_name') : ( $page ? $page->post_name : '') }}">
                                             <p style="font-style: italic; font-size: 12px">The "slug" is the URL-friendly of the
                                                 name. It is usually all lower case and contains only letters, numbers, and
                                                 hyphens and must be unique</p>
@@ -129,8 +130,8 @@
                                             </p>
                                         </div>
                                         <div class="form-group">
-                                            <label for="excerpt">Excerpt</label>
-                                            <textarea type="text" class="form-control required" name="post_excerpt" id="excerpt" placeholder="Excerpt" rows="8">{{ old('post_excerpt') }}</textarea>
+                                            <label for="excerpt">Excerpt <span style="color: red">*</span></label>
+                                            <textarea type="text" class="form-control required" name="post_excerpt" id="excerpt" placeholder="Excerpt" rows="8">{{ old('post_excerpt') ? old('post_excerpt') : ($page ? $page->post_excerpt : '') }}</textarea>
                                             <p class="text-danger error-message" style="font-weight: bold" id="excerpt-error">
                                                 @error('post_excerpt')
                                                 {{ $message }}
@@ -138,11 +139,11 @@
                                             </p>
                                         </div>
                                         <div class="form-group">
-                                            <label for="description">Content</label>
+                                            <label for="description">Content <span style="color: red">*</span></label>
                                             <div class="editor-wrapper">
                                                 <textarea name="post_content" id="description" class="form-control"
                                                           style="width: 100%; height: 90px"
-                                                          placeholder="Description">{{ old('post_content') }}</textarea>
+                                                          placeholder="Description">{{ old('post_content') ? old('post_content') : ( $page ? $page->post_content : '' ) }}</textarea>
                                             </div>
                                             <p class="text-danger error-message" style="font-weight: bold"
                                                id="description-error">
@@ -152,25 +153,25 @@
                                             </p>
                                         </div>
                                         <div class="form-group">
-                                            <label for="file">Banner</label>
+                                            <label for="file">Banner <span style="color: red">*</span></label>
                                             <table class="table table-bordered">
                                                 <tbody>
                                                 <tr>
                                                     <th style="vertical-align: middle; width: 100px">Desktop</th>
                                                     <td>
-                                                        {!!  renderMediaManage('files[]') !!}
+                                                        {!!  renderMediaManage('files[]',!empty($pageMetaMap) ? $pageMetaMap[\App\Core\Glosary\MetaKey::BANNER['NAME']][0] : '') !!}
                                                     </td>
                                                 </tr>
                                                 <tr>
                                                     <th style="vertical-align: middle; width: 100px">Tablet</th>
                                                     <td>
-                                                        {!!  renderMediaManage('files[]') !!}
+                                                        {!!  renderMediaManage('files[]',!empty($pageMetaMap) ? $pageMetaMap[\App\Core\Glosary\MetaKey::BANNER['NAME']][1] : '') !!}
                                                     </td>
                                                 </tr>
                                                 <tr>
                                                     <th style="vertical-align: middle; width: 100px">Mobile</th>
                                                     <td>
-                                                        {!!  renderMediaManage('files[]') !!}
+                                                        {!!  renderMediaManage('files[]',!empty($pageMetaMap) ? $pageMetaMap[\App\Core\Glosary\MetaKey::BANNER['NAME']][2] : '') !!}
                                                     </td>
                                                 </tr>
                                                 </tbody>
@@ -178,7 +179,15 @@
                                         </div>
                                     </div>
                                     <div class="tab-pane p-3" id="slide" role="tabpanel">
-
+                                        @if($template == \App\Core\Glosary\PageTemplateConfigs::SERVICE['NAME'])
+                                            @include('Page::elements.service',
+                                                    ['serviceItem' => $pageMetaMap[\App\Core\Glosary\MetaKey::COMPLETE_ITEM['NAME']]])
+{{--                                            @include('Page::elements.service')--}}
+                                        @endif
+                                        @if($template == \App\Core\Glosary\PageTemplateConfigs::ABOUT['NAME'])
+                                            @include('Page::elements.about', [ 'imageMap' => $imageMap , 'itemMap' => $itemMap ])
+{{--                                                @include('Page::elements.about')--}}
+                                        @endif
                                     </div>
                                 </div>
                             </div>
@@ -186,13 +195,11 @@
                     </div>
                     <div class="col-3">
                         <div class="card">
-                            <h5 class="card-header mt-0 font-size-16">Template</h5>
+                            <h5 class="card-header mt-0 font-size-16">Publish</h5>
                             <div class="card-body">
-                                <select name="template" class="form-control" id="template">
-                                    @foreach(\App\Core\Glosary\PageTemplateConfigs::getAll() as $value)
-                                        <option value="{{ $value['VALUE'] }}">{{ $value['NAME'] }}</option>
-                                    @endforeach
-                                </select>
+                                <div class="status">
+                                    <span><i class="dripicons-flag"></i> Status : {{ \App\Core\Glosary\PostStatus::DRAFT['NAME'] }}</span>
+                                </div>
                             </div>
                             <div class="card-footer" style="display: flex; align-items: center; justify-content: space-between">
                                 <input type="hidden" id="publishStatus" name="status">
@@ -215,34 +222,6 @@
         {{--const slugs = JSON.parse('{!! json_encode($slugs) !!}')--}}
         CKEDITOR.replace('description', {filebrowserImageBrowseUrl: '/file-manager/ckeditor'});
         $(document).ready(function () {
-
-            $('#template').on('change',function (){
-                let value = $(this).val();
-                $('#loading').show();
-                $.ajax({
-                    url : '{{ route('page.template') }}',
-                    type : 'POST',
-                    dataType: 'html',
-                    data : {
-                        _token : '{{ csrf_token() }}',
-                        template : value,
-                    },
-                    success : function (response){
-                        $('#loading').hide();
-                        if (response != 'default') {
-                            $('#slide').empty();
-                            $('#slide').append(response);
-                            $('#customTab').show();
-                        }else{
-                            $('#slide').empty();
-                            $('#customTab').hide();
-                        }
-                    },
-                    error : function (e) {
-                        console.log(e);
-                    }
-                })
-            })
 
             $('#title').on('change', function () {
                 let val = $(this).val();

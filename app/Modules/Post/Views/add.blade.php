@@ -91,7 +91,7 @@
                                     @csrf
                                     <div class="tab-pane active p-3" id="common" role="tabpanel">
                                         <div class="form-group">
-                                            <label for="title">Title</label>
+                                            <label for="title">Title<span style="color: red">*</span></label>
                                             <input type="text" class="form-control required" name="post_title" id="title"
                                                    placeholder="Title"
                                                    value="{{ old('post_title') }}">
@@ -104,7 +104,7 @@
                                             </p>
                                         </div>
                                         <div class="form-group">
-                                            <label for="slug">Slug</label>
+                                            <label for="slug">Slug<span style="color: red">*</span></label>
                                             <input type="text" class="form-control required" name="post_name" id="slug"
                                                    placeholder="Slug"
                                                    value="{{ old('post_name') }}">
@@ -118,7 +118,7 @@
                                             </p>
                                         </div>
                                         <div class="form-group">
-                                            <label for="rate">Rate</label>
+                                            <label for="rate">Rate<span style="color: red">*</span></label>
                                             <input type="number" class="form-control" name="rate" id="rate"
                                                    placeholder="Rate" max="5" min="0"
                                                    value="{{ old('rate') }}">
@@ -129,7 +129,7 @@
                                             </p>
                                         </div>
                                         <div class="form-group">
-                                            <label for="price">Price</label>
+                                            <label for="price">Price<span style="color: red">*</span></label>
                                             <input type="text" class="form-control" name="price" id="price" placeholder="Price" value="{{ old('price') }}">
                                             <p class="text-danger error-message" style="font-weight: bold">
                                                 @error('price')
@@ -138,7 +138,7 @@
                                             </p>
                                         </div>
                                         <div class="form-group">
-                                            <label for="description">Description</label>
+                                            <label for="description">Description<span style="color: red">*</span></label>
                                             <div class="editor-wrapper">
                                                 <textarea name="post_content" id="description" class="form-control"
                                                           style="width: 100%; height: 90px"
@@ -152,11 +152,11 @@
                                             </p>
                                         </div>
                                         <div class="form-group">
-                                            <label for="price">Thumbnail</label>
+                                            <label for="price">Thumbnail<span style="color: red">*</span></label>
                                             {!!  renderMediaManage('thumb') !!}
                                         </div>
                                         <div class="form-group">
-                                            <label for="file">Banner</label>
+                                            <label for="file">Banner<span style="color: red">*</span></label>
                                             <table class="table table-bordered">
                                                 <tbody>
                                                     <tr>
@@ -185,7 +185,7 @@
                                         <table class="table-bordered table">
                                             <thead>
                                             <tr>
-                                                <th>Image</th>
+                                                <th>Image<span style="color: red">*</span></th>
                                                 <th></th>
                                             </tr>
                                             </thead>

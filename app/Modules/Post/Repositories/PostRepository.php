@@ -3,6 +3,7 @@
 namespace App\Modules\Post\Repositories;
 
 use App\Core\Glosary\LocationConfigs;
+use App\Core\Glosary\PageTemplateConfigs;
 use App\Core\Glosary\PaginationConfigs;
 use App\Core\Glosary\PostStatus;
 use App\Core\Glosary\PostType;
@@ -42,7 +43,7 @@ class PostRepository extends EloquentRepository
         return $this->_model->join('users', 'users.id', '=', 'posts'. $this->_suffixes .'.post_author')
 //            ->join('term_relationships'. $this->_suffixes, 'posts'. $this->_suffixes .'.id', '=', 'term_relationships'. $this->_suffixes .'.object_id')
 //            ->join('terms'. $this->_suffixes, 'terms'. $this->_suffixes .'.id', '=', 'term_relationships'. $this->_suffixes .'.term_taxonomy_id')
-            ->where('posts'. $this->_suffixes .'.post_type',PostType::POST['VALUE'])
+            ->where('posts'. $this->_suffixes .'.post_type',PageTemplateConfigs::POST['VALUE'])
             ->select('posts'. $this->_suffixes .'.id as postId', 'posts'. $this->_suffixes .'.post_title as postTitle', 'users.name as userName',
                 'users.id as userId', 'posts'. $this->_suffixes .'.post_status as postStatus',
                 'posts'. $this->_suffixes .'.created_at as createdAt', 'posts'. $this->_suffixes .'.updated_at as updatedAt')

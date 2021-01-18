@@ -9,7 +9,7 @@
                 <li class="menu-title">Main</li>
 
                 <li>
-                    <a href="#" class="waves-effect">
+                    <a href="{{ route('dashboard') }}" class="waves-effect">
                         <i class="dripicons-device-desktop"></i>
                         <span>Dashboard</span>
                     </a>
@@ -18,7 +18,7 @@
                     <li>
                         <a href="{{route('filemanager.index')}}" class="waves-effect">
                             <i class="dripicons-photo-group"></i>
-                            <span>Gallery</span>
+                            <span>Media Manager</span>
                         </a>
                     </li>
                 @endif
