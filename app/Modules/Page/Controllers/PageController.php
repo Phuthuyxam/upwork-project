@@ -47,6 +47,7 @@ class PageController extends Controller
             $page = $this->postRepository->getInstantModel()->where('post_type',$template)->first();
             $pageMeta = [];
             $pageMetaMap = [];
+            $translationRecord = false;
             if ($page) {
                 $pageMeta = $page->postMeta;
                 if ($pageMeta) {
@@ -54,6 +55,22 @@ class PageController extends Controller
                         $pageMetaMap[MetaKey::display($value['meta_key'])] = json_decode($value['meta_value']);
                     }
                 }
+
+                // add translation record
+                if (LocationConfigs::getLanguageDefault()['VALUE'] == app()->getLocale()) {
+                    $translationPost = $page->postFromTranslation;
+                }
+
+                $translationPost = $page->postToTranslation;
+
+                if (!empty($translationPost) && $translationPost->isNotEmpty()) {
+                    $langCode = (LocationConfigs::getLanguageDefault()['VALUE'] == app()->getLocale()) ? $translationPost[0]->to_lang : $translationPost[0]->from_lang;
+                    $langId = (LocationConfigs::getLanguageDefault()['VALUE'] == app()->getLocale()) ? $translationPost[0]->from_object_id : $translationPost[0]->to_object_id;
+                    $translationRecord = ['url' => renderTranslationUrl(route('page.edit', $langId), $langCode), 'lang_code' => $langCode];
+                } else {
+                    $translationRecord = false;
+                }
+
             }
             if ($template == PageTemplateConfigs::ABOUT['NAME']) {
                 $imageMap = [];
@@ -88,23 +105,59 @@ class PageController extends Controller
                         }
                     }
                 }
-                return view('Page::add',compact('template','defaultTemplate','pageMetaMap','imageMap','itemMap','page'));
+                return view('Page::add',compact('template','defaultTemplate','pageMetaMap','imageMap','itemMap','page','translationRecord'));
             }
-            return view('Page::add',compact('template','defaultTemplate','page','pageMetaMap'));
+            return view('Page::add',compact('template','defaultTemplate','page','pageMetaMap', 'translationRecord'));
         }else{
             try {
-
+                $currentLang = app()->getLocale();
                 $page = $this->postRepository->getInstantModel()->where('post_type',$template)->first();
 
                 if ($page) {
-                    $validate = $request->validate([
+                    $validateRule = [
                         'post_title' => 'required|max:191',
                         'post_name' => 'required|unique:posts,id,'.$page->id,
                         'post_excerpt' => 'required',
-                    ]);
+                    ];
+
+                    $prefixLanguage = generatePrefixLanguage();
+                    if(isset($prefixLanguage) && !empty($prefixLanguage) && LocationConfigs::checkLanguageCode(str_replace("/","",$prefixLanguage))
+                        && LocationConfigs::getLanguageDefault()['VALUE'] != str_replace("/","",$prefixLanguage))
+                        $validateRule['post_name'] = "required|unique:posts_". str_replace("/","",$prefixLanguage) .",post_name," . $page->id;
+                    $validate = $request->validate($validateRule);
+                    // make translation
+                    if(isset($request->translation) && !empty($request->translation) && LocationConfigs::checkLanguageCode($request->translation)) {
+                        // check has record in relationship
+                        $translationMapping = $this->translationRelationRepository->filter([['from_object_id',$page->id] , ['from_lang', $currentLang] , ['to_lang' , $request->translation], ['type' , 'post']]);
+                        if($translationMapping && $translationMapping->isNotEmpty()) {
+                            $transUrl = renderTranslationUrl(route('page.edit', ['id' => $translationMapping[0]->to_object_id]), $request->translation);
+                            return redirect()->to($transUrl)->with('message', 'warning|Warning! when creating the translation. A record already exists. Please edit with this one.');
+                        }
+
+                        $translation = $this->translationSave($request, $template);
+                        if($translation){
+                            // make record relationship translation
+                            if(isset($translation['post_id']) && !empty($translation['post_id'])) {
+                                $translationRecord = [
+                                    'to_object_id' => $translation['post_id'],
+                                    'from_object_id' => $page->id,
+                                    'to_lang' => app()->getLocale(),
+                                    'from_lang' => $currentLang,
+                                    'type' => 'post',
+                                ];
+                                if($this->translationRelationRepository->create($translationRecord))
+                                    return redirect()->to($translation['redirect_url'])->with('message', $translation['message']);
+                                return redirect()->back()->with('message', 'danger|Something wrong when make a translation record try again!');
+                            }
+                            return redirect()->to($translation['redirect_url'])->with('message', $translation['message']);
+                        }
+                        return redirect()->back()->with('message', 'danger|Something wrong when make a translation record try again!');
+                    }
+
+
+
                     $pageTemplate = PageTemplateConfigs::parse($template)['VALUE'];
                     $status = $request->input('status') == 0 ? PostStatus::DRAFT['VALUE'] : PostStatus::PUBLIC['VALUE'];
-
                     // Save Post
                     $dataPost = [
                         'post_title' => $request->input('post_title'),
@@ -332,14 +385,14 @@ class PageController extends Controller
 
 
     // translation
-    public function translationSave(Request $request) {
+    public function translationSave(Request $request, $template) {
         app()->setLocale($request->translation);
         $this->postRepository->setModel();
         $this->postMetaRepository->setModel();
         $post_title = $request->input('post_title');
         $status = $request->input('status') == 0 ? PostStatus::DRAFT['VALUE'] : PostStatus::PUBLIC['VALUE'];
         $result = false;
-
+        $pageTemplate = PageTemplateConfigs::parse($template)['VALUE'];
         $dataPost = [
             'post_title' => $post_title,
             'post_name' => $request->input('post_name'),
@@ -350,58 +403,41 @@ class PageController extends Controller
             'post_type' => PostType::PAGE['VALUE']
         ];
 
-        try {
+//        try {
 
             $translationRecord = $this->postRepository->filter([['post_name' , $request->input('post_name')]]);
 
             if($translationRecord && $translationRecord->isNotEmpty()) {
                 // update
-                $transUrl = renderTranslationUrl(route('page.edit', ['id' => $translationRecord[0]->id]), $request->translation);
+                $transUrl = renderTranslationUrl(route('page.add', ['template' => $template]), $request->translation);
                 return [ 'redirect_url' => $transUrl, 'message' => 'warning|Warning! when creating the translation. A record already exists. Please edit with this one.' ];
             } else {
                 $postId = $this->postRepository->create($dataPost)->id;
                 if ($postId) {
-                    $result = false;
                     $files = $request->input('files');
                     if (isset($files) && !empty($files)) {
-                        $fileMap = [];
-                        foreach ($files as $value) {
-                            $fileMap[] = $value;
-                        }
-                        $dataMeta = [
+                        $dataMeta =
                             [
                                 'post_id' => $postId,
                                 'meta_key' => MetaKey::BANNER['VALUE'],
-                                'meta_value' => json_encode($fileMap)
-                            ],
-
-                            [
-                                'post_id' => $postId,
-                                'meta_key' => MetaKey::PAGE_TEMPLATE['VALUE'],
-                                'meta_value' => $request->input('template')
-                            ],
-                        ];
-                        $this->postMetaRepository->getInstantModel()->insert($dataMeta);
+                                'meta_value' => json_encode($files)
+                            ];
+                        $this->postMetaRepository->create($dataMeta);
                     }
 
-                    if ($request->input('template') == PageTemplateConfigs::SERVICE['VALUE']) {
+                    if ($pageTemplate == PageTemplateConfigs::SERVICE['VALUE']) {
 
                         $this->createPage($request, $postId, MetaKey::COMPLETE_ITEM['VALUE']);
 
-                    } else if ($request->input('template') == PageTemplateConfigs::ABOUT['VALUE']) {
+                    } else if ($pageTemplate == PageTemplateConfigs::ABOUT['VALUE']) {
 
                         $this->createPage($request, $postId, MetaKey::COMPLETE_ITEM['VALUE'], MetaKey::IMAGE_ITEM['VALUE']);
 
-                    } else {
-                        $this->postMetaRepository->create([
-                            'post_id' => $postId,
-                            'meta_key' => MetaKey::PAGE_TEMPLATE['VALUE'],
-                            'meta_value' => $request->input('template')
-                        ]);
                     }
+
                     Log::info('User ' . Auth::id() . ' has created page' . $postId);
 
-                    $transUrl = renderTranslationUrl(route('page.edit', ['id' => $postId]), $request->translation);
+                    $transUrl = renderTranslationUrl(route('page.add', ['template' => $template]), $request->translation);
                     return [ 'redirect_url' => $transUrl,
                         'message' => 'success|Successfully add a Translation"' . $request->input('post_name') . '" page', 'post_id' => $postId
                     ];
@@ -409,10 +445,11 @@ class PageController extends Controller
                 } else {
                     return false;
                 }
+
             }
 
-        } catch (\Throwable $th) {
-            return false;
-        }
+//        } catch (\Throwable $th) {
+//            return false;
+//        }
     }
 }

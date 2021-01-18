@@ -196,6 +196,40 @@
                         </div>
                     </div>
                     <div class="col-3">
+                        @if($page)
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="tab-translate">
+                                    @if(isset($translationRecord) && $translationRecord != false)
+                                        <a href="{{ $translationRecord['url'] }}"><i class="dripicons-flag"></i> Go to translation record {{ \App\Core\Glosary\LocationConfigs::getLanguageByCode($translationRecord['lang_code'])['DISPLAY'] }}</a>
+                                    @else
+
+                                        @php
+                                            $languages = \App\Core\Glosary\LocationConfigs::getAll();
+                                            $currentLang = app()->getLocale();
+
+                                        @endphp
+                                        @if(isset($languages) && !empty($languages))
+                                            <b><i class="dripicons-flag"></i> Make translation</b>
+                                            <select id="make-translation">
+                                                <option value="0">---choose language---</option>
+                                                @foreach($languages as $lan)
+                                                    @if($lan['VALUE'] != $currentLang)
+                                                        <option value="{{ $lan['VALUE'] }}" data-display="{{ $lan['DISPLAY'] }}">
+                                                            {{ $lan['DISPLAY'] }}
+                                                        </option>
+                                                    @endif
+                                                @endforeach
+                                            </select>
+                                        @endif
+
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+                        @endif
+
+
                         <div class="card">
                             <h5 class="card-header mt-0 font-size-16">Publish</h5>
                             <div class="card-body">
@@ -205,8 +239,9 @@
                             </div>
                             <div class="card-footer" style="display: flex; align-items: center; justify-content: space-between">
                                 <input type="hidden" id="publishStatus" name="status">
-                                <button type="submit" class="btn btn-info btn-draft waves-effect waves-light">Save Draft</button>
-                                <button type="submit" class="btn btn-primary btn-submit waves-effect waves-light">Publish</button>
+                                <input type="hidden" name="translation" id="translation_mode">
+                                <button type="submit" class="btn btn-info btn-draft waves-effect waves-light" id="ptx-save-btn-draf">Save Draft</button>
+                                <button type="submit" class="btn btn-primary btn-submit waves-effect waves-light" id="ptx-save-btn">Publish</button>
                             </div>
                         </div>
                     </div>
@@ -395,5 +430,22 @@
             })
             return valid;
         }
+        $('#make-translation').change(function (e){
+            e.preventDefault();
+            let lanCode = $(this).val();
+            if(lanCode === "0") {
+                $('#ptx-save-btn').text("Save");
+                $('#translation_mode').val("");
+                return
+            }
+            let display = $("#make-translation option:selected").data('display');
+            let text = "Are you sure make a translation to " + display + " ? After confirm you will complete with save button";
+            var r = confirm(text);
+            if (r == true) {
+                $('#translation_mode').val(lanCode);
+                $('#ptx-save-btn').text("Publish with "+display);
+                $('#ptx-save-btn-draf').text("Save Draft with "+display);
+            }
+        });
     </script>
 @endsection
