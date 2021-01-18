@@ -12,9 +12,8 @@
                             $dataStystem = json_decode(\App\Core\Helper\OptionHelpers::getSystemConfigByKey('general'));
                         @endphp
                         @if(isset($dataStystem->logo))
-                            {!! \App\Core\Helper\FrontendHelpers::renderImage()  !!}
+                            {!! \App\Core\Helper\FrontendHelpers::renderImage($dataStystem->logo)  !!}
                         @endif
-
                     </span>
                 </a>
             </div>

@@ -30,9 +30,10 @@
 <div class="tab-content">
     <div class="tab-pane active p-3" id="tab1" role="tabpanel">
 
-        <table class="table table-bordered">
+        <table class="table table-bordered table-striped">
             <thead>
                 <tr>
+                    <th></th>
                     <th>Slider</th>
                     <th></th>
                 </tr>
@@ -40,8 +41,9 @@
             <tbody>
 
                 @if(isset($dataHome['slider']) && !empty($dataHome['slider']))
-                    @foreach($dataHome['slider'] as $slider)
+                    @foreach($dataHome['slider'] as $key => $slider)
                         <tr>
+                            <td>{{ $key + 1 }}</td>
                             <td style="">
                                 <div class="row">
                                     <div class="col-lg-12" style="margin-bottom: 30px">
@@ -177,6 +179,7 @@
                     @endforeach
                 @else
                     <tr>
+                        <td class="counter">1</td>
                         <td style="">
                             <div class="row">
                                 <div class="col-lg-12" style="margin-bottom: 30px">
@@ -620,11 +623,7 @@
                 </div>
             </div>
         </div>
-
-
-
     </div>
-
 
     <div class="tab-pane p-3" id="tab5" role="tabpanel">
         <div class="form-group row">
@@ -745,11 +744,8 @@
                                 <button type="button" class="btn btn-success btn-add-type"><i class="dripicons-plus"></i></button>
                             </div>
                         </td>
-
                     </tr>
                 @endif
-
-
                 </tbody>
             </table>
         </div>

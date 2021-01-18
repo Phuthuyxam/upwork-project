@@ -81,16 +81,6 @@
                             <div class="card-body">
                                 @csrf
                                 @include('Setting::elements.'.$key)
-                                {{-- SEO form for home page --}}
-                                @if($key == \App\Core\Glosary\OptionMetaKey::HOME['VALUE'])
-                                    <div class="car">
-                                        <div class="card-body row">
-                                            <div class="col-8">
-                                                @include('Seo::seo',['objectId' => \App\Core\Glosary\SeoConfigs::SEOPAGEFIXED['HOMEPAGE']['FIXID'] , 'seoType' => \App\Core\Glosary\SeoConfigs::SEOTYPE['SINGLE']['KEY'] ])
-                                            </div>
-                                        </div>
-                                    </div>
-                                @endif
                             </div>
                         </div>
                     </div>
@@ -134,6 +124,10 @@
                                 </div>
                             </div>
                         </div>
+                        {{-- SEO form for home page --}}
+                        @if($key == \App\Core\Glosary\OptionMetaKey::HOME['VALUE'])
+                             @include('Seo::seo',['objectId' => \App\Core\Glosary\SeoConfigs::SEOPAGEFIXED['HOMEPAGE']['FIXID'] , 'seoType' => \App\Core\Glosary\SeoConfigs::SEOTYPE['SINGLE']['KEY'] ])
+                        @endif
                     </div>
                 </div>
             </form>
@@ -154,6 +148,9 @@
         row.find('.home-slider-image').val('');
         row.find('.image-preview-container').html("");
         row.find('.home_brand_url').val('');
+        let count = row.find('.counter').text();
+        count = parseInt(count) + 1;
+        row.find('.counter').text(count);
         $(this).parents('tbody').append(row);
     })
     $('body').on('click','.btn-delete-type',function (e){
