@@ -9,9 +9,6 @@
     <tbody>
 
     @if(isset($serviceItem) && !empty($serviceItem))
-        @php
-            $serviceItem = json_decode($serviceItem);
-        @endphp
         @foreach($serviceItem as $key=> $value)
             <tr>
                 <td style="max-width: 400px;">

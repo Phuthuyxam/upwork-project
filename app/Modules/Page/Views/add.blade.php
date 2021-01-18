@@ -180,13 +180,15 @@
                                     </div>
                                     <div class="tab-pane p-3" id="slide" role="tabpanel">
                                         @if($template == \App\Core\Glosary\PageTemplateConfigs::SERVICE['NAME'])
-                                            @include('Page::elements.service',
-                                                    ['serviceItem' => $pageMetaMap[\App\Core\Glosary\MetaKey::COMPLETE_ITEM['NAME']]])
-{{--                                            @include('Page::elements.service')--}}
+                                            @if($pageMetaMap)
+                                                @include('Page::elements.service',
+                                                        ['serviceItem' => $pageMetaMap[\App\Core\Glosary\MetaKey::COMPLETE_ITEM['NAME']]])
+                                            @else
+                                                @include('Page::elements.service')
+                                            @endif
                                         @endif
                                         @if($template == \App\Core\Glosary\PageTemplateConfigs::ABOUT['NAME'])
                                             @include('Page::elements.about', [ 'imageMap' => $imageMap , 'itemMap' => $itemMap ])
-{{--                                                @include('Page::elements.about')--}}
                                         @endif
                                     </div>
                                 </div>
