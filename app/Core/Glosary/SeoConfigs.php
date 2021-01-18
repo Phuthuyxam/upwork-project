@@ -11,6 +11,9 @@ class SeoConfigs extends BasicEnum
         'SINGLE' => ['KEY' => 'seo.single'],
         'GROUP' => ['KEY' => 'seo.group']
     ];
+    const SEOPAGEFIXED = [
+        'HOMEPAGE' => ['FIXID' => 99999999]
+    ];
 
     const SEOKEY = [
         'SEO' => [

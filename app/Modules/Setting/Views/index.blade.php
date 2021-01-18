@@ -134,6 +134,20 @@
                                     </div>
                                 </div>
                             </form>
+
+                            {{-- SEO form for home page --}}
+                            @if($key == \App\Core\Glosary\OptionMetaKey::HOME['VALUE'])
+                                <div class="car">
+                                    <div class="card-body row">
+                                        <div class="col-8">
+                                            @include('Seo::seo',['objectId' => \App\Core\Glosary\SeoConfigs::SEOPAGEFIXED['HOMEPAGE']['FIXID'] , 'seoType' => \App\Core\Glosary\SeoConfigs::SEOTYPE['SINGLE']['KEY'] ])
+                                        </div>
+                                    </div>
+                                </div>
+                            @endif
+
+
+
                         </div>
                     </div>
                 </div>
