@@ -50,26 +50,6 @@
                                           id="{{ \App\Core\Glosary\SeoConfigs::SEOKEY['SEO']['DESC'] }}" rows="3"></textarea>
                             </div>
 
-                            <div class="mt-4">
-                                <label class="mb-1">Cornerstone content</label>
-                                <p class="text-muted mb-3 font-size-14">
-                                    Cornerstone content should be the most important and extensive articles on your site.
-                                    <a href="https://yoa.st/1i9?php_version=7.4&platform=wordpress&platform_version=5.5.3&software=free&software_version=15.5&days_active=0-1&user_language=en_US">Learn more about Cornerstone Content. </a>
-                                </p>
-
-                                <div style="display: flex; align-items: center">
-                                    Mark as cornerstone content
-                                    <div style="line-height: 0; margin-left: auto">
-                                        <input type="checkbox" switch="primary"
-                                               name="{{ \App\Core\Glosary\SeoConfigs::SEOKEY['SEO']['CORNERSTONE_CONTENT'] }}"
-                                               id="{{ \App\Core\Glosary\SeoConfigs::SEOKEY['SEO']['CORNERSTONE_CONTENT'] }}">
-                                        <label for="{{ \App\Core\Glosary\SeoConfigs::SEOKEY['SEO']['CORNERSTONE_CONTENT'] }}" data-on-label="On" data-off-label="Off" style="margin: 0"></label>
-                                    </div>
-
-                                </div>
-
-                            </div>
-
 
                             <div class="mt-4">
                                 <label class="mb-1">Allow search engines to show this Post in search results?</label>
@@ -251,14 +231,6 @@
                                     </label>
                                     <input type="text" maxlength="25" name="{{ \App\Core\Glosary\SeoConfigs::SEOKEY['SOCIAL']['TWITTER']['TITLE'] }}"
                                            id="{{ \App\Core\Glosary\SeoConfigs::SEOKEY['SOCIAL']['TWITTER']['TITLE'] }}" class="form-control"/>
-                                </div>
-
-                                <div class="mt-4">
-                                    <label class="mb-1">
-                                        Twitter description
-                                    </label>
-                                    <textarea class="form-control"  name="{{ \App\Core\Glosary\SeoConfigs::SEOKEY['SOCIAL']['TWITTER']['DESCRIPTION'] }}"
-                                              id="{{ \App\Core\Glosary\SeoConfigs::SEOKEY['SOCIAL']['TWITTER']['DESCRIPTION'] }}" rows="3"></textarea>
                                 </div>
                             </div>
 

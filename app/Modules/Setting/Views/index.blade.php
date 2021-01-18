@@ -1,7 +1,4 @@
 @extends('backend.default')
-@section('title')
-    Theme setting
-@endsection
 @section('style')
     <style>
         .error {
@@ -65,9 +62,6 @@
             color: #ffffff;
         }
     </style>
-@endsection
-@section('heading')
-    <h4 class="page-title font-size-18">Options Manage</h4>
 @endsection
 @section('content')
     <div class="content-wrapper">
@@ -140,7 +134,7 @@
         e.preventDefault();
         let row = $(this).parents('tr').clone();
         row.find('.action-wrapper').empty();
-        row.find('.action-wrapper').append('<button type="button" class="btn btn-success btn-add-type" style="margin-right: 30px"><i class="dripicons-plus"></i></button><button type="button" class="btn btn-danger btn-delete-type"><i class="dripicons-minus"></i></button>');
+        row.find('.action-wrapper').append('<button type="button" class="btn btn-success btn-add-type"><i class="dripicons-plus"></i></button><button type="button" class="btn btn-danger btn-delete-type"><i class="dripicons-minus"></i></button>');
         row.find('.option-menu-title').val('');
         row.find('.option-menu-url').val('');
         row.find('.option-home-slider-desc').val('');
@@ -175,6 +169,31 @@
             $('html, body').animate({ scrollTop: $('#ptx-save-btn').offset().top }, 'slow');
         }
     });
+
+    $('#ptx-save-btn').click(function (e) {
+        e.preventDefault();
+        let valid = true;
+        if ($('#menu-table').length) {
+            e.preventDefault();
+            $('#menu-table').find('tr').each(function (i) {
+                if ($(this).find('input.option-menu-title').val() === '' && i < 6) {
+                    valid = false;
+                }
+
+            })
+
+            if (valid) {
+                $('form').submit();
+            }else{
+                Swal.fire({
+                    type: 'warning',
+                    text: 'Please insert at least 5 elements',
+                })
+            }
+        }else{
+            $('form').submit();
+        }
+    })
     </script>
 
 @endsection

@@ -48,7 +48,6 @@
                             @endif
                         </div>
 
-
                         <div class="form-group">
                             <label for="phone">Site Title:</label>
                             <input type="text" class="form-control" name="site_title" id="site_title" value="{{ isset($result->site_title) ? $result->site_title : "" }}">
@@ -81,30 +80,30 @@
                             <label>Social links:</label>
                             <table class="table table-bordered">
                                 <tbody>
-                                    <tr>
-                                        <th>Facebook:</th>
-                                        <td>
-                                            <input type="text" class="form-control" name="social_links[]" value="{{ isset($result->social_link[0]) ? $result->social_link[0] : "" }}">
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <th>Twitter:</th>
-                                        <td>
-                                            <input type="text" class="form-control" name="social_links[]" value="{{ isset($result->social_link[1]) ? $result->social_link[1] : "" }}">
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <th>Instagram:</th>
-                                        <td>
-                                            <input type="text" class="form-control" name="social_links[]" value="{{ isset($result->social_link[2]) ? $result->social_link[2] : "" }}">
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <th>Youtube:</th>
-                                        <td>
-                                            <input type="text" class="form-control" name="social_links[]" value="{{ isset($result->social_link[3]) ? $result->social_link[3] : "" }}">
-                                        </td>
-                                    </tr>
+                                <tr>
+                                    <th>Facebook:</th>
+                                    <td>
+                                        <input type="text" class="form-control" name="social_links[]" value="{{ isset($result->social_link[0]) ? $result->social_link[0] : "" }}">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>Twitter:</th>
+                                    <td>
+                                        <input type="text" class="form-control" name="social_links[]" value="{{ isset($result->social_link[1]) ? $result->social_link[1] : "" }}">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>Instagram:</th>
+                                    <td>
+                                        <input type="text" class="form-control" name="social_links[]" value="{{ isset($result->social_link[2]) ? $result->social_link[2] : "" }}">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>Youtube:</th>
+                                    <td>
+                                        <input type="text" class="form-control" name="social_links[]" value="{{ isset($result->social_link[3]) ? $result->social_link[3] : "" }}">
+                                    </td>
+                                </tr>
                                 </tbody>
                             </table>
                         </div>
