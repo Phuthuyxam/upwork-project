@@ -110,7 +110,7 @@
                                         <span style="font-weight: bold">Default Category :</span>
                                         <select class="form-control" id="default-category" style="display: inline-block;width: 200px;margin: 0 1rem">
                                             @foreach($categories as $value)
-                                                <option value="{{ $value->term_id }}" {{ $defaultCategory->option_value == $value->term_id ? 'selected' :'' }}>{{ $value->name }}</option>
+                                                <option value="{{ $value->term_id }}" {{ ( !empty($defaultCategory) && $defaultCategory->option_value == $value->term_id ) ? 'selected' :'' }}>{{ $value->name }}</option>
                                             @endforeach
                                         </select>
                                         <button class="btn btn-success btn-save">Save</button>
@@ -138,7 +138,7 @@
                                             @foreach($categories as $value)
                                                 <tr>
                                                     <td>
-                                                        @if($defaultCategory->option_value != $value->term_id )
+                                                        @if( !empty($defaultCategory) && $defaultCategory->option_value != $value->term_id )
                                                             <input type="checkbox" class="cate-check" data-id="{{ $value->term_id }}" name="" id="">
                                                         @endif
                                                     </td>
@@ -149,7 +149,7 @@
                                                     <td style="width: 100px">
                                                         <div class="btn-wrapper" style="display: flex; align-items: center;">
                                                             <a href="{{ route('taxonomy.edit',$value->term_id) }}" class="btn btn-primary btn-edit" style="margin-right: 10px">Edit</a>
-                                                            @if($defaultCategory->option_value != $value->term_id )
+                                                            @if( !empty($defaultCategory) && $defaultCategory->option_value != $value->term_id )
                                                                 <button class="btn btn-danger btn-delete" data-id="{{ $value->term_id }}">Delete</button>
                                                             @endif
                                                         </div>
