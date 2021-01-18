@@ -5,7 +5,6 @@ namespace App\Modules\Taxonomy\Controllers;
 use App\Core\Glosary\LocationConfigs;
 use App\Core\Glosary\MetaKey;
 use App\Core\Glosary\ResponeCode;
-use App\Core\Glosary\TaxonomyType;
 use App\Http\Controllers\Controller;
 use App\Modules\Setting\Repositories\OptionRepository;
 use App\Modules\Taxonomy\Repositories\TermMetaRepository;
@@ -50,7 +49,6 @@ class TaxonomyController extends Controller
             $validate = $request->validate([
                 'name' => 'required|max:191',
                 'slug' => 'required|unique:terms',
-                'description' => 'required'
             ]);
             $isFirstTerm = true;
 
@@ -125,7 +123,6 @@ class TaxonomyController extends Controller
                 $validateRule = [
                     'name' => 'required|max:191',
                     'slug' => 'required|unique:terms,slug,'. $id,
-                    'description' => 'required',
                 ];
                 $prefixLanguage = generatePrefixLanguage();
                 if(isset($prefixLanguage) && !empty($prefixLanguage) && LocationConfigs::checkLanguageCode(str_replace("/","",$prefixLanguage))

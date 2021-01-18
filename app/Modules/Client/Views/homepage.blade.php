@@ -1,7 +1,19 @@
 @extends('Client::layouts.master')
-{{--@section('seo')--}}
-{{--    {!! getDataSeoOption(-99, 'homepage', $seoDefault) !!}--}}
-{{--@endsection--}}
+@section('html')
+    @if($currentLanguage == 'en')
+        <html lang="en">
+    @else
+        <html lang="ar" dir="rtl">
+    @endif
+@endsection
+@section('style')
+    @if($currentLanguage == 'ar')
+        <link rel="stylesheet" href="{{ asset('client/css/arab.css') }}">
+    @endif
+@endsection
+@section('seo')
+    {!! getDataSeoOption(-99, 'homepage', $seoDefault) !!}
+@endsection
 @section('content')
     <div class="content-wrapper">
         <section class="home-slider-wrapper">
@@ -72,7 +84,7 @@
                             <div class="occupancy-detail">
                                 <div class="adult-select">
                                     <i class="fa fa-user" aria-hidden="true"></i>
-                                    <select class="form-control" name="adult" id="">
+                                    <select class="form-control" name="adult">
                                         <option value="1">1</option>
                                         <option value="2">2</option>
                                         <option value="3" selected>3</option>
@@ -82,7 +94,7 @@
                                 </div>
                                 <div class="children-select">
                                     <i class="fa fa-male" aria-hidden="true"></i>
-                                    <select class="form-control" name="adult" id="">
+                                    <select class="form-control" name="child">
                                         <option value="1">1</option>
                                         <option value="2">2</option>
                                         <option value="3" selected>3</option>
@@ -119,7 +131,7 @@
                                     <div class="diamond">
                                         <i class="fas fa-long-arrow-alt-right"></i>
                                     </div>
-                                    <span class="tt-uper">see more services</span>
+                                    <span class="tt-uper">{{ $currentLanguage == 'en' ? 'see more services' : 'اطلع على المزيد من الخدمات' }}</span>
                                 </a>
                             </div>
                         </div>
@@ -140,7 +152,7 @@
                             <div class="diamond">
                                 <i class="fas fa-long-arrow-alt-right" aria-hidden="true"></i>
                             </div>
-                            <span class="tt-uper">see more details</span>
+                            <span class="tt-uper">{{ $currentLanguage == 'en' ? 'see more details' : 'اطلع على المزيد' }}</span>
                         </a>
                     </div>
                 </div>
@@ -203,30 +215,40 @@
                 </div>
             </section>
         @endif
-        <section class="brand-wrapper">
-            <div class="container">
-                <div class="home-hotel-heading" style="display: block;">
-                    <div class="heading">
-                        <h3 class="tt-uper">more yet to come</h3>
-                        <h2 class="tt-uper fw-bold">our brands</h2>
+
+        {{-- brand client show --}}
+
+        @if(isset($page->our_brand) && !empty($page->our_brand))
+            @php
+                $brands = $page->our_brand;
+            @endphp
+            <section class="brand-wrapper">
+                <div class="container">
+                    <div class="home-hotel-heading" style="display: block;">
+                        <div class="heading">
+                            <h3 class="tt-uper">{{ isset($brands->heading) && !empty($brands->heading) ? $brands->heading : "" }}</h3>
+                            <h2 class="tt-uper fw-bold">{{ isset($brands->title) && !empty($brands->title) ? $brands->title : "" }}</h2>
+                        </div>
+                    </div>
+                    <div class="brand-content">
+                        @if(isset($brands->brands) && !empty($brands->brands))
+
+                        <div class="brand-slider">
+                            @foreach($brands->brands as $brand)
+                                <div class="item">
+                                    <a href="{{ $brand->url }}">
+                                        {!! \App\Core\Helper\FrontendHelpers::renderImage($brand->banner) !!}
+                                    </a>
+                                </div>
+                            @endforeach
+                        </div>
+                        @endif
                     </div>
                 </div>
-                <div class="brand-content">
-                    <div class="brand-slider">
-                        <div class="item"><img src="images/FRONTEL WWL.png" alt=""></div>
-                        <div class="item"><img src="images/makanlogo.png" alt=""></div>
-                        <div class="item"><img src="images/LL.png" alt=""></div>
-                        <div class="item"><img src="images/MaskGroup1.png" alt=""></div>
-                        <div class="item"><img src="images/Venue.png" alt=""></div>
-                        <div class="item"><img src="images/FRONTEL WWL.png" alt=""></div>
-                        <div class="item"><img src="images/makanlogo.png" alt=""></div>
-                        <div class="item"><img src="images/LL.png" alt=""></div>
-                        <div class="item"><img src="images/MaskGroup1.png" alt=""></div>
-                        <div class="item"><img src="images/Venue.png" alt=""></div>
-                    </div>
-                </div>
-            </div>
-        </section>
+            </section>
+        @endif
+
+
         <section class="map-wrapper">
             <div class="location-search-wrapper">
                 <div class="search-input">
@@ -266,4 +288,126 @@
             <div id="map"></div>
         </section>
     </div>
+@endsection
+@section('script')
+    <script>
+        const locations = JSON.parse('{!!  json_encode($mapData) !!}');
+        function initMap() {
+            const maxZoom = 15;
+            const minZoom = 3;
+            var zoom = 4;
+            const map = new google.maps.Map(document.getElementById("map"), {
+                zoom: zoom,
+                center: locations != '' ? locations[0].location : { lat: -28.024, lng: 140.887 },
+                mapTypeControlOptions: { mapTypeIds: [] },
+                fullscreenControl: false,
+                streetViewControl: false,
+                maxZoom: maxZoom,
+                minZoom: minZoom,
+                zoomControl: false
+            });
+
+            google.maps.event.addListener(map, 'zoom_changed', function () {
+                zoom = map.getZoom();
+                var height = (zoom - minZoom) / (maxZoom - minZoom) * 100 + '%';
+                $('.zoom-controls').find('.zoom-level').height(height);
+            });
+
+            const input = document.getElementById("search");
+            const searchBox = new google.maps.places.SearchBox(input);
+            const infowindow = new google.maps.InfoWindow();
+            const infowindowContent = document.getElementById("infowindow-content");
+
+
+            map.addListener("bounds_changed", () => {
+                searchBox.setBounds(map.getBounds());
+            });
+
+            searchBox.addListener("places_changed", () => {
+                const places = searchBox.getPlaces();
+                if (places.length == 0) {
+                    return;
+                }
+
+                // For each place, get the icon, name and location.
+                const bounds = new google.maps.LatLngBounds();
+                places.forEach((place) => {
+                    if (!place.geometry) {
+                        console.log("Returned place contains no geometry");
+                        return;
+                    }
+
+                    if (place.geometry.viewport) {
+                        // Only geocodes have viewport.
+                        bounds.union(place.geometry.viewport);
+                    } else {
+                        bounds.extend(place.geometry.location);
+                    }
+                });
+                map.fitBounds(bounds);
+                map.setZoom(maxZoom);
+
+            });
+
+            const markers = locations.map((location, i) => {
+                var marker = new google.maps.Marker({
+                    position: location.location,
+                    icon: "{{ asset('client/images/Group 3219.png') }}",
+                    map: map
+                });
+
+                marker.addListener("click", () => {
+                    if ($(window).width() < 600) {
+                        html = `
+                    <p class="fw-bold">`+ location.name + `</p>
+                    <p>`+ location.address + `</p>
+                    <p>`+ location.city + `</p>
+                `;
+                        infowindow.setContent(html);
+                        infowindow.open(map, marker);
+                    } else {
+                        map.setZoom(maxZoom);
+                        map.setCenter(marker.getPosition());
+
+                        var rate = "";
+                        var star = '<i class="fas fa-star"></i>';
+                        for (var i = 0; i < location.rate; i++) {
+                            rate += star;
+                        }
+                        $('#location').show();
+                        $('#location').addClass('animate__animated');
+                        $('#location').addClass('animate__slideInLeft');
+                        $('#location').removeClass('animate__slideOutLeft');
+                        $('#location').find('img').attr('src', location.image);
+                        $('#location').find('.name').text(location.name);
+                        $('#location').find('.city').text(location.city);
+                        $('#location').find('.rate').html(rate);
+                    }
+                });
+            });
+            $('.zoom-controls .zoom-level').height((zoom - minZoom) / (maxZoom - minZoom) * 100 + '%');
+            $('.zoom-controls .plus').click(function () {
+                if (zoom < maxZoom) {
+                    zoom = zoom + 1;
+                    map.setZoom(zoom);
+                    var height = (zoom - minZoom) / (maxZoom - minZoom) * 100 + '%';
+                    $(this).parents('.zoom-controls').find('.zoom-level').height(height);
+                } else {
+                    zoom = maxZoom;
+                }
+            })
+
+            $('.zoom-controls .minus').click(function () {
+                if (zoom > minZoom) {
+                    zoom = zoom - 1;
+                    map.setZoom(zoom);
+                    var height = (zoom - minZoom) / (maxZoom - minZoom) * 100 + '%';
+                    $(this).parents('.zoom-controls').find('.zoom-level').height(height);
+                } else {
+                    zoom = minZoom;
+                }
+
+            })
+        }
+    </script>
 @endsection

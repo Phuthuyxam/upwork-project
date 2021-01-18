@@ -1,4 +1,7 @@
 @extends('backend.default')
+@section('title')
+    Theme setting
+@endsection
 @section('style')
     <style>
         .error {
@@ -151,6 +154,7 @@
         row.find('.option-home-slider-url').val('');
         row.find('.home-slider-image').val('');
         row.find('.image-preview-container').html("");
+        row.find('.home_brand_url').val('');
         $(this).parents('tbody').append(row);
     })
     $('body').on('click','.btn-delete-type',function (e){

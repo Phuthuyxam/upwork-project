@@ -17,7 +17,7 @@ class CreateTermRelationshipsArTable extends Migration
             $table->id();
             $table->bigInteger('object_id')->comment('example post id');
             $table->bigInteger('term_taxonomy_id');
-            $table->integer('term_order');
+            $table->integer('term_order')->nullable();
             $table->timestamps();
         });
     }

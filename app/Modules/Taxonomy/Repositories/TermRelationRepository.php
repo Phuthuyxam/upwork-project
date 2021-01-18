@@ -16,6 +16,8 @@ class TermRelationRepository extends EloquentRepository {
     }
 
     public function getByObjectId($objecId){
+        if($this->_model->where('object_id',$objecId)->select('term_taxonomy_id')->first() == null)
+            return [];
         return $this->_model->where('object_id',$objecId)->select('term_taxonomy_id')->first()->toArray();
     }
 

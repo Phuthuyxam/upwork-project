@@ -1,8 +1,9 @@
 <?php
 use Illuminate\Support\Facades\Route;
 $namespace = 'App\Modules\Post\Controllers';
+$prefix = generatePrefixLanguage();
 Route::group(
-    ['module'=>'post', 'namespace' => $namespace, 'middleware' => ['web','auth','ptx.permission']],
+    ['module'=>'post', 'namespace' => $namespace, 'middleware' => ['web','auth','ptx.permission'] , 'prefix' => $prefix],
     function() {
         Route::prefix('admin/hotels')->group(function () {
             Route::get('/','PostController@index')->name('post.index');

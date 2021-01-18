@@ -11,7 +11,7 @@ class PageTemplateConfigs extends BasicEnum
     const HOTEL = ['NAME' => 'HOTEL','VALUE' => '1','BACKEND' => '','FRONT' => ''];
     const SERVICE = ['NAME' => 'SERVICE','VALUE' => '2','VIEW'=>'Page::elements.service','BACKEND' => '','FRONT' => ''];
     const ABOUT = ['NAME' => 'ABOUT','VALUE' => '3','VIEW'=>'Page::elements.about','BACKEND' => '','FRONT' => ''];
-//    const CONTACT = ['NAME' => 'CONTACT','VALUE' => '4','BACKEND' => '','FRONT' => ''];
+    const CONTACT = ['NAME' => 'CONTACT','VALUE' => '4','BACKEND' => '','FRONT' => ''];
 
     public static function getAll() {
         $oClass = new \ReflectionClass(__CLASS__);

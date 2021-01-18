@@ -3,7 +3,7 @@
 @section('content')
     <div class="p-3">
         <h4 class="font-size-18 text-muted mt-2 text-center">Welcome Back !</h4>
-        <p class="text-muted text-center mb-4">Sign in to continue to Fonik.</p>
+        <p class="text-muted text-center mb-4">Sign in to continue.</p>
 
         <form class="form-horizontal" method="POST" action="{{ route('login') }}">
             @csrf

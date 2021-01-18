@@ -2,6 +2,7 @@
 
 namespace App\Modules\Post\Controllers;
 
+use App\Core\Glosary\LocationConfigs;
 use App\Core\Glosary\PostStatus;
 use App\Core\Glosary\MetaKey;
 use App\Core\Glosary\PostType;
@@ -10,6 +11,7 @@ use App\Modules\Post\Repositories\PostMetaRepository;
 use App\Modules\Post\Repositories\PostRepository;
 use App\Modules\Taxonomy\Repositories\TermRelationRepository;
 use App\Modules\Taxonomy\Repositories\TermRepository;
+use App\Modules\Translations\Repositories\TranslationRelationshipRepository;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -22,14 +24,17 @@ class PostController extends Controller
     protected $postMetaRepository;
     protected $termRepository;
     protected $termRelationRepository;
+    protected $translationRelationRepository;
 
     public function __construct(PostRepository $posRepository, PostMetaRepository $postMetaRepository,
-                                TermRepository $termRepository, TermRelationRepository $termRelationRepository)
+                                TermRepository $termRepository, TermRelationRepository $termRelationRepository,
+                                TranslationRelationshipRepository $translationRelationRepository)
     {
         $this->posRepository = $posRepository;
         $this->postMetaRepository = $postMetaRepository;
         $this->termRepository = $termRepository;
         $this->termRelationRepository = $termRelationRepository;
+        $this->translationRelationRepository = $translationRelationRepository;
     }
 
     public function index(Request $request)
@@ -84,6 +89,7 @@ class PostController extends Controller
                 $dataMap = [
                     'image' => $request->input('map_image') ? $request->input('map_image') : '',
                     'address' => $request->input('map_address') ? $request->input('map_address') : '',
+                    'city' => $request->input('map_city') ? $request->input('map_city') : '',
                     'location' => [
                         'lat' => $request->input('map_lat') ? $request->input('map_lat') : '',
                         'long' => $request->input('map_long') ? $request->input('map_long') : ''
@@ -159,7 +165,7 @@ class PostController extends Controller
 
             if ($result) {
                 Log::info('user '.Auth::id().' has created hotel '. $postId);
-                return redirect('admin/hotels/edit/' . $postId)->with('message', 'success|Successfully create  "' . $request->input('post_title') . '" hotel');
+                return redirect(route('post.edit', ['id' => $postId]))->with('message', 'success|Successfully create  "' . $request->input('post_title') . '" hotel');
             } else {
                 return redirect()->back()->with('message', 'danger|Something wrong try again!');
             }
@@ -178,14 +184,72 @@ class PostController extends Controller
             $slugs = $this->termRepository->getAllSlug();
             $taxonomy = $this->termRepository->getAll();
             $term_id = $this->termRelationRepository->getByObjectId($id);
-            return view('Post::edit', compact('post', 'postMetaMap','slugs','taxonomy','term_id'));
+            $postRecod = $this->posRepository->find($id);
+            if(LocationConfigs::getLanguageDefault()['VALUE'] == app()->getLocale()){
+                $translationPost = $postRecod->postFromTranslation;
+            }
+
+            $translationPost = $postRecod->postToTranslation;
+
+            if(!empty($translationPost) && $translationPost->isNotEmpty()){
+                $langCode = (LocationConfigs::getLanguageDefault()['VALUE'] == app()->getLocale()) ?  $translationPost[0]->to_lang : $translationPost[0]->from_lang;
+                $langId = (LocationConfigs::getLanguageDefault()['VALUE'] == app()->getLocale()) ?  $translationPost[0]->from_object_id : $translationPost[0]->to_object_id;
+                $translationRecord = [ 'url' => renderTranslationUrl(route('page.edit' , $langId), $langCode) , 'lang_code' => $langCode ];
+            } else {
+                $translationRecord = false;
+            }
+            return view('Post::edit', compact('post', 'postMetaMap','slugs','taxonomy','term_id','translationRecord'));
         }else {
-            $validate = $request->validate([
+            $currentLang = app()->getLocale();
+            $validateRule = [
                 'post_title' => 'required|max:191',
                 'post_name' => 'required|unique:posts,post_name,'.$id,
                 'post_content' => 'required',
                 'taxonomy' => 'required'
-            ]);
+            ];
+
+            $prefixLanguage = generatePrefixLanguage();
+            if(isset($prefixLanguage) && !empty($prefixLanguage) && LocationConfigs::checkLanguageCode(str_replace("/","",$prefixLanguage))
+                && LocationConfigs::getLanguageDefault()['VALUE'] != str_replace("/","",$prefixLanguage))
+                $validateRule['post_name'] = "required|unique:posts_". str_replace("/","",$prefixLanguage) .",post_name," . $id;
+            $validate = $request->validate($validateRule);
+
+            // make translation
+            if(isset($request->translation) && !empty($request->translation) && LocationConfigs::checkLanguageCode($request->translation)) {
+                // check has record in relationship
+                $translationMapping = $this->translationRelationRepository->filter([['from_object_id',$id] , ['from_lang', $currentLang] , ['to_lang' , $request->translation], ['type' , 'post']]);
+                if($translationMapping && $translationMapping->isNotEmpty()) {
+                    $transUrl = renderTranslationUrl(route('post.edit', ['id' => $translationMapping[0]->to_object_id]), $request->translation);
+                    return redirect()->to($transUrl)->with('message', 'warning|Warning! when creating the translation. A record already exists. Please edit with this one.');
+                }
+
+                //
+//                $translationMapping = $this->translationRelationRepository->filter([['from_object_id',$id] , ['to_lang', $currentLang] , ['from_lang' , $request->translation], ['type' , 'post']]);
+//                if($translationMapping && $translationMapping->isNotEmpty()) {
+//                    $transUrl = renderTranslationUrl(route('post.edit', ['id' => $translationMapping[0]->to_object_id]), $request->translation);
+//                    return redirect()->to($transUrl)->with('message', 'warning|Warning! when creating the translation. A record already exists. Please edit with this one.');
+//                }
+
+                $translation = $this->translationSave($request);
+                if($translation){
+                    // make record relationship translation
+                    if(isset($translation['post_id']) && !empty($translation['post_id'])) {
+                        $translationRecord = [
+                            'to_object_id' => $translation['post_id'],
+                            'from_object_id' => $id,
+                            'to_lang' => app()->getLocale(),
+                            'from_lang' => $currentLang,
+                            'type' => 'post',
+                        ];
+                        if($this->translationRelationRepository->create($translationRecord))
+                            return redirect()->to($translation['redirect_url'])->with('message', $translation['message']);
+                        return redirect()->back()->with('message', 'danger|Something wrong when make a translation record try again!');
+                    }
+                    return redirect()->to($translation['redirect_url'])->with('message', $translation['message']);
+                }
+                return redirect()->back()->with('message', 'danger|Something wrong when make a translation record try again!');
+            }
+
 
 
             $post_title = $request->input('post_title');
@@ -303,6 +367,7 @@ class PostController extends Controller
                 $dataMap = [
                     'image' => $request->input('map_image') ? $request->input('map_image') : '',
                     'address' => $request->input('map_address') ? $request->input('map_address') : '',
+                    'city' => $request->input('map_city') ? $request->input('map_city') : '',
                     'location' => [
                         'lat' => $request->input('map_lat') ? $request->input('map_lat') : '',
                         'long' =>  $request->input('map_long') ? $request->input('map_long') : ''
@@ -321,11 +386,19 @@ class PostController extends Controller
                 $taxonomy = $request->input('taxonomy');
                 if (!empty($taxonomy)) {
                     $condition = [['object_id','=',$id]];
-                    $dataTermRelation = [
-                        'term_taxonomy_id' => $request->input('taxonomy')
-                    ];
-                    if ($this->termRelationRepository->updateByCondition($condition,$dataTermRelation)) {
-                        $result = true;
+
+                    // check record
+                    $record =  $this->termRelationRepository->getInstantModel()->where($condition)->get();
+                    if($record && $record->isEmpty()) {
+                        $this->termRelationRepository->create(['object_id' => $id , 'term_taxonomy_id' => $request->input('taxonomy')]);
+                    } else {
+                        $dataTermRelation = [
+                            'term_taxonomy_id' => $request->input('taxonomy')
+                        ];
+
+                        if ($this->termRelationRepository->updateByCondition($condition,$dataTermRelation)) {
+                            $result = true;
+                        }
                     }
                 }
             }
@@ -401,5 +474,133 @@ class PostController extends Controller
         } catch (\Throwable $th) {
             return response(ResponeCode::SERVERERROR['CODE']);
         }
+    }
+
+    public function translationSave(Request $request) {
+        app()->setLocale($request->translation);
+        $this->posRepository->setModel();
+        $this->postMetaRepository->setModel();
+        $post_title = $request->input('post_title');
+        $status = $request->input('status') == 0 ? PostStatus::DRAFT['VALUE'] : PostStatus::PUBLIC['VALUE'];
+        $result = false;
+
+        $dataPost = [
+            'post_title' => $post_title,
+            'post_name' => $request->input('post_name'),
+            'post_author' => Auth::id(),
+            'post_status' => $status,
+            'post_content' => $request->input('post_content'),
+            'post_type' => PostType::POST['VALUE']
+        ];
+        $translationRecord = $this->posRepository->filter([['post_name' , $request->input('post_name')]]);
+
+        if($translationRecord && $translationRecord->isNotEmpty()) {
+            $transUrl = renderTranslationUrl(route('post.edit', ['id' => $translationRecord[0]->id]), $request->translation);
+            return [ 'redirect_url' => $transUrl, 'message' => 'warning|Warning! when creating the translation. A record already exists. Please edit with this one.' ];
+        }else {
+            $postId = $this->posRepository->create($dataPost)->id;
+            if ($postId) {
+                $result = true;
+                // Room Type
+                $types = $request->input('room_types');
+                $inventories = $request->input('inventories');
+
+                $typeMap = [];
+                if (!empty($types) && !empty($inventories)) {
+                    foreach ($types as $key => $value) {
+                        $typeMap[] = [
+                            'type' => $value,
+                            'inven' => $inventories[$key]
+                        ];
+                    }
+                }
+
+                $dataMap = [
+                    'image' => $request->input('map_image') ? $request->input('map_image') : '',
+                    'address' => $request->input('map_address') ? $request->input('map_address') : '',
+                    'location' => [
+                        'lat' => $request->input('map_lat') ? $request->input('map_lat') : '',
+                        'long' => $request->input('map_long') ? $request->input('map_long') : ''
+                    ]
+                ];
+
+                // Save post meta
+                $dataPostMeta = [
+                    [
+                        'post_id' => $postId,
+                        'meta_key' => MetaKey::BANNER['VALUE'],
+                        'meta_value' => $request->input('files') ? json_encode($request->input('files')) : '',
+                        'created_at' => date('Y-m-d H:i:s'),
+                    ],
+                    [
+                        'post_id' => $postId,
+                        'meta_key' => MetaKey::SLIDE['VALUE'],
+                        'meta_value' => $request->input('images') ? json_encode($request->input('images')) : '',
+                        'created_at' => date('Y-m-d H:i:s')
+                    ],
+                    [
+                        'post_id' => $postId,
+                        'meta_key' => MetaKey::ROOM_TYPE['VALUE'],
+                        'meta_value' => !empty($typeMap) ? json_encode($typeMap) : '',
+                        'created_at' => date('Y-m-d H:i:s')
+                    ],
+                    [
+                        'post_id' => $postId,
+                        'meta_key' => MetaKey::FACILITY['VALUE'],
+                        'meta_value' => $request->input('facilities') ? json_encode($request->input('facilities')) : '',
+                        'created_at' => date('Y-m-d H:i:s')
+                    ],
+                    [
+                        'post_id' => $postId,
+                        'meta_key' => MetaKey::LOCATION['VALUE'],
+                        'meta_value' => json_encode($dataMap),
+                        'created_at' => date('Y-m-d H:i:s')
+                    ],
+                    [
+                        'post_id' => $postId,
+                        'meta_key' => MetaKey::RATE['VALUE'],
+                        'meta_value' => $request->input('rate') ? $request->input('rate') : 0,
+                        'created_at' => date('Y-m-d H:i:s')
+                    ],
+                    [
+                        'post_id' => $postId,
+                        'meta_key' => MetaKey::THUMBNAIL['VALUE'],
+                        'meta_value' => $request->input('thumb') ? json_encode($request->input('thumb')) : '',
+                        'created_at' => date('Y-m-d H:i:s')
+                    ],
+                    [
+                        'post_id' => $postId,
+                        'meta_key' => MetaKey::PRICE['VALUE'],
+                        'meta_value' => $request->input('price') ? json_encode($request->input('price')) : '',
+                        'created_at' => date('Y-m-d H:i:s')
+                    ],
+                ];
+
+                if ($this->postMetaRepository->insert($dataPostMeta)) {
+                    $result = true;
+                }
+
+                // Save term relation
+//                $dataTermRelation = [
+//                    'object_id' => $postId,
+//                    'term_taxonomy_id' => $request->input('taxonomy')
+//                ];
+//                if ($this->termRelationRepository->create($dataTermRelation)) {
+//                    $result = true;
+//                }
+            }
+
+
+            if ($result) {
+                Log::info('user '.Auth::id().' has created hotel '. $postId);
+                $transUrl = renderTranslationUrl(route('post.edit', ['id' => $postId]), $request->translation);
+                return [ 'redirect_url' => $transUrl,
+                    'message' => 'success|Successfully add a Translation"' . $request->input('post_name') . '" post', 'post_id' => $postId
+                ];
+            } else {
+                return false;
+            }
+        }
+
     }
 }

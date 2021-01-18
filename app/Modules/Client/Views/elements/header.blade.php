@@ -35,6 +35,7 @@
                 @php
                     $languages = \App\Core\Glosary\LocationConfigs::getAll();
                     $currentLan = app()->getLocale();
+                    $modeTranslation = ( isset($translationMode) && !empty($translationMode) ) ? $translationMode : false;
                 @endphp
 
                 <div class="header-languages">
@@ -44,12 +45,14 @@
                             <span class="language">{{ strtoupper($currentLan) }}</span>
                             <i class="fa fa-angle-down"></i>
                         </div>
+
                         @if(isset($languages) && !empty($languages))
                             <div class="language-options">
                                 <ul>
                                     @foreach($languages as $lan)
                                         <li>
-                                            <a href="{{ renderTranslationUrl(url()->current() , $lan['VALUE']) }}">{{ strtoupper($lan['VALUE']) }}</a>
+
+                                            <a href="{{ renderTranslationUrl(url()->current() , $lan['VALUE'], $modeTranslation) }}">{{ strtoupper($lan['VALUE']) }}</a>
                                         </li>
                                     @endforeach
                                 </ul>

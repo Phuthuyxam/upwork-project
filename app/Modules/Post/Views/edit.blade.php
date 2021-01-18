@@ -63,6 +63,44 @@
     <div class="content-wrapper">
         <div class="container-fluid">
             {!! displayAlert(Session::get('message'))  !!}
+
+            @if(isset($translationRecord) && $translationRecord != false)
+                <div class="card">
+                    <div class="card-body">
+                        <div class="tab-translate">
+                            <a href="{{ $translationRecord['url'] }}"><i class="dripicons-flag"></i> Go to translation record {{ \App\Core\Glosary\LocationConfigs::getLanguageByCode($translationRecord['lang_code'])['DISPLAY'] }}</a>
+                        </div>
+                    </div>
+                </div>
+            @else
+
+                @php
+                    $languages = \App\Core\Glosary\LocationConfigs::getAll();
+                    $currentLang = app()->getLocale();
+
+                @endphp
+                @if(isset($languages) && !empty($languages))
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="tab-translate">
+                                <b><i class="dripicons-flag"></i> Make translation</b>
+                                <select id="make-translation">
+                                    <option value="0">---choose language---</option>
+                                    @foreach($languages as $lan)
+                                        @if($lan['VALUE'] != $currentLang)
+                                            <option value="{{ $lan['VALUE'] }}" data-display="{{ $lan['DISPLAY'] }}">
+                                                {{ $lan['DISPLAY'] }}
+                                            </option>
+                                        @endif
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                @endif
+
+            @endif
+
             <div class="alert alert-danger alert-common" style="display: none;">
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
                 Some fields need to required. Please check it again !
@@ -309,6 +347,7 @@
                                                 <tr>
                                                     <th rowspan="2" style="text-align: center; vertical-align: middle">Image</th>
                                                     <th rowspan="2" style="text-align: center; vertical-align: middle">Address</th>
+                                                    <th rowspan="2" style="text-align: center; vertical-align: middle">City</th>
                                                     <th colspan="2" style="text-align: center; vertical-align: middle">Location</th>
                                                 </tr>
                                                 <tr>
@@ -325,6 +364,7 @@
                                                         {!! renderMediaManage('map_image',$map->image ? $map->image : null,false) !!}
                                                     </td>
                                                     <td><textarea type="text" class="form-control" name="map_address">{{ old('map_address') ? old('map_address') : $map->address}}</textarea></td>
+                                                    <td><input type="text" class="form-control" name="map_city">{{ old('map_city') ? old('map_city') : $map->city }}</td>
                                                     <td>
                                                         <input type="number" class="form-control" name="map_lat" value="{{ old('map_lat') ? old('map_lat') : $map->location->lat }}">
                                                     </td>
@@ -345,13 +385,14 @@
                             <div class="card-body">
                                 <div class="status">
                                     <p><i class="dripicons-flag"></i> Status : {{ \App\Core\Glosary\PostStatus::display($post['post_status']) }}</p>
-                                    <a href="#" target="_blank"><i class="dripicons-web"></i> Make translation</a>
+{{--                                    <a href="#" target="_blank"><i class="dripicons-web"></i> Make translation</a>--}}
                                 </div>
                             </div>
                             <div class="card-footer" style="display: flex; align-items: center; justify-content: space-between">
                                 <input type="hidden" id="publishStatus" name="status">
-                                <button type="submit" class="btn btn-info btn-draft waves-effect waves-light">Save Draft</button>
-                                <button type="submit" class="btn btn-primary btn-submit waves-effect waves-light">Publish</button>
+                                <input type="hidden" name="translation" id="translation_mode">
+                                <button type="submit" class="btn btn-info btn-draft waves-effect waves-light" id="ptx-save-btn-draf">Save Draft</button>
+                                <button type="submit" class="btn btn-primary btn-submit waves-effect waves-light" id="ptx-save-btn">Publish</button>
                             </div>
                         </div>
                         <div class="card">
@@ -361,7 +402,7 @@
                                     <select name="taxonomy" id="tax" class="form-control required">
                                         <option value="">Select Category</option>
                                         @foreach($taxonomy as $value)
-                                            <option value="{{ $value['id'] }}" {{ $value['id'] == $term_id['term_taxonomy_id'] ? 'selected':'' }}>{{ $value['name'] }}</option>
+                                            <option value="{{ $value['id'] }}" {{ isset($term_id['term_taxonomy_id']) && $value['id'] == $term_id['term_taxonomy_id'] ? 'selected':'' }}>{{ $value['name'] }}</option>
                                         @endforeach
                                     </select>
                                     <p class="text-danger error-message" style="font-weight: bold">
@@ -506,6 +547,24 @@
             }
             return valid;
         }
+
+        $('#make-translation').change(function (e){
+            e.preventDefault();
+            let lanCode = $(this).val();
+            if(lanCode === "0") {
+                $('#ptx-save-btn').text("Save");
+                $('#translation_mode').val("");
+                return
+            }
+            let display = $("#make-translation option:selected").data('display');
+            let text = "Are you sure make a translation to " + display + " ? After confirm you will complete with save button";
+            var r = confirm(text);
+            if (r == true) {
+                $('#translation_mode').val(lanCode);
+                $('#ptx-save-btn').text("Publish with "+display);
+                $('#ptx-save-btn-draf').text("Save Draf with "+display);
+            }
+        });
 
     </script>
 @endsection

@@ -6,13 +6,18 @@ namespace App\Modules\Client\Controllers;
 
 use App\Core\Glosary\MetaKey;
 use App\Core\Glosary\PageTemplateConfigs;
+use App\Core\Glosary\PostStatus;
 use App\Core\Glosary\PostType;
+use App\Core\Helper\OptionHelpers;
 use App\Http\Controllers\Controller;
 use App\Modules\Post\Repositories\PostMetaRepository;
 use App\Modules\Post\Repositories\PostRepository;
 use App\Modules\Taxonomy\Repositories\TermMetaRepository;
 use App\Modules\Taxonomy\Repositories\TermRelationRepository;
 use App\Modules\Taxonomy\Repositories\TermRepository;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Mail;
 
 class ClientPostController extends Controller
 {
@@ -36,7 +41,15 @@ class ClientPostController extends Controller
 
     public function detail($slug){
         if ($this->postRepository->getBySlug($slug)) {
+            $currentLanguage = app()->getLocale();
+            $translationMode = [ "mode" => "post" , "slug" => $slug ];
+            $user = Auth::user();
             $post = $this->postRepository->getBySlug($slug);
+
+            if ($user == null && $post->post_status == PostStatus::DRAFT['VALUE']) {
+                return view('Client::pages.404');
+            }
+
             $postMeta = $this->postMetaRepository->getByPostId($post->id);
             $postMetaMap = [];
             foreach ($postMeta as $value) {
@@ -85,10 +98,10 @@ class ClientPostController extends Controller
                             }
                         }
                     }
-                    return view('Client::about',compact('post','pageMetaMap','imageMap','itemMap'));
+                    return view('Client::about',compact('post','pageMetaMap','imageMap','itemMap', 'translationMode','currentLanguage'));
                 }
                 if ($template == PageTemplateConfigs::SERVICE['VALUE']) {
-                    return view('Client::service',compact('post','pageMetaMap'));
+                    return view('Client::service',compact('post','pageMetaMap','translationMode','currentLanguage'));
                 }
                 if ($template == PageTemplateConfigs::HOTEL['VALUE']) {
                     $posts = $this->postRepository->getInstantModel()->where('post_type',PostType::POST['VALUE'])->get();
@@ -116,10 +129,13 @@ class ClientPostController extends Controller
                             }
                         }
                     }
-                    return view('Client::hotel',compact('post','postsMetaMap','pageMetaMap'));
+                    return view('Client::hotel',compact('post','postsMetaMap','pageMetaMap','translationMode','currentLanguage'));
+                }
+                if ($template == PageTemplateConfigs::CONTACT['VALUE']) {
+                    return view('Client::contact',compact('post','pageMetaMap', 'translationMode','currentLanguage'));
                 }
                 if ($template == PageTemplateConfigs::DEFAULT['VALUE']) {
-                    return view('Client::hotel',compact('post','pageMetaMap'));
+                    return view('Client::hotel',compact('post','pageMetaMap', 'translationMode','currentLanguage'));
                 }
             }else {
                 $termRelation = $this->termRelationRepository->getInstantModel()->where('object_id', $post->id)->first();
@@ -143,7 +159,11 @@ class ClientPostController extends Controller
                 }
                 $relatePostMap = [];
                 $relatePostMetaMap = [];
-                $relatePosts = $this->postRepository->findByIds($ids);
+                if ($user) {
+                    $relatePosts = $this->postRepository->findByIds($ids);
+                }else{
+                    $relatePosts = $this->postRepository->findByIds($ids,false);
+                }
                 if (count($relatePosts)) {
                     $relatePostMap = $relatePosts->toArray();
                     foreach ($relatePostMap as $key => $value) {
@@ -168,10 +188,34 @@ class ClientPostController extends Controller
                         }
                     }
                 }
-                return view('Client::hotel-detail', compact('post', 'postMetaMap', 'termMetaMap', 'relatePostMetaMap', 'relatePostMap'));
+
+                return view('Client::hotel-detail', compact('post', 'postMetaMap', 'termMetaMap', 'relatePostMetaMap', 'relatePostMap', 'translationMode','currentLanguage'));
             }
         }else{
             return view('Client::pages.404');
         }
     }
+
+    public function saveContactForm(Request $request) {
+
+        $this->validate($request, [
+            'contact_name' => 'required',
+            'contact_email' => 'required|email',
+            'contact_phone' => 'required|regex:/(0)[0-9]/|not_regex:/[a-z]/|min:9'
+        ]);
+
+        $systemConfig = OptionHelpers::getSystemConfigByKey('general');
+        if($systemConfig && json_decode($systemConfig,true))
+            $systemConfig = json_decode($systemConfig, true);
+
+        $input = $request->all();
+        Mail::send('mail_temaplate.contact', ['name'=>$input["contact_name"], 'email'=>$input["contact_email"], 'phone'=>$input['contact_phone'],'project' => $input['contact_project'] ,'contact_message' => $input['contact_message'] ], function ($message) {
+            $message->from('youremail@your_domain');
+            $message->to('youremail@your_domain', 'Your Name')
+                ->subject('Your Website Contact Form');
+        });
+        Session::flash('flash_message', 'Send message successfully!');
+
+    }
+
 }

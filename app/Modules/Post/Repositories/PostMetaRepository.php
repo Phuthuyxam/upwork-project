@@ -1,12 +1,18 @@
 <?php
 namespace App\Modules\Post\Repositories;
 
+use App\Core\Glosary\LocationConfigs;
 use App\Core\Repositories\EloquentRepository;
 use App\Modules\Post\Model\PostMeta;
+use App\Modules\Post\Model\Translations\Ar\PostMetaAr;
+
 
 class PostMetaRepository extends EloquentRepository {
 
     public function getModel() {
+        $lang = app()->getLocale();
+        if($lang == LocationConfigs::ARABIC['VALUE'])
+            return PostMetaAr::class;
         return PostMeta::class;
     }
 
