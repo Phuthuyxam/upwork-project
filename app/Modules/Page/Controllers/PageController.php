@@ -44,6 +44,13 @@ class PageController extends Controller
         $pageTemplate = PageTemplateConfigs::parse($template)['VALUE'];
         if ($request->isMethod('get')) {
             $currentLanguage = generatePrefixLanguage();
+            $slugs = $this->postRepository->getAllSlugs();
+            $allSlug = [];
+            if ($slugs) {
+               foreach ($slugs as $value) {
+                   $allSlug[] = $value->post_name;
+               }
+            }
             $defaultTemplate = [PageTemplateConfigs::CONTACT['NAME'],PageTemplateConfigs::HOTEL['NAME']];
             $page = $this->postRepository->getInstantModel()->where('post_type',$template)->first();
             $pageMeta = [];
@@ -106,9 +113,9 @@ class PageController extends Controller
                         }
                     }
                 }
-                return view('Page::add',compact('template','defaultTemplate','pageMetaMap','imageMap','itemMap','page','translationRecord'));
+                return view('Page::add',compact('template','defaultTemplate','pageMetaMap','imageMap','itemMap','page','translationRecord','allSlug'));
             }
-            return view('Page::add',compact('template','defaultTemplate','page','pageMetaMap', 'translationRecord'));
+            return view('Page::add',compact('template','defaultTemplate','page','pageMetaMap', 'translationRecord','allSlug'));
         }else{
             try {
                 $currentLang = app()->getLocale();

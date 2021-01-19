@@ -30,14 +30,20 @@
             </div>
             <div class="banner-content">
                 <div class="banner-title">
-                    @if(isset($termMetaMap[\App\Core\Glosary\MetaKey::BRAND_LOGO['NAME']]))
-                    {!! \App\Core\Helper\FrontendHelpers::renderImage($termMetaMap[\App\Core\Glosary\MetaKey::BRAND_LOGO['NAME']]) !!}
+                    @if(isset($postMetaMap[\App\Core\Glosary\MetaKey::LOGO['NAME']]))
+                    {!! \App\Core\Helper\FrontendHelpers::renderImage($postMetaMap[\App\Core\Glosary\MetaKey::LOGO['NAME']]) !!}
                     @endif
                 </div>
                 <div class="breadscrum">
                     <ul>
-                        <li class="item"><a href="{{ route('index') }}">{{ $currentLanguage == 'en' ? 'home' : 'الصفحة الرئيسية' }}</a></li>
-                        <li class="item active"><a href="#"><span><div class="rectangle"></div>  الصفحة الرئيسية </span></a></li>
+                        <li class="item"><a href="{{ route('index') }}">{{ $currentLanguage == 'en' ? 'Home' : 'الصفحة الرئيسية' }}</a></li>
+                        @if(isset($hotelPage) && !empty($hotelPage))
+                        <li class="item active">
+                            <a href="{{ route('detail',$hotelPage->post_name) }}">
+                                <span><div class="rectangle"></div>{{ $hotelPage->post_title }}</span>
+                            </a>
+                        </li>
+                        @endif
                         <li class="item active"><span>
                             <div class="rectangle"></div> {{ $post->post_title }}
                         </span></li>
@@ -165,42 +171,7 @@
                         </div>
                     </div>
                     <div class="col-xl-3">
-                        <div class="reservation-form" style="background-image: url({{ asset('client/images/MaskGroup31.jpg') }});">
-                            <h4 class="fw-bold">Your Reservation</h4>
-                            <form action="">
-                                <div class="date-input">
-                                    <div class="icon-calendar">
-                                        <img src="{{ asset('client/images/Icon feathercalendar.svg') }}" alt="">
-                                    </div>
-                                    <input type="text" name="" class="form-control detail-date-picker" value=""
-                                           placeholder="Check-In" required="required" title="">
-                                </div>
-                                <div class="date-input">
-                                    <div class="icon-calendar">
-                                        <img src="{{ asset('client/images/Icon feathercalendar.svg') }}" alt="">
-                                    </div>
-                                    <input type="text" name="" class="form-control detail-date-picker" value=""
-                                           placeholder="Check-Out" required="required" title="">
-                                </div>
-                                <select class="form-control" name="">
-                                    <option value="default">Adults</option>
-                                    <option value="1">1</option>
-                                    <option value="1">2</option>
-                                    <option value="1">3</option>
-                                    <option value="1">4</option>
-                                </select>
-                                <select class="form-control" name="">
-                                    <option value="default">Childrens</option>
-                                    <option value="1">1</option>
-                                    <option value="1">2</option>
-                                    <option value="1">3</option>
-                                    <option value="1">4</option>
-                                </select>
-                                <div class="submit-wrapper">
-                                    <input type="submit" class="btn btn-submit" value="CHECK AVAILIBILITY">
-                                </div>
-                            </form>
-                        </div>
+                        @include('Client::elements.booking-form')
                     </div>
                     @if(isset($relatePostMap) && !empty($relatePostMap) && isset($relatePostMetaMap) && !empty($relatePostMetaMap))
                     <div class="col-xl-9">

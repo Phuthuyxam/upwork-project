@@ -22,6 +22,7 @@
             position: relative;
             overflow: hidden;
             width: 50% !important;
+            background: #ccc;
         }
 
         .preview-image .close {
@@ -133,7 +134,7 @@
                                     <input type="hidden" id="postId" value="{{ $post['id'] }}">
                                     <div class="tab-pane active p-3" id="common" role="tabpanel">
                                         <div class="form-group">
-                                            <label for="title">Title</label>
+                                            <label for="title">Title<span style="color: red">*</span></label>
                                             <input type="text" class="form-control required" name="post_title" id="title"
                                                    placeholder="Title"
                                                    value="{{ old('post_title') ? old('post_title') : $post['post_title'] }}">
@@ -146,7 +147,7 @@
                                             </p>
                                         </div>
                                         <div class="form-group">
-                                            <label for="slug">Slug</label>
+                                            <label for="slug">Slug<span style="color: red">*</span></label>
                                             <input type="text" class="form-control required" name="post_name" id="slug"
                                                    placeholder="Slug"
                                                    value="{{ old('post_name') ? old('post_name') : $post['post_name'] }}">
@@ -160,7 +161,7 @@
                                             </p>
                                         </div>
                                         <div class="form-group">
-                                            <label for="rate">Rate</label>
+                                            <label for="rate">Star<span style="color: red">*</span></label>
                                             <input type="number" class="form-control required" name="rate" id="rate"
                                                    placeholder="Rate" max="5" min="0"
                                                    value="{{ old('rate') ? old('rate') : $postMetaMap[\App\Core\Glosary\MetaKey::RATE['VALUE']] }}">
@@ -171,7 +172,7 @@
                                             </p>
                                         </div>
                                         <div class="form-group">
-                                            <label for="price">Price</label>
+                                            <label for="price">Price<span style="color: red">*</span></label>
                                             <input type="text" class="form-control" name="price" id="price" placeholder="Price"
                                                    value="{{ old('price') ? old('price') : $postMetaMap[\App\Core\Glosary\MetaKey::PRICE['VALUE']]}}">
                                             <p class="text-danger error-message" style="font-weight: bold">
@@ -181,7 +182,7 @@
                                             </p>
                                         </div>
                                         <div class="form-group">
-                                            <label for="description">Description</label>
+                                            <label for="description">Description<span style="color: red">*</span></label>
                                             <div class="editor-wrapper">
                                                 <textarea name="post_content" id="description" class="form-control"
                                                           style="width: 100%; height: 90px"
@@ -195,15 +196,15 @@
                                             </p>
                                         </div>
                                         <div class="form-group">
-                                            <label for="price">Thumbnail</label>
+                                            <label for="price">Thumbnail<span style="color: red">*</span></label>
                                             {!!  renderMediaManage('thumb',$postMetaMap[\App\Core\Glosary\MetaKey::THUMBNAIL['VALUE']]) !!}
                                         </div>
                                         <div class="form-group">
-                                            <label for="price">Logo</label>
+                                            <label for="price">Logo<span style="color: red">*</span></label>
                                             {!!  renderMediaManage('logo',$postMetaMap[\App\Core\Glosary\MetaKey::LOGO['VALUE']]) !!}
                                         </div>
                                         <div class="form-group">
-                                            <label for="file">Banner</label>
+                                            <label for="file">Banner<span style="color: red">*</span></label>
                                             @php
                                                 $banner = $postMetaMap[\App\Core\Glosary\MetaKey::BANNER['VALUE']];
                                             @endphp
@@ -232,10 +233,11 @@
                                         </div>
                                     </div>
                                     <div class="tab-pane p-3" id="slide" role="tabpanel">
-                                        <table class="table-bordered table">
+                                        <table class="table-bordered table table-striped">
                                             <thead>
                                             <tr>
-                                                <th>Image</th>
+                                                <th></th>
+                                                <th>Image<span style="color: red">*</span></th>
                                                 <th></th>
                                             </tr>
                                             </thead>
@@ -246,6 +248,7 @@
                                             @if(isset($slides) && !empty($slides))
                                                 @foreach($slides as $key => $value)
                                                     <tr>
+                                                        <td class="counter">{{ $key + 1 }}</td>
                                                         <td>
                                                             {!! renderMediaManage('images[]',$value) !!}
                                                         </td>
@@ -278,9 +281,10 @@
                                         </table>
                                     </div>
                                     <div class="tab-pane p-3" id="type" role="tabpanel">
-                                        <table class="table table-bordered">
+                                        <table class="table table-bordered table-striped">
                                             <thead>
                                                 <tr>
+                                                    <th></th>
                                                     <th>Rooms type</th>
                                                     <th>Inventory</th>
                                                     <th></th>
@@ -293,6 +297,7 @@
                                             @if(isset($types) && !empty($types))
                                                 @foreach($types as $key => $value)
                                                 <tr>
+                                                    <td class="counter">{{ $key + 1 }}</td>
                                                     <td>
                                                         <input type="text" class="form-control input-type" name="room_types[]" value="{{ $value->type }}">
                                                     </td>
@@ -309,14 +314,30 @@
                                                     </td>
                                                 </tr>
                                             @endforeach
+                                            @else
+                                                <tr>
+                                                    <td class="counter">1</td>
+                                                    <td>
+                                                        <input type="text" class="form-control input-type" name="room_types[]">
+                                                    </td>
+                                                    <td>
+                                                        <input type="number" class="form-control input-type" name="inventories[]">
+                                                    </td>
+                                                    <td style="width: 50px; vertical-align: middle">
+                                                        <div class="action-wrapper">
+                                                            <button class="btn btn-success btn-add"><i class="dripicons-plus"></i></button>
+                                                        </div>
+                                                    </td>
+                                                </tr>
                                             @endif
                                             </tbody>
                                         </table>
                                     </div>
                                     <div class="tab-pane p-3" id="settings" role="tabpanel">
-                                        <table class="table table-bordered">
+                                        <table class="table table-bordered table-striped">
                                             <thead>
                                             <tr>
+                                                <th></th>
                                                 <th>Facilities and Amenities</th>
                                                 <th></th>
                                             </tr>
@@ -328,6 +349,7 @@
                                                 @if(isset($facilities) && !empty($facilities))
                                                     @foreach($facilities as $key => $value)
                                                         <tr>
+                                                            <td class="counter">{{ $key + 1 }}</td>
                                                             <td>
                                                                 <input type="text" class="form-control input-type" name="facilities[]" value="{{ $value }}">
                                                             </td>
@@ -341,6 +363,21 @@
                                                             </td>
                                                         </tr>
                                                     @endforeach
+                                                @else
+                                                    <tr>
+                                                        <td class="counter">1</td>
+                                                        <td>
+                                                            <input type="text" class="form-control input-type" name="facilities[]" value="{{ $value }}">
+                                                        </td>
+                                                        <td style="width: 50px; vertical-align: middle">
+                                                            <div class="action-wrapper">
+                                                                <button class="btn btn-success btn-add"><i class="dripicons-plus"></i></button>
+                                                                @if($key > 0)
+                                                                    <button class="btn btn-danger btn-delete"><i class="dripicons-minus"></i></button>
+                                                                @endif
+                                                            </div>
+                                                        </td>
+                                                    </tr>
                                                 @endif
                                             </tbody>
                                         </table>
@@ -349,7 +386,6 @@
                                         <table class="table table-bordered">
                                             <thead>
                                                 <tr>
-                                                    <th rowspan="2" style="text-align: center; vertical-align: middle">Image</th>
                                                     <th rowspan="2" style="text-align: center; vertical-align: middle">Address</th>
                                                     <th rowspan="2" style="text-align: center; vertical-align: middle">City</th>
                                                     <th colspan="2" style="text-align: center; vertical-align: middle">Location</th>
@@ -364,9 +400,6 @@
                                                     $map = $postMetaMap[\App\Core\Glosary\MetaKey::LOCATION['VALUE']];
                                                 @endphp
                                                 <tr>
-                                                    <td style="width: 260px">
-                                                        {!! renderMediaManage('map_image',$map->image ? $map->image : null,false) !!}
-                                                    </td>
                                                     <td><textarea type="text" class="form-control" name="map_address">{{ old('map_address') ? old('map_address') : $map->address}}</textarea></td>
                                                     <td><input type="text" class="form-control" name="map_city" value="{{ old('map_city') ? old('map_city') : $map->city }}"></td>
                                                     <td>
@@ -518,6 +551,7 @@
                 e.preventDefault();
                 let row = $(this).parents('tr').clone();
 
+
                 $(this).parents('tbody').append(row);
                 row.find('.image-preview-container').empty();
                 row.find('.home-slider-image').val('');
@@ -527,10 +561,20 @@
                 // type
                 row.find('.input-type').val('');
 
+                let counter = $(this).parents('tbody').find('tr').length;
+                console.log(counter);
+                row.find('.counter').text(counter);
             })
             $('body').on('click', '.btn-delete', function (e) {
                 e.preventDefault();
+
+                let counter = $(this).parents('tbody').find('tr').length - 1;
+                // console.log(counter);
+                let parent = $(this).parents('tbody');
                 $(this).parents('tr').remove();
+                for ( let i = 0 ; i < counter; i++) {
+                    parent.find('tr td.counter').eq(i).text(i+1);
+                }
             })
 
         })

@@ -25,7 +25,7 @@ class PostRepository extends EloquentRepository
 
     public function getAllSlugs()
     {
-        return $this->_model->select('post_name')->get()->toArray();
+        return $this->_model->select('post_name')->get();
     }
 
     public function getPosts()

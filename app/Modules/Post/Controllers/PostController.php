@@ -86,7 +86,6 @@ class PostController extends Controller
                 }
 
                 $dataMap = [
-                    'image' => $request->input('map_image') ? $request->input('map_image') : '',
                     'address' => $request->input('map_address') ? $request->input('map_address') : '',
                     'city' => $request->input('map_city') ? $request->input('map_city') : '',
                     'location' => [
@@ -369,7 +368,6 @@ class PostController extends Controller
                 // Save map
                 $mapCondition = [['post_id','=',$id],['meta_key' ,'=', MetaKey::LOCATION['VALUE']]];
                 $dataMap = [
-                    'image' => $request->input('map_image') ? $request->input('map_image') : '',
                     'address' => $request->input('map_address') ? $request->input('map_address') : '',
                     'city' => $request->input('map_city') ? $request->input('map_city') : '',
                     'location' => [
@@ -500,7 +498,6 @@ class PostController extends Controller
                 }
 
                 $dataMap = [
-                    'image' => $request->input('map_image') ? $request->input('map_image') : '',
                     'address' => $request->input('map_address') ? $request->input('map_address') : '',
                     'location' => [
                         'lat' => $request->input('map_lat') ? $request->input('map_lat') : '',

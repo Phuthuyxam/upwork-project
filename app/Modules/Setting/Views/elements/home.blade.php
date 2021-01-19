@@ -518,9 +518,10 @@
         </div>
 
         <div class="form-group row">
-            <table class="table table-bordered">
+            <table class="table table-bordered table-striped">
                 <thead>
                 <tr>
+                    <th></th>
                     <th>Add Brand</th>
                     <th></th>
                 </tr>
@@ -528,8 +529,9 @@
                 <tbody>
 
                 @if(isset($dataHome['our_brand']['brands']) && !empty($dataHome['our_brand']['brands']))
-                    @foreach($dataHome['our_brand']['brands'] as $brand)
+                    @foreach($dataHome['our_brand']['brands'] as $key => $brand)
                         <tr>
+                            <td class="counter">{{ $key + 1 }}</td>
                             <td style="">
                                 <div class="row">
 
@@ -579,6 +581,7 @@
                     @endforeach
                 @else
                     <tr>
+                        <td class="counter">1</td>
                         <td style="">
                             <div class="row">
 

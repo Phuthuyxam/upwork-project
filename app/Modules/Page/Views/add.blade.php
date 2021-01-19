@@ -95,7 +95,9 @@
                                     </li>
                                     @if(!in_array($template,$defaultTemplate))
                                     <li class="nav-item" id="customTab">
-                                        <a class="nav-link " data-toggle="tab" href="#slide" role="tab">Custom Setting</a>
+                                        <a class="nav-link " data-toggle="tab" href="#slide" role="tab">
+                                           {{ \App\Core\Glosary\PageTemplateConfigs::parse($template)['TAB_TITLE'] }}
+                                        </a>
                                     </li>
                                     @endif
                                 </ul>
@@ -139,7 +141,7 @@
                                             </p>
                                         </div>
                                         <div class="form-group">
-                                            <label for="description">Content <span style="color: red">*</span></label>
+                                            <label for="description">Content</label>
                                             <div class="editor-wrapper">
                                                 <textarea name="post_content" id="description" class="form-control"
                                                           style="width: 100%; height: 90px"
@@ -263,7 +265,11 @@
 @section('script')
     <script>
         {{--const maxFileSize = '{{ \App\Core\Glosary\MaxFileSize::IMAGE['VALUE'] }}';--}}
-        {{--const slugs = JSON.parse('{!! json_encode($slugs) !!}')--}}
+        @if(count($allSlug))
+            const slugs = JSON.parse('{!! json_encode($allSlug) !!}');
+        @else
+            const slugs = '';
+        @endif
         CKEDITOR.replace('description', {filebrowserImageBrowseUrl: '/file-manager/ckeditor'});
         $(document).ready(function () {
 
@@ -288,7 +294,7 @@
                     $(this).val(changeToSlug($('#title').val()));
                     $(this).removeClass('required');
                 } else {
-                    if (slugs.indexOf(val) >= 0) {
+                    if (slugs.indexOf(val) >= 0 && $slugs != '') {
                         $('#slug-error').text('Slug already exist');
                         $(this).addClass('error');
                     } else {
@@ -387,14 +393,22 @@
             count = count + 1;
             $(this).parents('.section').find('.item-count').val(count);
 
+            let counter = $(this).parents('tbody').find('tr').length;
+            console.log(counter);
+            row.find('.counter').text(counter);
         })
         $('body').on('click','.btn-delete-type',function (e){
             e.preventDefault();
             let count = parseInt($(this).parents('.section').find('.item-count').val());
             count = count - 1;
             $(this).parents('.section').find('.item-count').val(count);
-            $(this).parents('tr').remove();
 
+            let counter = $(this).parents('tbody').find('tr').length - 1;
+            let parent = $(this).parents('tbody');
+            $(this).parents('tr').remove();
+            for ( let i = 0 ; i < counter; i++) {
+                parent.find('tr td.counter').eq(i).text(i+1);
+            }
         })
 
         $('body').on('click', '.btn-add-child', function (e) {

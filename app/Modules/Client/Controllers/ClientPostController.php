@@ -13,6 +13,7 @@ use App\Core\Helper\OptionHelpers;
 use App\Http\Controllers\Controller;
 use App\Modules\Post\Repositories\PostMetaRepository;
 use App\Modules\Post\Repositories\PostRepository;
+use App\Modules\SystemConfig\Repositories\SystemConfigRepository;
 use App\Modules\Taxonomy\Repositories\TermMetaRepository;
 use App\Modules\Taxonomy\Repositories\TermRelationRepository;
 use App\Modules\Taxonomy\Repositories\TermRepository;
@@ -25,19 +26,13 @@ class ClientPostController extends Controller
 
     protected $postRepository;
     protected $postMetaRepository;
-    protected $termRepository;
-    protected $termRelationRepository;
-    protected $termMetaRepository;
+    protected $systemRepository;
 
-    public function __construct(PostRepository $postRepository, PostMetaRepository $postMetaRepository,
-                                TermRepository $termRepository, TermRelationRepository $termRelationRepository,
-                                TermMetaRepository $termMetaRepository)
+    public function __construct(PostRepository $postRepository, PostMetaRepository $postMetaRepository, SystemConfigRepository $systemRepository)
     {
         $this->postRepository = $postRepository;
         $this->postMetaRepository = $postMetaRepository;
-        $this->termRepository = $termRepository;
-        $this->termRelationRepository = $termRelationRepository;
-        $this->termMetaRepository = $termMetaRepository;
+        $this->systemRepository = $systemRepository;
     }
 
     public function detail($slug){
@@ -52,11 +47,20 @@ class ClientPostController extends Controller
                 return view('Client::pages.404');
             }
 
+            $hotelPage = '';
+            $bookingType = '';
+            if ($post->post_type == PageTemplateConfigs::POST['NAME']) {
+                $hotelPage = $this->postRepository->getInstantModel()->where('post_type',PageTemplateConfigs::HOTEL['NAME'])->first();
+
+                $bookingType = $this->systemRepository->findByCondition([['option_key','=','booking_type']]);
+                if ($bookingType) {
+                    $bookingType = json_decode($bookingType->option_value);
+                }
+            }
             $postMeta = $this->postMetaRepository->getByPostId($post->id);
             $getBanner = $this->postMetaRepository->filter([['post_id' , $post->id] , ['meta_key', MetaKey::BANNER['VALUE'] ]]);
             if($getBanner && $getBanner->isNotEmpty()) {
                 $banners = json_decode($getBanner[0]->meta_value , true);
-
             }
             $seoConfig = SeoConfigs::getSeoKey();
             $seoDefault = [
@@ -161,58 +165,7 @@ class ClientPostController extends Controller
                     return view('Client::hotel',compact('post','pageMetaMap', 'translationMode','currentLanguage', 'seoDefault'));
                 }
             }else {
-                $termRelation = $this->termRelationRepository->getInstantModel()->where('object_id', $post->id)->first();
-                $termMeta = $termRelation != null ? $this->termMetaRepository->getInstantModel()->where('term_id', $termRelation->term_taxonomy_id)->get() : false ;
-                $termMetaMap = [];
-                if ($termMeta) {
-                    foreach ($termMeta->toArray() as $value) {
-                        $termMetaMap[MetaKey::display($value['meta_key'])] = json_decode($value['meta_value']);
-                    }
-                }
-
-                $relatePost = $termRelation != null ? $this->termRelationRepository->getInstantModel()->where('term_taxonomy_id', $termRelation->term_taxonomy_id)->get() : false;
-                $ids = [];
-                if ($relatePost) {
-                    $relatePost = $relatePost->toArray();
-                    foreach ($relatePost as $value) {
-                        if ($value['object_id'] != $post->id) {
-                            $ids[] = $value['object_id'];
-                        }
-                    }
-                }
-                $relatePostMap = [];
-                $relatePostMetaMap = [];
-                if ($user) {
-                    $relatePosts = $this->postRepository->findByIds($ids);
-                }else{
-                    $relatePosts = $this->postRepository->findByIds($ids,false);
-                }
-                if (count($relatePosts)) {
-                    $relatePostMap = $relatePosts->toArray();
-                    foreach ($relatePostMap as $key => $value) {
-                        $relatePostMetaMap[$value['id']] = [
-                            'slug' => $value['post_name'],
-                            'title' => $value['post_title'],
-                        ];
-                    }
-                }
-
-                $relatePostMeta = $this->postMetaRepository->findByPostIds($ids);
-
-                if (count($relatePostMeta)) {
-                    $relatePostMeta = $relatePostMeta->toArray();
-                    foreach ($relatePostMetaMap as $key => $value) {
-                        foreach ($relatePostMeta as $k => $meta) {
-                            if ($key == $meta['post_id']) {
-                                if (isset($meta['meta_key'])) {
-                                    $relatePostMetaMap[$key][MetaKey::display($meta['meta_key'])] = json_decode($meta['meta_value']);
-                                }
-                            }
-                        }
-                    }
-                }
-
-                return view('Client::hotel-detail', compact('post', 'postMetaMap', 'termMetaMap', 'relatePostMetaMap', 'relatePostMap', 'translationMode','currentLanguage', 'seoDefault'));
+                return view('Client::hotel-detail', compact('post', 'postMetaMap', 'translationMode','currentLanguage', 'seoDefault','hotelPage','bookingType'));
             }
         }else{
             return view('Client::pages.404');
@@ -238,6 +191,10 @@ class ClientPostController extends Controller
                 ->subject('Your Website Contact Form');
         });
         Session::flash('flash_message', 'Send message successfully!');
+
+    }
+
+    public function booking(Request $request){
 
     }
 

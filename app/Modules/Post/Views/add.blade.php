@@ -119,7 +119,7 @@
                                             </p>
                                         </div>
                                         <div class="form-group">
-                                            <label for="rate">Rate<span style="color: red">*</span></label>
+                                            <label for="rate">Star<span style="color: red">*</span></label>
                                             <input type="number" class="form-control required" name="rate" id="rate"
                                                    placeholder="Rate" max="5" min="0"
                                                    value="{{ old('rate') }}">
@@ -187,15 +187,17 @@
                                         </div>
                                     </div>
                                     <div class="tab-pane p-3" id="slide" role="tabpanel">
-                                        <table class="table-bordered table">
+                                        <table class="table-bordered table table-striped">
                                             <thead>
                                             <tr>
+                                                <th></th>
                                                 <th>Image<span style="color: red">*</span></th>
                                                 <th></th>
                                             </tr>
                                             </thead>
                                             <tbody>
                                             <tr>
+                                                <td class="counter">1</td>
                                                 <td>
                                                     {!!  renderMediaManage('images[]') !!}
                                                 </td>
@@ -210,9 +212,10 @@
                                         </table>
                                     </div>
                                     <div class="tab-pane p-3" id="type" role="tabpanel">
-                                        <table class="table table-bordered">
+                                        <table class="table table-bordered table-striped">
                                             <thead>
                                             <tr>
+                                                <th></th>
                                                 <th>Rooms type</th>
                                                 <th>Inventory</th>
                                                 <th></th>
@@ -222,6 +225,7 @@
                                             @if(old('room_types') && old('inventories'))
                                                 @foreach(old('room_types') as $key => $value)
                                                     <tr>
+                                                        <td class="counter">{{ $key + 1 }}</td>
                                                         <td>
                                                             <input type="text" class="form-control" name="room_types[]" value="{{ $value }}">
                                                         </td>
@@ -240,6 +244,7 @@
                                                 @endforeach
                                             @else
                                                 <tr>
+                                                    <td class="counter">1</td>
                                                     <td>
                                                         <input type="text" class="form-control input-type" name="room_types[]">
                                                     </td>
@@ -257,9 +262,10 @@
                                         </table>
                                     </div>
                                     <div class="tab-pane p-3" id="settings" role="tabpanel">
-                                        <table class="table table-bordered">
+                                        <table class="table table-bordered table-striped">
                                             <thead>
                                             <tr>
+                                                <th></th>
                                                 <th>Facilities and Amenities</th>
                                                 <th></th>
                                             </tr>
@@ -268,6 +274,7 @@
                                             @if(old('facilities'))
                                                 @foreach(old('facilities') as $key => $value)
                                                     <tr>
+                                                        <td class="counter">{{ $key + 1 }}</td>
                                                         <td>
                                                             <input type="text" class="form-control input-type" name="facilities[]" value="{{ $value }}">
                                                         </td>
@@ -283,6 +290,7 @@
                                                 @endforeach
                                             @else
                                                 <tr>
+                                                    <td class="counter">1</td>
                                                     <td>
                                                         <input type="text" class="form-control input-type" name="facilities[]">
                                                     </td>
@@ -301,7 +309,6 @@
                                         <table class="table table-bordered">
                                             <thead>
                                                 <tr>
-                                                    <th rowspan="2" style="text-align: center; vertical-align: middle">Image</th>
                                                     <th rowspan="2" style="text-align: center; vertical-align: middle">Address</th>
                                                     <th rowspan="2" style="text-align: center; vertical-align: middle">City</th>
                                                     <th colspan="2" style="text-align: center; vertical-align: middle">Location</th>
@@ -313,9 +320,6 @@
                                             </thead>
                                             <tbody>
                                                 <tr>
-                                                    <td style="width: 260px">
-                                                        {!!  renderMediaManage('map_image',null,false) !!}
-                                                    </td>
                                                     <td><textarea type="text" class="form-control" name="map_address">{{ old('map_address') }}</textarea></td>
                                                     <td><input type="text" class="form-control" name="map_city">{{ old('map_city') }}</td>
                                                     <td>
@@ -489,12 +493,20 @@
                 row.find('.input-type').val('');
 
                 $(this).parents('tbody').append(row);
+
+                let counter = $(this).parents('tbody').find('tr').length;
+                row.find('.counter').text(counter);
             })
             $('body').on('click', '.btn-delete', function (e) {
                 e.preventDefault();
+                let counter = $(this).parents('tbody').find('tr').length - 1;
+                // console.log(counter);
+                let parent = $(this).parents('tbody');
                 $(this).parents('tr').remove();
+                for ( let i = 0 ; i < counter; i++) {
+                    parent.find('tr td.counter').eq(i).text(i+1);
+                }
             })
-
         })
 
         function checkRequired(formId) {

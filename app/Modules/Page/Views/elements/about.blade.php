@@ -1,8 +1,9 @@
 <div class="section">
     <h5>Our Vision</h5>
-    <table class="table table-bordered">
+    <table class="table table-bordered table-striped">
         <thead>
         <tr>
+            <th></th>
             <th>Image</th>
             <th>Description</th>
             <th></th>
@@ -12,6 +13,7 @@
         @if(isset($itemMap) && !empty($itemMap))
             @foreach($itemMap[0] as $key => $value)
                 <tr>
+                    <td class="counter">{{ $key + 1 }}</td>
                     <td style="max-width: 400px;">
                         {!! renderMediaManage('images[]',$value->image) !!}
                     </td>
@@ -32,6 +34,7 @@
             @endforeach
         @else
             <tr>
+                <td class="counter">1</td>
                 <td style="width: 400px;">
                     {!! renderMediaManage('images[]') !!}
                 </td>
@@ -56,9 +59,10 @@
 
 <div class="section">
     <h5>Our Mission</h5>
-    <table class="table table-bordered">
+    <table class="table table-bordered table-striped">
         <thead>
         <tr>
+            <th></th>
             <th>Image</th>
             <th>Description</th>
             <th></th>
@@ -68,6 +72,7 @@
         @if(isset($itemMap) && !empty($itemMap))
             @foreach($itemMap[1] as $key => $value)
                 <tr>
+                    <td class="counter">{{ $key + 1 }}</td>
                     <td style="max-width: 400px;">
                         {!! renderMediaManage('images[]',$value->image) !!}
                     </td>
@@ -90,6 +95,7 @@
             @endforeach
         @else
             <tr>
+                <td class="counter">1</td>
                 <td style="width: 400px;">
                     {!! renderMediaManage('images[]') !!}
                 </td>
@@ -114,9 +120,10 @@
 
 <div class="section">
 <h5>Our Reward</h5>
-<table class="table table-bordered">
+<table class="table table-bordered table-striped">
     <thead>
         <tr>
+            <th></th>
             <th>Image</th>
             <th></th>
         </tr>
@@ -125,12 +132,13 @@
         @if(isset($imageMap) && !empty($imageMap))
             @foreach($imageMap as $key=>$value)
                 <tr>
+                    <td class="counter">{{ $key + 1 }}</td>
                     <td style="max-width: 400px;">
                         <div class="image-items">
                             <table class="table table-bordered">
                                 <tbody>
                                 @foreach($value as $k => $item)
-                                    <tr>
+                                    <tr style="background: #fff">
                                         <td>{!! renderMediaManage('gallery[]',$item) !!}</td>
                                         <td style="vertical-align: middle;width: 50px;">
                                             <div class="button-wrapper">
@@ -159,11 +167,12 @@
             @endforeach
         @else
             <tr>
+                <td class="counter">1</td>
                 <td style="max-width: 400px;">
                     <div class="image-items">
                         <table class="table table-bordered">
                             <tbody>
-                                <tr>
+                                <tr style="background: #fff">
                                     <td>{!! renderMediaManage('gallery[]') !!}</td>
                                     <td style="vertical-align: middle;width: 50px;">
                                         <div class="button-wrapper">

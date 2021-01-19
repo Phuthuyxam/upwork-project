@@ -156,19 +156,19 @@
                         </a>
                     </div>
                 </div>
-                @if(isset($page->our_hotel->hotels) && !empty($page->our_hotel->hotels))
+                @if(isset($postMap) && !empty($postMap))
                     <div class="home-hotel-content">
                         <div class="row">
-                            @foreach($page->our_hotel->hotels as $item)
+                            @foreach($postMap as $item)
                                 <div class="col-xl-3 col-lg-3 col-sm-6">
-                                <a href="#" title="title">
+                                <a href="{{ route('detail',$item['slug']) }}" title="title">
                                     <div class="home-hotel-item">
                                         <div class="image">
-                                            {!! \App\Core\Helper\FrontendHelpers::renderImage($item->banner) !!}
+                                            {!! \App\Core\Helper\FrontendHelpers::renderImage($item[\App\Core\Glosary\MetaKey::THUMBNAIL['NAME']]) !!}
                                         </div>
                                         <div class="overlay">
                                             <div class="logo">
-                                                {!! \App\Core\Helper\FrontendHelpers::renderImage($item->logo) !!}
+                                                {!! \App\Core\Helper\FrontendHelpers::renderImage($item[\App\Core\Glosary\MetaKey::LOGO['NAME']]) !!}
                                             </div>
                                         </div>
                                     </div>

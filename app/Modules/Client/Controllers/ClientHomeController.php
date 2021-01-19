@@ -5,6 +5,8 @@ namespace App\Modules\Client\Controllers;
 
 
 use App\Core\Glosary\MetaKey;
+use App\Core\Glosary\PageTemplateConfigs;
+use App\Core\Glosary\PostStatus;
 use App\Core\Glosary\PostType;
 use App\Core\Glosary\SeoConfigs;
 use App\Core\Helper\OptionHelpers;
@@ -14,6 +16,7 @@ use App\Modules\Post\Repositories\PostMetaRepository;
 use App\Modules\Post\Repositories\PostRepository;
 use App\Modules\Setting\Repositories\OptionRepository;
 
+use Illuminate\Support\Facades\Auth;
 use Spatie\SchemaOrg\Graph;
 
 
@@ -59,7 +62,12 @@ class ClientHomeController extends Controller
             $seoConfig['SOCIAL']['TWITTER']['IMAGE'] => isset($systemConfig['logo']) ? $systemConfig['logo'] : ""
         ];
 
-        $posts = $this->postRepository->getInstantModel()->where('post_type',PostType::POST['VALUE'])->get();
+        if (Auth::user()){
+            $posts = $this->postRepository->getInstantModel()->where('post_type',PageTemplateConfigs::POST['NAME'])->get();
+        }else{
+            $posts = $this->postRepository->getInstantModel()->where([['post_type','=',PageTemplateConfigs::POST['NAME']],['post_status','=',PostStatus::PUBLIC['VALUE']]])->get();
+        }
+
         $mapData = [];
         if (count($posts)) {
             $ids = [];
@@ -68,6 +76,7 @@ class ClientHomeController extends Controller
                 $ids[] = $value['id'];
                 $postMap[$value['id']] = [
                     'name' => $value['post_title'],
+                    'slug' => $value['post_name']
                 ];
             }
             $postMeta = $this->postMetaRepository->findByPostIds($ids);
@@ -85,7 +94,7 @@ class ClientHomeController extends Controller
                     foreach ($postMap as $value) {
                         $mapData[] = [
                             'name' => isset($value['name']) ? $value['name'] : "",
-                            'image' => isset($value[MetaKey::LOCATION['NAME']]->image) ?  $value[MetaKey::LOCATION['NAME']]->image : "",
+                            'image' => isset($value[MetaKey::THUMBNAIL['NAME']]) ?  $value[MetaKey::THUMBNAIL['NAME']] : "",
                             'address' => isset($value[MetaKey::LOCATION['NAME']]->address) ? $value[MetaKey::LOCATION['NAME']]->address : "",
                             'city' => isset($value[MetaKey::LOCATION['NAME']]->city) ? $value[MetaKey::LOCATION['NAME']]->city : "",
                             'rate' => isset($value[MetaKey::RATE['NAME']]) ? $value[MetaKey::RATE['NAME']] : "",
@@ -98,7 +107,7 @@ class ClientHomeController extends Controller
                 }
             }
         }
-        return view('Client::homepage',compact('page', 'seoDefault','currentLanguage','mapData'));
+        return view('Client::homepage',compact('page', 'seoDefault','currentLanguage','mapData','postMap'));
     }
 
 }
