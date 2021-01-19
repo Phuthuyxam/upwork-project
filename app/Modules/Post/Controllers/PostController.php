@@ -189,7 +189,7 @@ class PostController extends Controller
             if(!empty($translationPost) && $translationPost->isNotEmpty()){
                 $langCode = (LocationConfigs::getLanguageDefault()['VALUE'] == app()->getLocale()) ?  $translationPost[0]->to_lang : $translationPost[0]->from_lang;
                 $langId = (LocationConfigs::getLanguageDefault()['VALUE'] == app()->getLocale()) ?  $translationPost[0]->from_object_id : $translationPost[0]->to_object_id;
-                $translationRecord = [ 'url' => renderTranslationUrl(route('page.edit' , $langId), $langCode) , 'lang_code' => $langCode ];
+                $translationRecord = [ 'url' => renderTranslationUrl(route('post.edit' , $langId), $langCode) , 'lang_code' => $langCode ];
             } else {
                 $translationRecord = false;
             }
