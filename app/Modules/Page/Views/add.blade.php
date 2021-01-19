@@ -461,12 +461,28 @@
             }
             let display = $("#make-translation option:selected").data('display');
             let text = "Are you sure make a translation to " + display + " ? After confirm you will complete with save button";
-            var r = confirm(text);
-            if (r == true) {
-                $('#translation_mode').val(lanCode);
-                $('#ptx-save-btn').text("Publish with "+display);
-                $('#ptx-save-btn-draf').text("Save Draft with "+display);
-            }
+            Swal.fire({
+                text: text,
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.value) {
+                    $('#translation_mode').val(lanCode);
+                    $('#ptx-save-btn').text("Publish with "+display);
+                    $('#ptx-save-btn-draf').text("Save Draft with "+display);
+
+                    if (lanCode == 'en') {
+                        $('body').find('input').css('text-align','left');
+                        $('body').find('textarea').css('text-align','left');
+                    }else{
+                        $('body').find('input').css('text-align','right');
+                        $('body').find('textarea').css('text-align','right');
+                    }
+                }
+            })
         });
     </script>
 @endsection

@@ -61,6 +61,11 @@
         .list-option .active a {
             color: #ffffff;
         }
+        @if($currentLanguage == 'ar/')
+            input,textarea {
+            text-align: right;
+        }
+        @endif
     </style>
 @endsection
 @section('content')
@@ -175,8 +180,13 @@
                 $('#translation_mode').val(lanCode);
                 $('#ptx-save-btn').text("Publish with "+display);
 
-                $('body').find('input').css('text-align','right');
-                $('body').find('textarea').css('text-align','right');
+                if (lanCode == 'en') {
+                    $('body').find('input').css('text-align','left');
+                    $('body').find('textarea').css('text-align','left');
+                }else{
+                    $('body').find('input').css('text-align','right');
+                    $('body').find('textarea').css('text-align','right');
+                }
             }
         })
     });

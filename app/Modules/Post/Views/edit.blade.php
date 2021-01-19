@@ -629,8 +629,13 @@
                     $('#ptx-save-btn').text("Publish with "+display);
                     $('#ptx-save-btn-draf').text("Save Draft with "+display);
 
-                    $('body').find('input').css('text-align','right');
-                    $('body').find('textarea').css('text-align','right');
+                    if (lanCode == 'en') {
+                        $('body').find('input').css('text-align','left');
+                        $('body').find('textarea').css('text-align','left');
+                    }else{
+                        $('body').find('input').css('text-align','right');
+                        $('body').find('textarea').css('text-align','right');
+                    }
                 }
             })
         });

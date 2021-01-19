@@ -23,7 +23,8 @@ class OptionController extends Controller
         $dataMenu = $this->optionRepository->filter([['option_key', OptionMetaKey::MENU['VALUE']]]);
         $dataFooter = $this->optionRepository->filter([['option_key', OptionMetaKey::FOOTER['VALUE']]]);
         $dataHome = $this->optionRepository->filter([['option_key', OptionMetaKey::HOME['VALUE']]]);
-        return view('Setting::index', compact( 'key', 'dataMenu', 'dataFooter','dataHome'));
+        $currentLanguage = generatePrefixLanguage() ? generatePrefixLanguage() : 'en/' ;
+        return view('Setting::index', compact( 'key', 'dataMenu', 'dataFooter','dataHome','currentLanguage'));
     }
 
     public function save($key = null, Request $request) {
