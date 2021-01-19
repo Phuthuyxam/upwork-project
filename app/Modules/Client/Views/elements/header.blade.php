@@ -42,7 +42,7 @@
                     <div class="language-select-wrapper">
                         <i style="font-size: 20px;" class="fas fa-globe"></i>
                         <div class="language-select">
-                            <span class="language">{{ strtoupper($currentLan) }}</span>
+                            <span class="language">{{ __("header_label_language") }}</span>
                             <i class="fa fa-angle-down"></i>
                         </div>
 

@@ -6,5 +6,6 @@
     "contact_form_placeholder_email" : "بريدك الالكتروني",
     "contact_form_placeholder_phone" : "رقم هاتفك",
     "contact_form_placeholder_project" : "الموضوع",
-    "contact_form_placeholder_message" : "رسالتك"
+    "contact_form_placeholder_message" : "رسالتك",
+    "header_label_language" : "عربي"
 }
