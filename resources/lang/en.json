@@ -7,5 +7,12 @@
     "contact_form_placeholder_phone" : "Your Phone",
     "contact_form_placeholder_project" : "Your Project",
     "contact_form_placeholder_message" : "Your Message",
-    "header_label_language" : "EN"
+    "header_label_language" : "EN",
+    "home_title" : "Home",
+    "detail_hotel_description" : "DESCRIPTION",
+    "detail_hotel_rooms_type_inventory" : "Rooms Type & Inventory",
+    "detail_hotel_inventory" : "Inventory",
+    "detail_hotel_rooms_type" : "Rooms Type",
+    "detail_hotel_facilities" : "Hotel Facilities and Amenities",
+    "detail_hotel_other" : "Other Hotels"
 }

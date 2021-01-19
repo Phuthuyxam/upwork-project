@@ -3,6 +3,7 @@
 namespace App\Modules\Post\Controllers;
 
 use App\Core\Glosary\LocationConfigs;
+use App\Core\Glosary\PageTemplateConfigs;
 use App\Core\Glosary\PostStatus;
 use App\Core\Glosary\MetaKey;
 use App\Core\Glosary\PostType;
@@ -473,7 +474,7 @@ class PostController extends Controller
             'post_author' => Auth::id(),
             'post_status' => $status,
             'post_content' => $request->input('post_content'),
-            'post_type' => PostType::POST['VALUE']
+            'post_type' => PageTemplateConfigs::POST['NAME']
         ];
         $translationRecord = $this->posRepository->filter([['post_name' , $request->input('post_name')]]);
 

@@ -83,8 +83,8 @@ class ClientPostController extends Controller
                 $postMetaMap[MetaKey::display($value['meta_key'])] = json_decode($value['meta_value']);
             }
 
-            if (isset($postMetaMap[MetaKey::PAGE_TEMPLATE['NAME']])) {
-                $template = $postMetaMap[MetaKey::PAGE_TEMPLATE['NAME']];
+            if (isset($post->post_type)) {
+                $template = PageTemplateConfigs::parse($post->post_type)['VALUE'];
                 $pageMeta = $this->postMetaRepository->getByPostId($post->id);
                 $pageMetaMap = [];
                 if ($pageMeta) {
@@ -160,9 +160,6 @@ class ClientPostController extends Controller
                 }
                 if ($template == PageTemplateConfigs::CONTACT['VALUE']) {
                     return view('Client::contact',compact('post','pageMetaMap', 'translationMode','currentLanguage', 'seoDefault'));
-                }
-                if ($template == PageTemplateConfigs::DEFAULT['VALUE']) {
-                    return view('Client::hotel',compact('post','pageMetaMap', 'translationMode','currentLanguage', 'seoDefault'));
                 }
             }else {
                 return view('Client::hotel-detail', compact('post', 'postMetaMap', 'translationMode','currentLanguage', 'seoDefault','hotelPage','bookingType'));

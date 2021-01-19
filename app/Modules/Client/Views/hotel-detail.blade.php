@@ -36,7 +36,7 @@
                 </div>
                 <div class="breadscrum">
                     <ul>
-                        <li class="item"><a href="{{ route('index') }}">{{ $currentLanguage == 'en' ? 'Home' : 'الصفحة الرئيسية' }}</a></li>
+                        <li class="item"><a href="{{ route('index') }}">{{__('home_title')}}</a></li>
                         @if(isset($hotelPage) && !empty($hotelPage))
                         <li class="item active">
                             <a href="{{ route('detail',$hotelPage->post_name) }}">
@@ -100,73 +100,78 @@
                         </div>
                         <div class="detail-content">
                             <div class="description-heading">
-                                <h3 class="tt-uper fw-semiBold">DESCRIPTION</h3>
+                                <h3 class="tt-uper fw-semiBold">{{ __('detail_hotel_description') }}</h3>
                             </div>
                             <div class="description">
                                 {!! $post->post_content !!}
                             </div>
-                            <div class="room-type">
-                                <div class="heading">
-                                    <h2 class="fw-semiBold">Rooms Type & Inventory</h2>
-                                </div>
-                                <div class="content">
-                                    <div class="row">
-                                        <div class="col-xl-6 col-lg-6 col-sm-6">
-                                            @if(isset($postMetaMap[\App\Core\Glosary\MetaKey::ROOM_TYPE['NAME']]) && !empty($postMetaMap[\App\Core\Glosary\MetaKey::ROOM_TYPE['NAME']]))
-                                                <div class="type-table">
-                                                        @php
-                                                            $types = $postMetaMap[\App\Core\Glosary\MetaKey::ROOM_TYPE['NAME']];
-                                                        @endphp
-                                                    <table class="table table-bordered">
-                                                        <thead>
-                                                            <th>Rooms Type</th>
-                                                            <th style="text-align: center;">Inventory</th>
-                                                        </thead>
-                                                        <tbody>
-                                                        @foreach($types as $value)
-                                                            <tr>
-                                                                <td>{{ $value->type }}</td>
-                                                                <td style="text-align: center;">{{ $value->inven }}</td>
-                                                            </tr>
-                                                        @endforeach
-                                                        </tbody>
-                                                    </table>
-                                                </div>
-                                            @endif
-                                        </div>
-                                        <div class="col-xl-6 col-lg-6 col-sm-6">
-                                            @if(isset($postMetaMap[\App\Core\Glosary\MetaKey::FACILITY['NAME']]) && !empty($postMetaMap[\App\Core\Glosary\MetaKey::FACILITY['NAME']]))
-                                                @php
-                                                    $facilities = $postMetaMap[\App\Core\Glosary\MetaKey::FACILITY['NAME']];
-                                                @endphp
-                                                <div class="facilities">
-                                                    <h2 class="fw-semiBold">Hotel Facilities and Amenities</h2>
-                                                    <div class="facility-list">
-                                                        <ul>
-                                                            @foreach($facilities as $value)
-                                                                <li>
-                                                                    <div class="icon">
-                                                                        <img src="{{ asset('client/images/Group3811.svg') }}" alt="">
-                                                                    </div>
-                                                                    <p>{{ $value }}</p>
-                                                                </li>
+                                <div class="room-type">
+                                    <div class="heading">
+                                        <h2 class="fw-semiBold">{{__('detail_hotel_rooms_type_inventory')}}</h2>
+                                    </div>
+                                    <div class="content">
+                                        <div class="row">
+                                            @if((isset($postMetaMap[\App\Core\Glosary\MetaKey::ROOM_TYPE['NAME']][0]->type)
+                                                && !empty($postMetaMap[\App\Core\Glosary\MetaKey::ROOM_TYPE['NAME']][0]->type))
+                                                ||(isset($postMetaMap[\App\Core\Glosary\MetaKey::ROOM_TYPE['NAME']][0]->inven)
+                                                && !empty($postMetaMap[\App\Core\Glosary\MetaKey::ROOM_TYPE['NAME']][0]->inven)))
+                                                <div class="col-xl-6 col-lg-6 col-sm-6">
+                                                    <div class="type-table">
+                                                            @php
+                                                                $types = $postMetaMap[\App\Core\Glosary\MetaKey::ROOM_TYPE['NAME']];
+                                                            @endphp
+                                                        <table class="table table-bordered">
+                                                            <thead>
+                                                                <th>{{ __('detail_hotel_rooms_type') }}</th>
+                                                                <th style="text-align: center;">{{ __('detail_hotel_inventory') }}</th>
+                                                            </thead>
+                                                            <tbody>
+                                                            @foreach($types as $value)
+                                                                <tr>
+                                                                    <td>{{ $value->type }}</td>
+                                                                    <td style="text-align: center;">{{ $value->inven }}</td>
+                                                                </tr>
                                                             @endforeach
-                                                        </ul>
+                                                            </tbody>
+                                                        </table>
                                                     </div>
                                                 </div>
                                             @endif
+                                            <div class="col-xl-6 col-lg-6 col-sm-6">
+                                                @if(isset($postMetaMap[\App\Core\Glosary\MetaKey::FACILITY['NAME']]) && !empty($postMetaMap[\App\Core\Glosary\MetaKey::FACILITY['NAME']][0]))
+                                                    @php
+                                                        $facilities = $postMetaMap[\App\Core\Glosary\MetaKey::FACILITY['NAME']];
+                                                    @endphp
+                                                    <div class="facilities">
+                                                        <h2 class="fw-semiBold">{{__('detail_hotel_facilities')}}</h2>
+                                                        <div class="facility-list">
+                                                            <ul>
+                                                                @foreach($facilities as $value)
+                                                                    <li>
+                                                                        <div class="icon">
+                                                                            <img src="{{ asset('client/images/Group3811.svg') }}" alt="">
+                                                                        </div>
+                                                                        <p>{{ $value }}</p>
+                                                                    </li>
+                                                                @endforeach
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                @endif
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
                             @if(isset($postMetaMap[\App\Core\Glosary\MetaKey::LOCATION['NAME']]) && !empty($postMetaMap[\App\Core\Glosary\MetaKey::LOCATION['NAME']]))
                                 @php
                                     $map = $postMetaMap[\App\Core\Glosary\MetaKey::LOCATION['NAME']];
                                 @endphp
-                            <div class="map">
-                                <iframe src="https://maps.google.com/maps?q={{ $map->location->lat }}, {{ $map->location->long }}&z=15&output=embed"
-                                        width="100%" height="400" frameborder="0" style="border:0"></iframe>
-                            </div>
+                                @if($map->location->lat != '' && $map->location->long != '')
+                                    <div class="map">
+                                        <iframe src="https://maps.google.com/maps?q={{ $map->location->lat }}, {{ $map->location->long }}&z=15&output=embed"
+                                                width="100%" height="400" frameborder="0" style="border:0"></iframe>
+                                    </div>
+                                @endif
                             @endif
                         </div>
                     </div>
@@ -177,7 +182,7 @@
                     <div class="col-xl-9">
                         <div class="other-hotels">
                             <div class="heading">
-                                <h2 class="fw-semiBold">Other Hotels</h2>
+                                <h2 class="fw-semiBold">{{__('detail_hotel_other')}}</h2>
                             </div>
                             <div class="hotels-content">
                                 <div class="row">
