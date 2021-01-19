@@ -67,11 +67,10 @@ class ClientHomeController extends Controller
         }else{
             $posts = $this->postRepository->getInstantModel()->where([['post_type','=',PageTemplateConfigs::POST['NAME']],['post_status','=',PostStatus::PUBLIC['VALUE']]])->get();
         }
-
+        $postMap = [];
         $mapData = [];
         if (count($posts)) {
             $ids = [];
-            $postMap = [];
             foreach ($posts->toArray() as $value) {
                 $ids[] = $value['id'];
                 $postMap[$value['id']] = [

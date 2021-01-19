@@ -51,6 +51,11 @@
         .action-wrapper .btn-add {
             margin-bottom: 10px;
         }
+        @if($currentLanguage == 'ar/')
+            input,textarea {
+                text-align: right;
+            }
+        @endif
     </style>
 @endsection
 @section('heading')

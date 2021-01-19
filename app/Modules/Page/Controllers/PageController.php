@@ -43,7 +43,7 @@ class PageController extends Controller
     public function add(Request $request,$template) {
         $pageTemplate = PageTemplateConfigs::parse($template)['VALUE'];
         if ($request->isMethod('get')) {
-            $currentLanguage = generatePrefixLanguage();
+            $currentLanguage = generatePrefixLanguage() ? generatePrefixLanguage() : 'en/' ;
             $slugs = $this->postRepository->getAllSlugs();
             $allSlug = [];
             if ($slugs) {
@@ -113,9 +113,9 @@ class PageController extends Controller
                         }
                     }
                 }
-                return view('Page::add',compact('template','defaultTemplate','pageMetaMap','imageMap','itemMap','page','translationRecord','allSlug'));
+                return view('Page::add',compact('template','defaultTemplate','pageMetaMap','imageMap','itemMap','page','translationRecord','allSlug','currentLanguage'));
             }
-            return view('Page::add',compact('template','defaultTemplate','page','pageMetaMap', 'translationRecord','allSlug'));
+            return view('Page::add',compact('template','defaultTemplate','page','pageMetaMap', 'translationRecord','allSlug','currentLanguage'));
         }else{
             try {
                 $currentLang = app()->getLocale();

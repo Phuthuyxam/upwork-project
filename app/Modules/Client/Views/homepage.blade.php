@@ -18,32 +18,34 @@
     <div class="content-wrapper">
         <section class="home-slider-wrapper">
             @if( isset($page->slider) && !empty($page->slider))
-            <div class="home-slider">
-                @foreach($page->slider as $item)
-                    <div class="item">
-                    <div class="slide-item-content">
-                        <div class="slide-logo">
-                            {!! \App\Core\Helper\FrontendHelpers::renderImage($item->logo) !!}
-                        </div>
-                        <div class="slide-description">
-                            <p>{{ $item->desc }}</p>
+                @if($page->slider[0]->logo != null && $page->slider[0]->desc != null && $page->slider[0]->banner_desktop != null && $page->slider[0]->banner_tablet != null && $page->slider[0]->banner_mobile != null)
+                    <div class="home-slider">
+                        @foreach($page->slider as $item)
+                            <div class="item">
+                                <div class="slide-item-content">
+                                    <div class="slide-logo">
+                                        {!! \App\Core\Helper\FrontendHelpers::renderImage($item->logo) !!}
+                                    </div>
+                                    <div class="slide-description">
+                                        <p>{{ $item->desc }}</p>
+                                    </div>
+                                </div>
+                                <picture>
+                                    <source srcset="{{ $item->banner_mobile }}" media="(max-width: 414px)">
+                                    <source srcset="{{ $item->banner_tablet }}" media="(max-width: 768px)">
+                                    {!! \App\Core\Helper\FrontendHelpers::renderImage($item->banner_desktop) !!}
+                                </picture>
+                            </div>
+                        @endforeach
+                    </div>
+                    <div class="slide-counter">
+                        <div class="container">
+                            <span id="counter-number">01</span>
+                            <span>of</span>
+                            <span>{{ count($page->slider) > 10 ? count($page->slider) : '0'.count($page->slider) }}</span>
                         </div>
                     </div>
-                    <picture>
-                        <source srcset="{{ $item->banner_mobile }}" media="(max-width: 414px)">
-                        <source srcset="{{ $item->banner_tablet }}" media="(max-width: 768px)">
-                        {!! \App\Core\Helper\FrontendHelpers::renderImage($item->banner_desktop) !!}
-                    </picture>
-                </div>
-                @endforeach
-            </div>
-            <div class="slide-counter">
-                <div class="container">
-                    <span id="counter-number">01</span>
-                    <span>of</span>
-                    <span>{{ count($page->slider) > 10 ? count($page->slider) : '0'.count($page->slider) }}</span>
-                </div>
-            </div>
+                @endif
             @endif
             <div class="hotel-search-wrapper">
                 <form action="">
@@ -117,22 +119,30 @@
         </section>
         @if(isset($page->our_service) && !empty($page->our_service))
             <section class="home-service-wrapper">
+                @if($page->our_service->background != null)
                 <div class="home-service-background">
                     {!! \App\Core\Helper\FrontendHelpers::renderImage($page->our_service->background) !!}
                 </div>
+                @endif
                 <div class="container">
                     <div class="home-service-content">
                         <div class="home-service-intro" style="background-image: url({{ asset('client/images/MaskGroup14.jpg') }});">
                             <div class="home-service">
-                                <h2 class="tt-uper fw-bold">{{ $page->our_service->title }}</h2>
-                                <h3 class="fw-semiBold">{{ $page->our_service->heading }}</h3>
+                                @if($page->our_service->title != null)
+                                    <h2 class="tt-uper fw-bold">{{ $page->our_service->title }}</h2>
+                                @endif
+                                @if($page->our_service->heading != null)
+                                    <h3 class="fw-semiBold">{{ $page->our_service->heading }}</h3>
+                                @endif
                                 {!! $page->our_service->paragraph !!}
-                                <a href="{{ $page->our_service->url }}" class="btn-view-more" title="title">
-                                    <div class="diamond">
-                                        <i class="fas fa-long-arrow-alt-right"></i>
-                                    </div>
-                                    <span class="tt-uper">{{ $currentLanguage == 'en' ? 'see more services' : 'اطلع على المزيد من الخدمات' }}</span>
-                                </a>
+                                @if($page->our_service->url != null)
+                                    <a href="{{ $page->our_service->url }}" class="btn-view-more" title="title">
+                                        <div class="diamond">
+                                            <i class="fas fa-long-arrow-alt-right"></i>
+                                        </div>
+                                        <span class="tt-uper">{{ $currentLanguage == 'en' ? 'see more services' : 'اطلع على المزيد من الخدمات' }}</span>
+                                    </a>
+                                @endif
                             </div>
                         </div>
                     </div>
@@ -144,17 +154,23 @@
             <div class="container">
                 <div class="home-hotel-heading">
                     <div class="heading">
-                        <h3 class="tt-uper">{{ $page->our_hotel->title }}</h3>
-                        <h2 class="tt-uper fw-bold">{{ $page->our_hotel->heading }}</h2>
+                        @if($page->our_hotel->title != null)
+                            <h3 class="tt-uper">{{ $page->our_hotel->title }}</h3>
+                        @endif
+                        @if($page->our_hotel->heading)
+                            <h2 class="tt-uper fw-bold">{{ $page->our_hotel->heading }}</h2>
+                        @endif
                     </div>
-                    <div class="view-more-detail">
-                        <a href="{{ $page->our_hotel->url }}" class="btn-view-more" title="title">
-                            <div class="diamond">
-                                <i class="fas fa-long-arrow-alt-right" aria-hidden="true"></i>
-                            </div>
-                            <span class="tt-uper">{{ $currentLanguage == 'en' ? 'see more details' : 'اطلع على المزيد' }}</span>
-                        </a>
-                    </div>
+                    @if($page->our_hotel->url != null)
+                        <div class="view-more-detail">
+                            <a href="{{ $page->our_hotel->url }}" class="btn-view-more" title="title">
+                                <div class="diamond">
+                                    <i class="fas fa-long-arrow-alt-right" aria-hidden="true"></i>
+                                </div>
+                                <span class="tt-uper">{{ $currentLanguage == 'en' ? 'see more details' : 'اطلع على المزيد' }}</span>
+                            </a>
+                        </div>
+                    @endif
                 </div>
                 @if(isset($postMap) && !empty($postMap))
                     <div class="home-hotel-content">
@@ -217,7 +233,7 @@
         @endif
 
         {{-- brand client show --}}
-
+{{--        @dd($page->our_brand)--}}
         @if(isset($page->our_brand) && !empty($page->our_brand))
             @php
                 $brands = $page->our_brand;
@@ -226,22 +242,29 @@
                 <div class="container">
                     <div class="home-hotel-heading" style="display: block;">
                         <div class="heading">
-                            <h3 class="tt-uper">{{ isset($brands->heading) && !empty($brands->heading) ? $brands->heading : "" }}</h3>
-                            <h2 class="tt-uper fw-bold">{{ isset($brands->title) && !empty($brands->title) ? $brands->title : "" }}</h2>
+                            @if(isset($brands->heading) && !empty($brands->heading))
+                            <h3 class="tt-uper">{{ $brands->heading }}</h3>
+                            @endif
+                            @if(isset($brands->title) && !empty($brands->title))
+                                <h2 class="tt-uper fw-bold">{{ $brands->title }}</h2>
+                            @endif
                         </div>
                     </div>
                     <div class="brand-content">
                         @if(isset($brands->brands) && !empty($brands->brands))
-
-                        <div class="brand-slider">
-                            @foreach($brands->brands as $brand)
-                                <div class="item">
-                                    <a href="{{ $brand->url }}">
-                                        {!! \App\Core\Helper\FrontendHelpers::renderImage($brand->banner) !!}
-                                    </a>
+                            @if($brands->brands[0]->banner != null)
+                                <div class="brand-slider">
+                                    @foreach($brands->brands as $brand)
+                                        @if($brand->banner != '')
+                                            <div class="item">
+                                                <a href="{{ $brand->url }}">
+                                                    {!! \App\Core\Helper\FrontendHelpers::renderImage($brand->banner) !!}
+                                                </a>
+                                            </div>
+                                        @endif
+                                    @endforeach
                                 </div>
-                            @endforeach
-                        </div>
+                            @endif
                         @endif
                     </div>
                 </div>

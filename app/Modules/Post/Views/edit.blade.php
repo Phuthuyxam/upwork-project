@@ -55,6 +55,11 @@
         .action-wrapper .btn-add {
             margin-bottom: 1rem;
         }
+        @if($currentLanguage == 'ar/')
+            input,textarea {
+                text-align: right;
+            }
+        @endif
     </style>
 @endsection
 @section('heading')
@@ -611,12 +616,23 @@
             }
             let display = $("#make-translation option:selected").data('display');
             let text = "Are you sure make a translation to " + display + " ? After confirm you will complete with save button";
-            var r = confirm(text);
-            if (r == true) {
-                $('#translation_mode').val(lanCode);
-                $('#ptx-save-btn').text("Publish with "+display);
-                $('#ptx-save-btn-draf').text("Save Draf with "+display);
-            }
+            Swal.fire({
+                text: text,
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.value) {
+                    $('#translation_mode').val(lanCode);
+                    $('#ptx-save-btn').text("Publish with "+display);
+                    $('#ptx-save-btn-draf').text("Save Draft with "+display);
+
+                    $('body').find('input').css('text-align','right');
+                    $('body').find('textarea').css('text-align','right');
+                }
+            })
         });
 
     </script>

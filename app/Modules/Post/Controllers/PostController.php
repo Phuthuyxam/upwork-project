@@ -46,9 +46,10 @@ class PostController extends Controller
     public function add(Request $request)
     {
         if ($request->isMethod('get')) {
+            $currentLanguage = generatePrefixLanguage() ? generatePrefixLanguage() : 'en/' ;
             $taxonomy = $this->termRepository->getAll()->toArray();
             $slugs = $this->posRepository->getAllSlugs();
-            return view('Post::add', compact('slugs', 'taxonomy'));
+            return view('Post::add', compact('slugs', 'taxonomy','currentLanguage'));
         } else {
             $validate = $request->validate([
                 'post_title' => 'required|max:191',
@@ -170,6 +171,7 @@ class PostController extends Controller
     public function edit(Request $request, $id)
     {
         if ($request->isMethod('get')) {
+            $currentLanguage = generatePrefixLanguage() ? generatePrefixLanguage() : 'en/' ;
             $post = $this->posRepository->find($id)->toArray();
             $postMeta = $this->postMetaRepository->getByPostId($id)->toArray();
             $postMetaMap = [];
@@ -191,7 +193,7 @@ class PostController extends Controller
             } else {
                 $translationRecord = false;
             }
-            return view('Post::edit', compact('post', 'postMetaMap','slugs','translationRecord'));
+            return view('Post::edit', compact('post', 'postMetaMap','slugs','translationRecord','currentLanguage'));
         }else {
             $currentLang = app()->getLocale();
             $validateRule = [
@@ -254,8 +256,7 @@ class PostController extends Controller
                 'post_name' => $request->input('post_name'),
                 'post_author' => Auth::id(),
                 'post_status' => $status,
-                'post_content' => $request->input('post_content'),
-                'post_type' => PostType::POST['VALUE']
+                'post_content' => $request->input('post_content')
             ];
 
             if ($this->posRepository->update($id,$dataPost)) {

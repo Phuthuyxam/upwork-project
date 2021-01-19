@@ -1712,6 +1712,9 @@ footer {
 .brand-slider ul.slick-dots li.slick-active .dot {
     background: #102447;
 }
+.location-image {
+    width: 200px;
+}
 @media screen and (min-width: 2000px) {
     .home-slider .item {
         height: 80vh;
