@@ -326,7 +326,7 @@
                                             <tbody>
                                                 <tr>
                                                     <td><textarea type="text" class="form-control" name="map_address">{{ old('map_address') }}</textarea></td>
-                                                    <td><input type="text" class="form-control" name="map_city">{{ old('map_city') }}</td>
+                                                    <td><input type="text" class="form-control" name="map_city" value="{{ old('map_city') }}"></td>
                                                     <td>
                                                         <input type="number" class="form-control" name="map_lat" value="{{ old('map_lat') }}">
                                                     </td>
