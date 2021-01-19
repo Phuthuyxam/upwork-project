@@ -125,7 +125,17 @@ class ClientPostController extends Controller
                     return view('Client::service',compact('post','pageMetaMap','translationMode','currentLanguage', 'seoDefault'));
                 }
                 if ($template == PageTemplateConfigs::HOTEL['VALUE']) {
-                    $posts = $this->postRepository->getInstantModel()->where('post_type',PostType::POST['VALUE'])->get();
+                    if ($user) {
+                        $condition = [
+                            ['post_type','=',PageTemplateConfigs::POST['NAME']]
+                        ];
+                    }else {
+                        $condition = [
+                            ['post_type','=',PageTemplateConfigs::POST['NAME']],
+                            ['post_status','=',PostStatus::PUBLIC['VALUE']]
+                        ];
+                    }
+                    $posts = $this->postRepository->getInstantModel()->where($condition)->get();
                     $ids = [];
                     $postsMetaMap = [];
                     if (count($posts)) {
