@@ -32,7 +32,7 @@
                 </div>
                 <div class="breadscrum">
                     <ul>
-                        <li class="item"><a href="{{ route('index') }}">{{ $currentLanguage == 'en' ? 'home' : 'الصفحة الرئيسية' }}</a></li>
+                        <li class="item"><a href="{{ route('index') }}">{{__('home_title')}}</a></li>
                         <li class="item active"><span>
                             <div class="rectangle"></div> {{ $post->post_title }}
                         </span></li>
@@ -60,7 +60,7 @@
                                 <div class="image">
                                     {!! \App\Core\Helper\FrontendHelpers::renderImage($value[\App\Core\Glosary\MetaKey::THUMBNAIL['NAME']]) !!}
                                     <div class="view-more-overlay">
-                                        <a href="{{ route('detail',$value['slug']) }}" class="tt-uper" title="title">{{ $currentLanguage == 'en' ? 'more info' : 'المزيد من المعلومات' }}</a>
+                                        <a href="{{ route('detail',$value['slug']) }}" class="tt-uper" title="title">{{__('more_info_text')}}</a>
                                     </div>
                                 </div>
                                 <div class="content">

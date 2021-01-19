@@ -49,7 +49,7 @@
                             @foreach($posts as $value)
                                 <tr>
                                     <td style="text-align: center"><input type="checkbox" class="cate-check" data-id="{{ $value['postId'] }}" name="" id=""></td>
-                                    <td><a href="{{ route('post.edit',$value['postId']) }}">{{ $value['postTitle'] }}</a></td>
+                                    <td><a href="{{ route('detail',$value['postName']) }}">{{ $value['postTitle'] }}</a></td>
                                     <td>{{ $value['userName'] }}</td>
 {{--                                    <td>{{ $value['termName'] }}</td>--}}
                                     <td>{{ \App\Core\Glosary\PostStatus::display($value['postStatus']) }}</td>

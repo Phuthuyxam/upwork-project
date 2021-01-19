@@ -108,3 +108,14 @@ body {
 .slide-counter {
     direction: ltr;
 }
+.reservation-form .date-input .icon-calendar {
+    left: 15px;
+    right: unset;
+}
+.description-heading h3::before {
+    right: 0;
+    left: unset;
+}
+span.language {
+    margin: 0 .5rem;
+}
