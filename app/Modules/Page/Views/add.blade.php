@@ -243,10 +243,17 @@
                                 <button type="submit" class="btn btn-info btn-draft waves-effect waves-light" id="ptx-save-btn-draf">Save Draft</button>
                                 <button type="submit" class="btn btn-primary btn-submit waves-effect waves-light" id="ptx-save-btn">Publish</button>
                             </div>
+            </form>
+                            {{-- seo p --}}
+
+                            {{-- SEO form for home page --}}
+                            @if($page)
+                                @include('Seo::seo',['objectId' => $page->id , 'seoType' => \App\Core\Glosary\SeoConfigs::SEOTYPE['SINGLE']['KEY'] ])
+                            @endif
                         </div>
                     </div>
                 </div>
-            </form>
+
         </div>
     </div>
 @endsection

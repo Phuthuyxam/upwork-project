@@ -399,6 +399,11 @@
                                 <button type="submit" class="btn btn-primary btn-submit waves-effect waves-light" id="ptx-save-btn">Publish</button>
                             </div>
                         </div>
+                        </form>
+                        {{-- SEO form for home page --}}
+                        @if(isset($post) && !empty($post))
+                            @include('Seo::seo',['objectId' => $post['id'] , 'seoType' => \App\Core\Glosary\SeoConfigs::SEOTYPE['SINGLE']['KEY'] ])
+                        @endif
 {{--                        <div class="card">--}}
 {{--                            <h5 class="card-header mt-0 font-size-16">Select Category</h5>--}}
 {{--                            <div class="card-body">--}}
@@ -420,7 +425,7 @@
 {{--                        </div>--}}
                     </div>
                 </div>
-            </form>
+
         </div>
     </div>
 @endsection
