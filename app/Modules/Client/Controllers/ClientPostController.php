@@ -49,14 +49,8 @@ class ClientPostController extends Controller
 
             $hotelPage = '';
             $bookingType = '';
-            if ($post->post_type == PageTemplateConfigs::POST['NAME']) {
-                $hotelPage = $this->postRepository->getInstantModel()->where('post_type',PageTemplateConfigs::HOTEL['NAME'])->first();
-
-                $bookingType = $this->systemRepository->findByCondition([['option_key','=','booking_type']]);
-                if ($bookingType) {
-                    $bookingType = json_decode($bookingType->option_value);
-                }
-            }
+            $relatePostMap = [];
+            $relatePostMetaMap = [];
             $postMeta = $this->postMetaRepository->getByPostId($post->id);
             $getBanner = $this->postMetaRepository->filter([['post_id' , $post->id] , ['meta_key', MetaKey::BANNER['VALUE'] ]]);
             if($getBanner && $getBanner->isNotEmpty()) {
@@ -83,7 +77,7 @@ class ClientPostController extends Controller
                 $postMetaMap[MetaKey::display($value['meta_key'])] = json_decode($value['meta_value']);
             }
 
-            if (isset($post->post_type)) {
+            if ($post->post_type != PageTemplateConfigs::POST['NAME']) {
                 $template = PageTemplateConfigs::parse($post->post_type)['VALUE'];
                 $pageMeta = $this->postMetaRepository->getByPostId($post->id);
                 $pageMetaMap = [];
@@ -162,7 +156,55 @@ class ClientPostController extends Controller
                     return view('Client::contact',compact('post','pageMetaMap', 'translationMode','currentLanguage', 'seoDefault'));
                 }
             }else {
-                return view('Client::hotel-detail', compact('post', 'postMetaMap', 'translationMode','currentLanguage', 'seoDefault','hotelPage','bookingType'));
+
+                $hotelPage = $this->postRepository->getInstantModel()->where('post_type',PageTemplateConfigs::HOTEL['NAME'])->first();
+
+                $bookingType = $this->systemRepository->findByCondition([['option_key','=','booking_type']]);
+                if ($bookingType) {
+                    $bookingType = json_decode($bookingType->option_value);
+                }
+                $relatePosts = '';
+                $relatePostMetaMap = [];
+                if ($user) {
+                    $condition = [
+                        ['post_type','=',PageTemplateConfigs::POST['NAME']],
+                        ['id','<>',$post->id]
+                    ];
+                }else{
+                    $condition = [
+                        ['post_type','=',PageTemplateConfigs::POST['NAME']],
+                        ['id','<>',$post->id],
+                        ['post_status','=',PostStatus::PUBLIC['VALUE']]
+                    ];
+                }
+                $relatePost = $this->postRepository->getInstantModel()->where($condition)->orderBy('created_at', 'desc')->limit(3)->get();
+                if ($relatePost) {
+                    $ids = [];
+                    foreach ($relatePost->toArray() as $value) {
+                        $relatePostMetaMap[$value['id']] = [
+                            'post_title' => $value['post_title'],
+                            'post_name' => $value['post_name'],
+                        ];
+                        $ids[] = $value['id'];
+                    }
+
+                    $relatePostMeta = $this->postMetaRepository->findByPostIds($ids);
+
+                    if (count($relatePostMeta)) {
+                        foreach ($relatePostMetaMap as $key => $value) {
+                            foreach ($relatePostMeta->toArray() as $k => $meta) {
+                                if ($key == $meta['post_id']) {
+                                    if (isset($meta['meta_key'])) {
+                                        $relatePostMetaMap[$key][MetaKey::display($meta['meta_key'])] = json_decode($meta['meta_value']);
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                }
+
+                return view('Client::hotel-detail', compact('post', 'postMetaMap', 'translationMode','currentLanguage', 'seoDefault','hotelPage','bookingType','relatePostMetaMap'));
             }
         }else{
             return view('Client::pages.404');

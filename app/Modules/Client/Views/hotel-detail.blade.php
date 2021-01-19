@@ -178,7 +178,7 @@
                     <div class="col-xl-3">
                         @include('Client::elements.booking-form')
                     </div>
-                    @if(isset($relatePostMap) && !empty($relatePostMap) && isset($relatePostMetaMap) && !empty($relatePostMetaMap))
+                    @if(isset($relatePostMetaMap) && !empty($relatePostMetaMap))
                     <div class="col-xl-9">
                         <div class="other-hotels">
                             <div class="heading">
@@ -192,7 +192,7 @@
                                             <div class="image">
                                                 {!! \App\Core\Helper\FrontendHelpers::renderImage($value[\App\Core\Glosary\MetaKey::THUMBNAIL['NAME']]) !!}
                                                 <div class="view-more-overlay">
-                                                    <a href="{{ route('detail',$value['slug']) }}" class="tt-uper" title="title">more info</a>
+                                                    <a href="{{ route('detail',$value['post_name']) }}" class="tt-uper" title="title">{{__('more_info_text')}}</a>
                                                 </div>
                                             </div>
                                             <div class="content">
@@ -205,7 +205,7 @@
                                                         @endif
                                                     </div>
                                                     <div class="title">
-                                                        <h3>{{ $value['title'] }}</h3>
+                                                        <h3>{{ $value['post_title'] }}</h3>
                                                         @if($value[\App\Core\Glosary\MetaKey::LOCATION['NAME']] && $value[\App\Core\Glosary\MetaKey::LOCATION['NAME']]->address != '')
                                                             <p class="city">{{ $value['location']->address }}</p>
                                                         @endif

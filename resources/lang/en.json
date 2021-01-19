@@ -14,5 +14,6 @@
     "detail_hotel_inventory" : "Inventory",
     "detail_hotel_rooms_type" : "Rooms Type",
     "detail_hotel_facilities" : "Hotel Facilities and Amenities",
-    "detail_hotel_other" : "Other Hotels"
+    "detail_hotel_other" : "Other Hotels",
+    "more_info_text" : "more info"
 }

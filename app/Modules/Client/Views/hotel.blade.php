@@ -60,7 +60,7 @@
                                 <div class="image">
                                     {!! \App\Core\Helper\FrontendHelpers::renderImage($value[\App\Core\Glosary\MetaKey::THUMBNAIL['NAME']]) !!}
                                     <div class="view-more-overlay">
-                                        <a href="{{ route('detail',$value['slug']) }}" class="tt-uper" title="title">{{ $currentLanguage == 'en' ? 'more info' : 'المزيد من المعلومات' }}</a>
+                                        <a href="{{ route('detail',$value['slug']) }}" class="tt-uper" title="title">{{__('more_info_text')}}</a>
                                     </div>
                                 </div>
                                 <div class="content">
