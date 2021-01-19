@@ -2,7 +2,7 @@
 use Illuminate\Support\Facades\Route;
 $namespace = 'App\Modules\Dashboard\Controllers';
 Route::group(
-    ['module'=>'dashboard', 'namespace' => $namespace, 'middleware' => ['web','auth']],
+    ['module'=>'dashboard', 'namespace' => $namespace, 'middleware' => ['web','auth', 'ptx.first.login']],
     function() {
         Route::prefix('admin')->group(function () {
             Route::get('/dashboard', [

@@ -89,19 +89,19 @@
 
                                 {{-- end field user meta --}}
 
-                                <div class="form-group">
-                                    <label for="name">Change password</label>
-                                    <input type="password" class="form-control" name="password" id="password" placeholder="Type new  password">
-                                    <p class="text-danger" style="font-weight: bold" id="name-error"></p>
-                                    @if($errors->first('password')) {!! '<p class="text-danger" style="font-weight: bold"> '. $errors->first('password') .' </p>' !!} @endif
-                                </div>
+{{--                                <div class="form-group">--}}
+{{--                                    <label for="name">Change password</label>--}}
+{{--                                    <input type="password" class="form-control" name="password" id="password" placeholder="Type new  password">--}}
+{{--                                    <p class="text-danger" style="font-weight: bold" id="name-error"></p>--}}
+{{--                                    @if($errors->first('password')) {!! '<p class="text-danger" style="font-weight: bold"> '. $errors->first('password') .' </p>' !!} @endif--}}
+{{--                                </div>--}}
 
-                                <div class="form-group">
-                                    <label for="name">Confirm new password</label>
-                                    <input type="password" class="form-control" name="password_confirmation" id="password_confirmation" placeholder="Type confirm new password">
-                                    <p class="text-danger" style="font-weight: bold" id="name-error"></p>
-                                    @if($errors->first('password_confirmation')) {!! '<p class="text-danger" style="font-weight: bold"> '. $errors->first('password_confirmation') .' </p>' !!} @endif
-                                </div>
+{{--                                <div class="form-group">--}}
+{{--                                    <label for="name">Confirm new password</label>--}}
+{{--                                    <input type="password" class="form-control" name="password_confirmation" id="password_confirmation" placeholder="Type confirm new password">--}}
+{{--                                    <p class="text-danger" style="font-weight: bold" id="name-error"></p>--}}
+{{--                                    @if($errors->first('password_confirmation')) {!! '<p class="text-danger" style="font-weight: bold"> '. $errors->first('password_confirmation') .' </p>' !!} @endif--}}
+{{--                                </div>--}}
 
                                 <button type="submit" class="btn btn-primary btn-submit">Submit</button>
                             </form>

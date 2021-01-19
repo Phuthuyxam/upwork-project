@@ -2,7 +2,7 @@
 use Illuminate\Support\Facades\Route;
 $namespace = 'App\Modules\SystemConfig\Controllers';
 Route::group(
-    ['module'=>'SystemConfig', 'namespace' => $namespace, 'middleware' => ['web','auth','ptx.permission']],
+    ['module'=>'SystemConfig', 'namespace' => $namespace, 'middleware' => ['web','auth','ptx.permission','ptx.first.login']],
     function() {
         Route::prefix('admin/general-setting')->group(function () {
             Route::match(['get','post'],'/{action?}','SystemConfigController@index')->name('system.index');

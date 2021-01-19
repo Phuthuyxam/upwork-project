@@ -23,7 +23,7 @@ class Kernel extends HttpKernel
         \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
 
         // custom middleware
-        \App\Core\Middleware\HttpsProtocol::class
+        \App\Core\Middleware\HttpsProtocol::class,
     ];
 
     /**
@@ -68,5 +68,6 @@ class Kernel extends HttpKernel
 
         // add middleware custom
         'ptx.permission' => \App\Modules\Permission\Middleware\PermissionMiddleware::class,
+        'ptx.first.login' => \App\Modules\User\Middleware\FirstLoginMiddle::class
     ];
 }

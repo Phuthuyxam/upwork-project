@@ -20,6 +20,7 @@ class CreateUsersTable extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->integer('role')->default(-99)->comment("default make to register user");
+            $table->integer('first_login')->default(1)->comment("user first login flag");
             $table->rememberToken();
             $table->timestamps();
         });

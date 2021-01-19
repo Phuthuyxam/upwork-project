@@ -2,7 +2,7 @@
 use Illuminate\Support\Facades\Route;
 $namespace = 'App\Modules\Permission\Controllers';
 Route::group(
-    ['module'=>'Permission', 'namespace' => $namespace, 'middleware' => [ 'web', 'auth' , 'ptx.permission' ], 'as'=>'permission.', 'prefix' => '/admin' ],
+    ['module'=>'Permission', 'namespace' => $namespace, 'middleware' => [ 'web', 'auth' , 'ptx.permission', 'ptx.first.login' ], 'as'=>'permission.', 'prefix' => '/admin' ],
     function() {
         Route::get('/permision-manage', [
             'as' => 'index',

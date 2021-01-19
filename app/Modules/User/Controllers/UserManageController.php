@@ -37,15 +37,16 @@ class UserManageController extends Controller
             [
                 'name' => ['required', 'string', 'max:255' , 'unique:users'],
                 'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-                'password' => ['required', 'string', 'min:8', 'confirmed'],
+//                'password' => ['required', 'string', 'min:8', 'confirmed'],
                 'phone' => ['required', 'regex:/(0)[0-9]/', 'not_regex:/[a-z]/', 'min:9'],
             ]
         );
         try {
+            $randomPass = $this->generatePassword();
             $saveUser = $this->userRepository->create([
                 'name' => $request->name,
                 'email' => $request->email,
-                'password' => Hash::make($request->password),
+                'password' => Hash::make($randomPass),
                 'role' => $request->role
             ]);
             $userNewId = $saveUser->id;
@@ -110,5 +111,20 @@ class UserManageController extends Controller
         $del = $this->userRepository->delete($id);
         if( $del) return redirect()->back()->with('message', 'success|Successfully delete the user');
         return redirect()->back()->with('message','danger|Something wrong try again!');
+    }
+
+    public function generatePassword() {
+        $alphabet = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!@#$';
+        $pass = array(); //remember to declare $pass as an array
+        $alphaLength = strlen($alphabet) - 1; //put the length -1 in cache
+        for ($i = 0; $i < 10; $i++) {
+            $n = rand(0, $alphaLength);
+            $pass[] = $alphabet[$n];
+        }
+        return implode($pass); //turn the array into a string
+    }
+
+    public function verifyPassWord() {
+        return view('User::firstlogin');
     }
 }

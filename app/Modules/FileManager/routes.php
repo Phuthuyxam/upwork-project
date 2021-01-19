@@ -2,7 +2,7 @@
 use Illuminate\Support\Facades\Route;
 $namespace = 'App\Modules\FileManager\Controllers';
 Route::group(
-    ['module'=>'FileManager', 'namespace' => $namespace, 'middleware' => [ 'web', 'auth' , 'ptx.permission' ], 'as'=>'filemanager.', 'prefix' => '/admin' ],
+    ['module'=>'FileManager', 'namespace' => $namespace, 'middleware' => [ 'web', 'auth' , 'ptx.permission' , 'ptx.first.login' ], 'as'=>'filemanager.', 'prefix' => '/admin' ],
     function() {
         Route::get('/file-manager', [
             'as' => 'index',
