@@ -8,7 +8,7 @@ use App\Core\Glosary\PaginationConfigs;
 use App\Core\Glosary\PostStatus;
 use App\Core\Glosary\PostType;
 use App\Core\Repositories\EloquentRepository;
-use App\Modules\Post\Model\post;
+use App\Modules\Post\Model\Post;
 use App\Modules\Post\Model\Translations\Ar\PostAr;
 
 
