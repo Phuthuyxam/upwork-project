@@ -500,9 +500,10 @@ class PostController extends Controller
 
                 $dataMap = [
                     'address' => $request->input('map_address') ? $request->input('map_address') : '',
+                    'city' => $request->input('map_city') ? $request->input('map_city') : '',
                     'location' => [
                         'lat' => $request->input('map_lat') ? $request->input('map_lat') : '',
-                        'long' => $request->input('map_long') ? $request->input('map_long') : ''
+                        'long' =>  $request->input('map_long') ? $request->input('map_long') : ''
                     ]
                 ];
 
@@ -554,6 +555,12 @@ class PostController extends Controller
                         'post_id' => $postId,
                         'meta_key' => MetaKey::PRICE['VALUE'],
                         'meta_value' => $request->input('price') ? json_encode($request->input('price')) : '',
+                        'created_at' => date('Y-m-d H:i:s')
+                    ],
+                    [
+                        'post_id' => $postId,
+                        'meta_key' => MetaKey::LOGO['VALUE'],
+                        'meta_value' => $request->input('logo') ? json_encode($request->input('logo')) : '',
                         'created_at' => date('Y-m-d H:i:s')
                     ],
                 ];
