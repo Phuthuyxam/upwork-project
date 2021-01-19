@@ -182,9 +182,9 @@ class PostController extends Controller
             $postRecod = $this->posRepository->find($id);
             if(LocationConfigs::getLanguageDefault()['VALUE'] == app()->getLocale()){
                 $translationPost = $postRecod->postFromTranslation;
+            }else {
+                $translationPost = $postRecod->postToTranslation;
             }
-
-            $translationPost = $postRecod->postToTranslation;
 
             if(!empty($translationPost) && $translationPost->isNotEmpty()){
                 $langCode = (LocationConfigs::getLanguageDefault()['VALUE'] == app()->getLocale()) ?  $translationPost[0]->to_lang : $translationPost[0]->from_lang;

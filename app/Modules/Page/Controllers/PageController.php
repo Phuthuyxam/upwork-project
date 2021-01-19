@@ -67,9 +67,9 @@ class PageController extends Controller
                 // add translation record
                 if (LocationConfigs::getLanguageDefault()['VALUE'] == app()->getLocale()) {
                     $translationPost = $page->postFromTranslation;
+                }else {
+                    $translationPost = $page->postToTranslation;
                 }
-
-                $translationPost = $page->postToTranslation;
 
                 if (!empty($translationPost) && $translationPost->isNotEmpty()) {
                     $langCode = (LocationConfigs::getLanguageDefault()['VALUE'] == app()->getLocale()) ? $translationPost[0]->to_lang : $translationPost[0]->from_lang;

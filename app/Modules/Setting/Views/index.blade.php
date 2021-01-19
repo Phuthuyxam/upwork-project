@@ -81,30 +81,30 @@
                     <div class="col-4">
                         <div class="card">
                             <h4 class="card-title card-header">Edit Option</h4>
-                            <div class="card-body">
-                                <div class="tab-heading" style="display: flex; justify-content: space-between;align-items: center">
+{{--                            <div class="card-body">--}}
+{{--                                <div class="tab-heading" style="display: flex; justify-content: space-between;align-items: center">--}}
                                     @php
                                         $languages = \App\Core\Glosary\LocationConfigs::getAll();
                                         $currentLang = app()->getLocale();
                                     @endphp
-                                    @if(isset($languages) && !empty($languages))
+{{--                                    @if(isset($languages) && !empty($languages))--}}
 
-                                        <div class="tab-translate">
-                                            <b><i class="dripicons-flag"></i> Make translation</b>
-                                            <select id="make-translation">
-                                                <option value="0">---choose language---</option>
-                                                @foreach($languages as $lan)
-                                                    @if($lan['VALUE'] != $currentLang)
-                                                        <option value="{{ $lan['VALUE'] }}" data-display="{{ $lan['DISPLAY'] }}">
-                                                            {{ $lan['DISPLAY'] }}
-                                                        </option>
-                                                    @endif
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    @endif
-                                </div>
-                            </div>
+{{--                                        <div class="tab-translate">--}}
+{{--                                            <b><i class="dripicons-flag"></i> Make translation</b>--}}
+{{--                                            <select id="make-translation">--}}
+{{--                                                <option value="0">---choose language---</option>--}}
+{{--                                                @foreach($languages as $lan)--}}
+{{--                                                    @if($lan['VALUE'] != $currentLang)--}}
+{{--                                                        <option value="{{ $lan['VALUE'] }}" data-display="{{ $lan['DISPLAY'] }}">--}}
+{{--                                                            {{ $lan['DISPLAY'] }}--}}
+{{--                                                        </option>--}}
+{{--                                                    @endif--}}
+{{--                                                @endforeach--}}
+{{--                                            </select>--}}
+{{--                                        </div>--}}
+{{--                                    @endif--}}
+{{--                                </div>--}}
+{{--                            </div>--}}
                             <div class="card-footer">
                                 <div class="submit-section">
                                     <div class="form-group mb-0">
