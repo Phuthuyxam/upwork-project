@@ -112,7 +112,7 @@ body {
     left: 15px;
     right: unset;
 }
-.description-heading h3::before {
+.description-heading h3::after {
     right: 0;
     left: unset;
 }
@@ -157,4 +157,22 @@ span.language {
 }
 .location-detail-wrapper .close {
     float: left;
+}
+.slick-slider .slick-track, .slick-slider .slick-list {
+    direction: ltr;
+}
+[dir='rtl'] .slick-slide
+{
+    float: left;
+}
+.slick-dots {
+    direction: ltr;
+}
+.facility-list ul li p {
+    font-family: Cairo, serif;
+    margin-right: 1rem;
+}
+.type-table table td,
+.type-table table th{
+    font-family: Cairo, serif;
 }

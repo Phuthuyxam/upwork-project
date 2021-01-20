@@ -73,7 +73,7 @@
 
         @if($currentLanguage == 'ar/')
             input,textarea {
-            text-align: right !important;
+            text-align: right;
         }
         @endif
     </style>
