@@ -6,13 +6,16 @@ namespace App\Modules\User\Controllers;
 
 use App\Core\Glosary\RoleConfigs;
 use App\Core\Glosary\UserMetaKey;
+use App\Core\Helper\OptionHelpers;
 use App\Http\Controllers\Controller;
 use App\Modules\Permission\Repositories\RoleRepository;
 use App\Modules\User\Model\UserMeta;
 use App\Modules\User\Repositories\UserMetaRepository;
 use App\Modules\User\Repositories\UserRepository;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 
 class UserManageController extends Controller
 {
@@ -55,6 +58,15 @@ class UserManageController extends Controller
                 'meta_key' => UserMetaKey::PHONE['VALUE'],
                 'meta_value' => $request->phone
             ]);
+            // send mail
+            $systemConfig = OptionHelpers::getSystemConfigByKey('general');
+            if($systemConfig && json_decode($systemConfig,true))
+                $systemConfig = json_decode($systemConfig, true);
+            Mail::send('mail_temaplate.register_user', ['new_password' => $randomPass, 'login_url' => url()->to('/login') ], function ($message) use ($systemConfig, $request) {
+                $message->from($systemConfig['site_admin_mail']);
+                $message->to($request->email, 'Employee')
+                    ->subject('Successfully activated the account on the system' . url()->to('/'));
+            });
             return redirect()->back()->with('message', 'success|Successfully added the user');
         }catch (\Throwable $th) {
             return redirect()->back()->with('message','danger|Something wrong try again!');
@@ -85,7 +97,7 @@ class UserManageController extends Controller
                             'email' => $request->email,
                             'role' => $request->role
                         ];
-            if($request->password) $dataSave[] = Hash::make($request->password);
+            if($request->password) $dataSave['password'] = Hash::make($request->password);
 
             $metaSave = [
                 'meta_value' => $request->phone
@@ -124,7 +136,14 @@ class UserManageController extends Controller
         return implode($pass); //turn the array into a string
     }
 
-    public function verifyPassWord() {
+    public function verifyPassWord(Request $request) {
+        if($request->isMethod('post')){
+            $request->validate(['password' => 'required|string|min:8|confirmed']);
+            $this->userRepository->update(Auth::id(), ['password' => Hash::make($request->password), 'first_login' => 0]);
+            Auth::logout();
+            return redirect('/login');
+        }
+        if(Auth::user()->first_login != 1) return view('Client::pages.404');
         return view('User::firstlogin');
     }
 }
