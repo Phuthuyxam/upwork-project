@@ -234,9 +234,9 @@ class ClientPostController extends Controller
             $systemConfig = json_decode($systemConfig, true);
 
         $input = $request->all();
-        Mail::send('mail_temaplate.contact', ['name'=>$input["contact_name"], 'email'=>$input["contact_email"], 'phone'=>$input['contact_phone'],'project' => $input['contact_project'] ,'contact_message' => $input['contact_message'] ], function ($message) {
-            $message->from('youremail@your_domain');
-            $message->to('youremail@your_domain', 'Your Name')
+        Mail::send('mail_temaplate.contact', ['name'=>$input["contact_name"], 'email'=>$input["contact_email"], 'phone'=>$input['contact_phone'],'project' => $input['contact_project'] ,'contact_message' => $input['contact_message'] ], function ($message) use ($systemConfig) {
+            $message->from($systemConfig['site_admin_mail']);
+            $message->to($systemConfig['site_admin_mail'], 'Employee')
                 ->subject('Your Website Contact Form');
         });
         Session::flash('flash_message', 'Send message successfully!');
