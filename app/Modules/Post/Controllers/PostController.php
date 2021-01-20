@@ -68,7 +68,7 @@ class PostController extends Controller
                 'post_author' => Auth::id(),
                 'post_status' => $status,
                 'post_content' => $request->input('post_content'),
-                'post_type' => PostType::POST['VALUE']
+                'post_type' => PageTemplateConfigs::POST['NAME']
             ];
             $postId = $this->posRepository->create($dataPost)->id;
             if ($postId) {
