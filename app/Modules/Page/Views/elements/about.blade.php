@@ -131,7 +131,7 @@
     <tbody>
         @if(isset($imageMap) && !empty($imageMap))
             @foreach($imageMap as $key=>$value)
-                <tr>
+                <tr class="item">
                     <td class="counter">{{ $key + 1 }}</td>
                     <td style="max-width: 400px;">
                         <div class="image-items">
@@ -166,7 +166,7 @@
                 </tr>
             @endforeach
         @else
-            <tr>
+            <tr class="item">
                 <td class="counter">1</td>
                 <td style="max-width: 400px;">
                     <div class="image-items">

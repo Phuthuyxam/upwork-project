@@ -242,7 +242,7 @@
                             <h5 class="card-header mt-0 font-size-16">Publish</h5>
                             <div class="card-body">
                                 <div class="status">
-                                    <span><i class="dripicons-flag"></i> Status : {{ \App\Core\Glosary\PostStatus::DRAFT['NAME'] }}</span>
+                                    <span><i class="dripicons-flag"></i> Status : {{ isset($page->post_status)  ? \App\Core\Glosary\PostStatus::display($page->post_status) :  \App\Core\Glosary\PostStatus::DRAFT['NAME'] }}</span>
                                 </div>
                             </div>
                             <div class="card-footer" style="display: flex; align-items: center; justify-content: space-between">
@@ -399,8 +399,7 @@
             count = count + 1;
             $(this).parents('.section').find('.item-count').val(count);
 
-            let counter = $(this).parents('tbody').find('tr').length;
-            console.log(counter);
+            let counter = $(this).parents('tbody').find('tr.item').length;
             row.find('.counter').text(counter);
         })
         $('body').on('click','.btn-delete-type',function (e){
@@ -409,11 +408,11 @@
             count = count - 1;
             $(this).parents('.section').find('.item-count').val(count);
 
-            let counter = $(this).parents('tbody').find('tr').length - 1;
+            let counter = $(this).parents('tbody').find('tr.item').length - 1;
             let parent = $(this).parents('tbody');
             $(this).parents('tr').remove();
             for ( let i = 0 ; i < counter; i++) {
-                parent.find('tr td.counter').eq(i).text(i+1);
+                parent.find('tr.item td.counter').eq(i).text(i+1);
             }
         })
 
@@ -480,8 +479,13 @@
                     $('#ptx-save-btn').text("Publish with "+display);
                     $('#ptx-save-btn-draf').text("Save Draft with "+display);
 
-                    $('body').find('input').css('text-align','right');
-                    $('body').find('textarea').css('text-align','right');
+                    if (lanCode == 'en') {
+                        $('body').find('input').css('text-align','left');
+                        $('body').find('textarea').css('text-align','left');
+                    }else{
+                        $('body').find('input').css('text-align','right');
+                        $('body').find('textarea').css('text-align','right');
+                    }
                 }
             })
         });

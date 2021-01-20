@@ -11,7 +11,7 @@
 
     @if(isset($serviceItem) && !empty($serviceItem))
         @foreach($serviceItem as $key=> $value)
-            <tr>
+            <tr class="item">
                 <td class="counter">{{ $key + 1 }}</td>
                 <td style="max-width: 400px;">
                     {!!  renderMediaManage('images[]', $value->image) !!}
@@ -36,7 +36,7 @@
             </tr>
         @endforeach
     @else
-        <tr>
+        <tr class="item">
             <td class="counter">1</td>
             <td style="width: 400px;">
                 {!!  renderMediaManage('images[]') !!}
