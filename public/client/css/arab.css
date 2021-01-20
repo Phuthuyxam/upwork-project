@@ -126,3 +126,6 @@ span.language {
     padding-right: 10px;
     padding-left: 20px;
 }
+.language-select-wrapper .language-options {
+    right: 15px;
+}
