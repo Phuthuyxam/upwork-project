@@ -16,7 +16,7 @@
     "detail_hotel_facilities" : "Hotel Facilities and Amenities",
     "detail_hotel_other" : "فنادق أخرى",
     "more_info_text" : "المزيد من المعلومات",
-    "see _more_services" : "اطلع على المزيد من الخدمات",
+    "see_more_services" : "اطلع على المزيد من الخدمات",
     "see_more_details" : "اطلع على المزيد",
     "home_find_hotel" : "ابحث عن فندقك",
     "home_check_in" : "تسجيل الدخول",
@@ -24,5 +24,8 @@
     "home_occupancy" : "الإشغال",
     "home_promotion_code" : "رمز العرض",
     "home_check_availability" : "التحقق من التوفر",
-    "home_select_hotel" : "اختر فندقك"
+    "home_select_hotel" : "اختر فندقك",
+    "booking_form_reservation" : "الحجز الخاص بك",
+    "booking_form_adult" : "كبار",
+    "booking_form_child" : "أطفال"
 }

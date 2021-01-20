@@ -14,11 +14,10 @@
                 </div>
                 <div class="menu-site">
                     <div class="header-menu">
-
                         <ul class="main-menu">
                             @if(isset($menus) && !empty($menus))
                                 @foreach($menus as $menu)
-                                    <li class="menu-item {{ (url()->current() == $menu['url']) ? "active" : false }}">
+                                    <li class="menu-item {{ (url()->current() == $menu['url'] && $menu['url'] != null) ? "active" : false }}">
                                         <a class="tt-uper" href="{{ $menu['url'] }}">{{ $menu['title'] }}</a>
                                     </li>
                                 @endforeach
@@ -51,7 +50,6 @@
                                 <ul>
                                     @foreach($languages as $lan)
                                         <li>
-
                                             <a href="{{ renderTranslationUrl(url()->current() , $lan['VALUE'], $modeTranslation) }}">{{ strtoupper($lan['VALUE']) }}</a>
                                         </li>
                                     @endforeach

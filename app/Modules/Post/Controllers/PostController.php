@@ -2,6 +2,7 @@
 
 namespace App\Modules\Post\Controllers;
 
+use App\Core\Glosary\BookingTypes;
 use App\Core\Glosary\LocationConfigs;
 use App\Core\Glosary\PageTemplateConfigs;
 use App\Core\Glosary\PostStatus;
@@ -96,6 +97,12 @@ class PostController extends Controller
                     ]
                 ];
 
+
+                $dataBooking = [
+                    'type' => $request->input('booking_type') ? $request->input('booking_type') : BookingTypes::LINK['VALUE'],
+                    'value' => $request->input('type_link') ? $request->input('type_link') : '#',
+                ];
+
                 // Save post meta
                 $dataPostMeta = [
                     [
@@ -103,55 +110,71 @@ class PostController extends Controller
                         'meta_key' => MetaKey::BANNER['VALUE'],
                         'meta_value' => $request->input('files') ? json_encode($request->input('files')) : '',
                         'created_at' => date('Y-m-d H:i:s'),
+                        'updated_at' => date('Y-m-d H:i:s')
                     ],
                     [
                         'post_id' => $postId,
                         'meta_key' => MetaKey::SLIDE['VALUE'],
                         'meta_value' => $request->input('images') ? json_encode($request->input('images')) : '',
-                        'created_at' => date('Y-m-d H:i:s')
+                        'created_at' => date('Y-m-d H:i:s'),
+                        'updated_at' => date('Y-m-d H:i:s')
                     ],
                     [
                         'post_id' => $postId,
                         'meta_key' => MetaKey::ROOM_TYPE['VALUE'],
                         'meta_value' => !empty($typeMap) ? json_encode($typeMap) : '',
-                        'created_at' => date('Y-m-d H:i:s')
+                        'created_at' => date('Y-m-d H:i:s'),
+                        'updated_at' => date('Y-m-d H:i:s')
                     ],
                     [
                         'post_id' => $postId,
                         'meta_key' => MetaKey::FACILITY['VALUE'],
                         'meta_value' => $request->input('facilities') ? json_encode($request->input('facilities')) : '',
-                        'created_at' => date('Y-m-d H:i:s')
+                        'created_at' => date('Y-m-d H:i:s'),
+                        'updated_at' => date('Y-m-d H:i:s')
                     ],
                     [
                         'post_id' => $postId,
                         'meta_key' => MetaKey::LOCATION['VALUE'],
                         'meta_value' => json_encode($dataMap),
-                        'created_at' => date('Y-m-d H:i:s')
+                        'created_at' => date('Y-m-d H:i:s'),
+                        'updated_at' => date('Y-m-d H:i:s')
                     ],
                     [
                         'post_id' => $postId,
                         'meta_key' => MetaKey::RATE['VALUE'],
                         'meta_value' => $request->input('rate') ? $request->input('rate') : 0,
-                        'created_at' => date('Y-m-d H:i:s')
+                        'created_at' => date('Y-m-d H:i:s'),
+                        'updated_at' => date('Y-m-d H:i:s')
                     ],
                     [
                         'post_id' => $postId,
                         'meta_key' => MetaKey::THUMBNAIL['VALUE'],
                         'meta_value' => $request->input('thumb') ? json_encode($request->input('thumb')) : '',
-                        'created_at' => date('Y-m-d H:i:s')
+                        'created_at' => date('Y-m-d H:i:s'),
+                        'updated_at' => date('Y-m-d H:i:s')
                     ],
                     [
                         'post_id' => $postId,
                         'meta_key' => MetaKey::PRICE['VALUE'],
                         'meta_value' => $request->input('price') ? json_encode($request->input('price')) : '',
-                        'created_at' => date('Y-m-d H:i:s')
+                        'created_at' => date('Y-m-d H:i:s'),
+                        'updated_at' => date('Y-m-d H:i:s')
                     ],
                     [
                         'post_id' => $postId,
                         'meta_key' => MetaKey::LOGO['VALUE'],
                         'meta_value' => $request->input('logo') ? json_encode($request->input('logo')) : '',
-                        'created_at' => date('Y-m-d H:i:s')
+                        'created_at' => date('Y-m-d H:i:s'),
+                        'updated_at' => date('Y-m-d H:i:s')
                     ],
+                    [
+                        'post_id' => $postId,
+                        'meta_key' => MetaKey::BOOKING_TYPE['VALUE'],
+                        'meta_value' => json_encode($dataBooking),
+                        'created_at' => date('Y-m-d H:i:s'),
+                        'updated_at' => date('Y-m-d H:i:s')
+                    ]
                 ];
 
                 if ($this->postMetaRepository->insert($dataPostMeta)) {
@@ -385,6 +408,20 @@ class PostController extends Controller
                 if ($this->postMetaRepository->updateByCondition($mapCondition,$metaMap)) {
                     $result = true;
                 }
+
+                if ($request->input('booking_type') && $request->input('type_link')) {
+                    $condition = [['post_id','=',$id],['meta_key','=',MetaKey::BOOKING_TYPE['VALUE']]];
+                    $dataOption = [
+                        'type' => $request->input('booking_type'),
+                        'value' => $request->input('type_link')
+                    ];
+                    $dataPostMeta = [
+                        'meta_value' => json_encode($dataOption)
+                    ];
+                    if ($this->postMetaRepository->updateByCondition($condition,$dataPostMeta)) {
+                        $result = true;
+                    }
+                }
             }
 
             if ($result) {
@@ -392,36 +429,6 @@ class PostController extends Controller
             } else {
                 return redirect()->back()->with('message', 'danger|Something wrong try again!');
             }
-        }
-    }
-
-    public function deleteImage(Request $request) {
-        $type = $request->input('type');
-        $data = $request->input('data');
-        $id = $request->input('id');
-
-        $result = false;
-        if ($type != '' && $data != '' && $id != '') {
-            $condition = [
-                ['post_id' ,'=', $id],
-                ['meta_key','=',$type],
-            ];
-            $postMeta = $this->postMetaRepository->getMetaValueByCondition($condition);
-            $metaValue = json_decode($postMeta['meta_value']);
-
-//            $postMeta = json_decode($postMeta['meta_value']);
-            $key = array_search($data, $metaValue);
-            if ($key !== false) {
-                $metaValue[$key] = "";
-                if ($this->postMetaRepository->update($postMeta['id'],['meta_value' => json_encode($metaValue)])) {
-                    $result = true;
-                }
-            }
-        }
-        if ($result) {
-            return response(ResponeCode::SUCCESS['CODE']);
-        }else {
-            return response(ResponeCode::SERVERERROR['CODE']);
         }
     }
 
@@ -508,6 +515,11 @@ class PostController extends Controller
                     ]
                 ];
 
+                $dataBooking = [
+                    'type' => $request->input('booking_type') ? $request->input('booking_type') : BookingTypes::LINK['VALUE'],
+                    'value' => $request->input('type_link') ? $request->input('type_link') : '#',
+                ];
+
                 // Save post meta
                 $dataPostMeta = [
                     [
@@ -515,55 +527,71 @@ class PostController extends Controller
                         'meta_key' => MetaKey::BANNER['VALUE'],
                         'meta_value' => $request->input('files') ? json_encode($request->input('files')) : '',
                         'created_at' => date('Y-m-d H:i:s'),
+                        'updated_at' => date('Y-m-d H:i:s')
                     ],
                     [
                         'post_id' => $postId,
                         'meta_key' => MetaKey::SLIDE['VALUE'],
                         'meta_value' => $request->input('images') ? json_encode($request->input('images')) : '',
-                        'created_at' => date('Y-m-d H:i:s')
+                        'created_at' => date('Y-m-d H:i:s'),
+                        'updated_at' => date('Y-m-d H:i:s')
                     ],
                     [
                         'post_id' => $postId,
                         'meta_key' => MetaKey::ROOM_TYPE['VALUE'],
                         'meta_value' => !empty($typeMap) ? json_encode($typeMap) : '',
-                        'created_at' => date('Y-m-d H:i:s')
+                        'created_at' => date('Y-m-d H:i:s'),
+                        'updated_at' => date('Y-m-d H:i:s')
                     ],
                     [
                         'post_id' => $postId,
                         'meta_key' => MetaKey::FACILITY['VALUE'],
                         'meta_value' => $request->input('facilities') ? json_encode($request->input('facilities')) : '',
-                        'created_at' => date('Y-m-d H:i:s')
+                        'created_at' => date('Y-m-d H:i:s'),
+                        'updated_at' => date('Y-m-d H:i:s')
                     ],
                     [
                         'post_id' => $postId,
                         'meta_key' => MetaKey::LOCATION['VALUE'],
                         'meta_value' => json_encode($dataMap),
-                        'created_at' => date('Y-m-d H:i:s')
+                        'created_at' => date('Y-m-d H:i:s'),
+                        'updated_at' => date('Y-m-d H:i:s')
                     ],
                     [
                         'post_id' => $postId,
                         'meta_key' => MetaKey::RATE['VALUE'],
                         'meta_value' => $request->input('rate') ? $request->input('rate') : 0,
-                        'created_at' => date('Y-m-d H:i:s')
+                        'created_at' => date('Y-m-d H:i:s'),
+                        'updated_at' => date('Y-m-d H:i:s')
                     ],
                     [
                         'post_id' => $postId,
                         'meta_key' => MetaKey::THUMBNAIL['VALUE'],
                         'meta_value' => $request->input('thumb') ? json_encode($request->input('thumb')) : '',
-                        'created_at' => date('Y-m-d H:i:s')
+                        'created_at' => date('Y-m-d H:i:s'),
+                        'updated_at' => date('Y-m-d H:i:s')
                     ],
                     [
                         'post_id' => $postId,
                         'meta_key' => MetaKey::PRICE['VALUE'],
                         'meta_value' => $request->input('price') ? json_encode($request->input('price')) : '',
-                        'created_at' => date('Y-m-d H:i:s')
+                        'created_at' => date('Y-m-d H:i:s'),
+                        'updated_at' => date('Y-m-d H:i:s')
                     ],
                     [
                         'post_id' => $postId,
                         'meta_key' => MetaKey::LOGO['VALUE'],
                         'meta_value' => $request->input('logo') ? json_encode($request->input('logo')) : '',
-                        'created_at' => date('Y-m-d H:i:s')
+                        'created_at' => date('Y-m-d H:i:s'),
+                        'updated_at' => date('Y-m-d H:i:s')
                     ],
+                    [
+                        'post_id' => $postId,
+                        'meta_key' => MetaKey::BOOKING_TYPE['VALUE'],
+                        'meta_value' => json_encode($dataBooking),
+                        'created_at' => date('Y-m-d H:i:s'),
+                        'updated_at' => date('Y-m-d H:i:s')
+                    ]
                 ];
 
                 if ($this->postMetaRepository->insert($dataPostMeta)) {

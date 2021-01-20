@@ -9,7 +9,7 @@ class FrontendHelpers
 
     public static function renderImage($url, $alt = false, $title = false, $class = false) {
         $pathinfo = pathinfo($url);
-        $acceptedFormats = array('gif', 'png', 'jpg', 'svg');
+        $acceptedFormats = array('gif', 'png', 'jpg', 'svg','jpeg','jfif');
         if(!isset($pathinfo['filename']) || empty($pathinfo['filename']) || !isset($pathinfo['extension']) || !in_array($pathinfo['extension'], $acceptedFormats)){
             $url = asset('/client/default-image.png');
         }

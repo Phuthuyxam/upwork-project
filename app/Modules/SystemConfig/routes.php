@@ -12,7 +12,5 @@ Route::group(
 //            Route::post('/deleteMany','ClientPostController@deleteMany')->name('post.delete.many');
 //            Route::post('/delete','ClientPostController@delete')->name('post.delete');
         });
-
-        Route::match(['get','post'],'admin/booking-type','SystemConfigController@setBookingType')->name('system.booking_type');
     }
 );

@@ -48,7 +48,7 @@
                     </div>
                     @if($post->post_content != '')
                         <div class="hotels-description">
-                            {!! $post->post_content !!}
+                            {{ $post->post_content  }}
                         </div>
                     @endif
                 </div>

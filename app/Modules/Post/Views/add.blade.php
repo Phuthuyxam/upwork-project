@@ -12,6 +12,10 @@
             margin-bottom: 0;
         }
 
+        .hidden {
+            display: none;
+        }
+
         .pagination-wrapper {
             display: flex;
             justify-content: flex-end;
@@ -355,24 +359,7 @@
                             <button type="submit" class="btn btn-primary btn-submit waves-effect waves-light">Publish</button>
                         </div>
                     </div>
-{{--                    <div class="card">--}}
-{{--                        <h5 class="card-header mt-0 font-size-16">Select Category</h5>--}}
-{{--                        <div class="card-body">--}}
-{{--                            <div class="form-group">--}}
-{{--                                <select name="taxonomy" id="tax" class="form-control required">--}}
-{{--                                    <option value="">Select Category</option>--}}
-{{--                                    @foreach($taxonomy as $value)--}}
-{{--                                        <option value="{{ $value['id'] }}" {{ old('taxonomy') == $value['id'] ? 'selected': '' }}>{{ $value['name'] }}</option>--}}
-{{--                                    @endforeach--}}
-{{--                                </select>--}}
-{{--                                <p class="text-danger error-message" style="font-weight: bold" >--}}
-{{--                                    @error('post_title')--}}
-{{--                                    {{ $message }}--}}
-{{--                                    @enderror--}}
-{{--                                </p>--}}
-{{--                            </div>--}}
-{{--                        </div>--}}
-{{--                    </div>--}}
+                    @include('Post::elements.booking')
                 </div>
             </div>
             </form>
@@ -537,6 +524,27 @@
             return valid;
         }
 
+
+        $('input[name="booking_type"]').on('change',function (){
+            $('#bookingType').find('.type_link').addClass('hidden');
+            $('#bookingType').find('.type_link').removeClass('error required');
+            $('#bookingType').find('.error-message').text('');
+            $('#bookingType').find('.type_link').attr('name','');
+            if ($(this).prop("checked")) {
+                $(this).parents('.form-group').find('.type_link').removeClass('hidden');
+                $(this).parents('.form-group').find('.type_link').addClass('required');
+                $(this).parents('.form-group').find('.type_link').attr('name','type_link');
+            }
+        })
+        $('.type_link').on('change',function (){
+            if($(this).val() == '') {
+                $(this).addClass('error');
+                $(this).parents('.form-group').find('.error-message').text('This field cannot be null');
+            }else{
+                $(this).removeClass('error');
+                $(this).parents('.form-group').find('.error-message').text('');
+            }
+        })
 
     </script>
 @endsection
