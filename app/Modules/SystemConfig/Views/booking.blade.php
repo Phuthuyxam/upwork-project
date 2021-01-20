@@ -28,7 +28,7 @@
                                 <div class="form-group" style="display: flex; align-items: center">
                                     <input type="radio" id="{{ $value['ID'] }}" name="booking_type" value="{{ $value['VALUE'] }}" style="margin-right: 1rem" {{ $value['VALUE'] == $record->type ? 'checked' : ''}}>
                                     <label for="{{ $value['ID'] }}" style="margin-bottom: 0">{{ $value['DISPLAY'] }}</label>
-                                    <input type="text" name="{{ $value['VALUE'] == $record->type ? 'type_link' : ''}}"
+                                    <input type="{{ $value['VALUE'] == \App\Core\Glosary\BookingTypes::FORM['VALUE'] ? 'email' : 'text'}}" name="{{ $value['VALUE'] == $record->type ? 'type_link' : ''}}"
                                            class="form-control type_link required {{ $value['VALUE'] == $record->type ? '' : 'hidden'}}" style="margin-left: 1rem; flex:1;"
                                            placeholder="{{ $value['PLACE_HOLDER'] }}" value="{{$value['VALUE'] == $record->type ? $record->value : ''}}">
                                 </div>
@@ -38,7 +38,7 @@
                                 <div class="form-group" style="display: flex; align-items: center">
                                     <input type="radio" id="{{ $value['ID'] }}" name="booking_type" value="{{ $value['VALUE'] }}" style="margin-right: 1rem" {{ $value['VALUE'] == 0 ? 'checked' : ''}}>
                                     <label for="{{ $value['ID'] }}" style="margin-bottom: 0">{{ $value['DISPLAY'] }}</label>
-                                    <input type="text" name="{{ $value['VALUE'] == 0 ? 'type_link' : ''}}" class="form-control type_link required {{ $value['VALUE'] == 0 ? '' : 'hidden'}}" style="margin-left: 1rem; flex:1;" placeholder="{{ $value['PLACE_HOLDER'] }}">
+                                    <input type="{{ $value['VALUE'] == \App\Core\Glosary\BookingTypes::FORM['VALUE'] ? 'email' : 'text'}}" name="{{ $value['VALUE'] == 0 ? 'type_link' : ''}}" class="form-control type_link required {{ $value['VALUE'] == 0 ? '' : 'hidden'}}" style="margin-left: 1rem; flex:1;" placeholder="{{ $value['PLACE_HOLDER'] }}">
                                 </div>
                             @endforeach
                         @endif

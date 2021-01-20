@@ -44,7 +44,6 @@
             <div class="container">
                 <div class="hotels-heading">
                     <div class="hotels-title">
-                        <p>{{ $post->post_title }}</p>
                         <h2 class="fw-bold">{{ $post->post_excerpt }}</h2>
                     </div>
                     <div class="hotels-description">
