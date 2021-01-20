@@ -17,5 +17,12 @@
     "detail_hotel_other" : "Other Hotels",
     "more_info_text" : "more info",
     "see_more_services" : "see more services",
-    "see_more_details" : "see more details"
+    "see_more_details" : "see more details",
+    "home_find_hotel" : "FIND YOUR HOTEL",
+    "home_check_in" : "CHECK IN",
+    "home_check_out" : "CHECK OUT",
+    "home_occupancy" : "OCCUPANCY",
+    "home_promotion_code" : "Promotional code",
+    "home_check_availability" : "Check availability",
+    "home_select_hotel" : "Select Your Hotel"
 }

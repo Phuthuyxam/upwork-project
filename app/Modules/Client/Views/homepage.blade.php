@@ -51,13 +51,13 @@
                 <form action="">
                     <div class="hotel-search-content">
                         <div class="hotel-selection search-item">
-                            <p class="title tt-uper fw-bold">FIND YOUR HOTEL</p>
+                            <p class="title tt-uper fw-bold">{{__('home_find_hotel')}}</p>
                             <div class="hotel-select">
                                 <div class="select-arrow">
                                     <img src="{{ asset('client/images/Path6702.png') }}" alt="">
                                 </div>
                                 <select class="form-control" required="required">
-                                    <option value="default">Select Your Hotel</option>
+                                    <option value="default">{{__('home_select_hotel')}}</option>
                                     <option value="">The Venue</option>
                                     <option value="">Frontel</option>
                                     <option value="">Three points hotel</option>
@@ -66,23 +66,27 @@
                         </div>
                         <div class="check-in-out-date search-item">
                             <div class="check-in">
-                                <p class="title tt-uper fw-bold">check in</p>
+                                <p class="title tt-uper fw-bold">{{__('home_check_in')}}</p>
                                 <p class="date fw-semiBold">20</p>
                                 <p class="title month-year tt-uper fw-semiBold">dec 2020</p>
                                 <input type="text" class="date-picker start-date form-control" name="start-date" readonly>
                             </div>
                             <div class="angle-left">
-                                <img src="{{ asset('client/images/Path6701.png') }}" alt="Path6701">
+                                @if($currentLanguage == 'ar')
+                                    <img src="{{ asset('client/images/Path6701-Copy.png') }}" alt="Path6701">
+                                @else
+                                    <img src="{{ asset('client/images/Path6701.png') }}" alt="Path6701">
+                                @endif
                             </div>
                             <div class="check-out">
-                                <p class="title tt-uper fw-bold">check out</p>
+                                <p class="title tt-uper fw-bold">{{__('home_check_out')}}</p>
                                 <p class="date fw-semiBold">22</p>
                                 <p class="title month-year tt-uper fw-semiBold">dec 2020</p>
                                 <input type="text" class="date-picker end-date form-control" name="end-date" readonly>
                             </div>
                         </div>
                         <div class="occupancy search-item">
-                            <p class="title tt-uper fw-bold">occupancy</p>
+                            <p class="title tt-uper fw-bold">{{__('home_occupancy')}}</p>
                             <div class="occupancy-detail">
                                 <div class="adult-select">
                                     <i class="fa fa-user" aria-hidden="true"></i>
@@ -107,11 +111,11 @@
                             </div>
                         </div>
                         <div class="promotion-code search-item">
-                            <p class="title fw-bold">Promotional code</p>
+                            <p class="title fw-bold">{{__('home_promotion_code')}}</p>
                             <input type="text" class="form-control">
                         </div>
                         <div class="btn-submit-wrapper">
-                            <input type="submit" class="btn btn-check-available tt-uper fw-bold" value="Check availability">
+                            <input type="submit" class="btn btn-check-available tt-uper fw-bold" value="{{__('home_check_availability')}}">
                         </div>
                     </div>
                 </form>

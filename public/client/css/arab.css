@@ -119,3 +119,10 @@ body {
 span.language {
     margin: 0 .5rem;
 }
+.hotel-selection select{
+    font-family: Cairo, serif;
+}
+.occupancy-detail select {
+    padding-right: 10px;
+    padding-left: 20px;
+}
