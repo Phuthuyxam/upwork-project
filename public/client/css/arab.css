@@ -129,3 +129,9 @@ span.language {
 .language-select-wrapper .language-options {
     right: 15px;
 }
+.home-slider .slick-arrow.btn-prev .slide-control {
+    padding-left: 10px;
+}
+.home-slider .slick-arrow.btn-next .slide-control {
+    padding-left: 10px;
+}
