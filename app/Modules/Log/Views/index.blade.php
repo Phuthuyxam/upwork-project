@@ -22,7 +22,7 @@
                             @foreach($messages as $value)
                                 <tr>
                                     <td>
-                                        {{$value}}
+                                        {!! $value !!}
                                     </td>
                                     <td>
 

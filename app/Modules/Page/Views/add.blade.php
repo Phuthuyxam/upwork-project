@@ -70,6 +70,12 @@
         .image-items .preview-image {
             width: 20% !important;
         }
+
+        @if($currentLanguage == 'ar/')
+            input,textarea {
+            text-align: right !important;
+        }
+        @endif
     </style>
 @endsection
 @section('heading')
@@ -116,7 +122,6 @@
                                                 {{ $message }}
                                                 @enderror
                                             </p>
-                                            <a href="{{ route('detail',$page['post_name']) }}" style="font-size: 13px" target="_blank">{{ urldecode(route('detail',$page['post_name'])) }}</a>
                                         </div>
                                         <div class="form-group">
                                             <label for="slug">Slug <span style="color: red">*</span></label>
@@ -475,13 +480,8 @@
                     $('#ptx-save-btn').text("Publish with "+display);
                     $('#ptx-save-btn-draf').text("Save Draft with "+display);
 
-                    if (lanCode == 'en') {
-                        $('body').find('input').css('text-align','left');
-                        $('body').find('textarea').css('text-align','left');
-                    }else{
-                        $('body').find('input').css('text-align','right');
-                        $('body').find('textarea').css('text-align','right');
-                    }
+                    $('body').find('input').css('text-align','right');
+                    $('body').find('textarea').css('text-align','right');
                 }
             })
         });

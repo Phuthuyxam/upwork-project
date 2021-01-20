@@ -15,5 +15,7 @@
     "detail_hotel_rooms_type" : "Rooms Type",
     "detail_hotel_facilities" : "Hotel Facilities and Amenities",
     "detail_hotel_other" : "Other Hotels",
-    "more_info_text" : "more info"
+    "more_info_text" : "more info",
+    "see_more_services" : "see more services",
+    "see_more_details" : "see more details"
 }

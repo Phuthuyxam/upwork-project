@@ -24,13 +24,32 @@
     <link rel="stylesheet" href="{{ asset('client/css/bootstrap-datepicker.min.css') }}">
     <link rel="stylesheet" href="{{ asset('client/css/jquery.fancybox.min.css') }}">
     <link rel="stylesheet" href="{{ asset('client/css/style.css') }}">
+    <style>
+        #loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 99999;
+            background: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        #loading img{
+            width: 20%;
+        }
+    </style>
     @yield('style')
 </head>
 
 <body>
 @include('Client::elements.header')
 
-
+<div id="loading">
+    <img src="{{ asset('client/images/loading.gif') }}" alt="">
+</div>
 {{-- Content of page--}}
 @yield('content')
 
@@ -44,7 +63,13 @@
 <script src="{{ asset('client/js/jquery.fancybox.min.js') }}"></script>
 <script src="{{ asset('client/js/custom.js') }}"></script>
 @yield('script')
-
+<script>
+    $(document).ready(function (){
+        setTimeout(function (){
+            $('#loading').hide();
+        },2000)
+    })
+</script>
 </body>
 
 </html>

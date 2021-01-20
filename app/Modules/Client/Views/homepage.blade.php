@@ -140,7 +140,7 @@
                                         <div class="diamond">
                                             <i class="fas fa-long-arrow-alt-right"></i>
                                         </div>
-                                        <span class="tt-uper">{{ $currentLanguage == 'en' ? 'see more services' : 'اطلع على المزيد من الخدمات' }}</span>
+                                        <span class="tt-uper">{{ __('see_more_services') }}</span>
                                     </a>
                                 @endif
                             </div>
@@ -167,7 +167,7 @@
                                 <div class="diamond">
                                     <i class="fas fa-long-arrow-alt-right" aria-hidden="true"></i>
                                 </div>
-                                <span class="tt-uper">{{ $currentLanguage == 'en' ? 'see more details' : 'اطلع على المزيد' }}</span>
+                                <span class="tt-uper">{{ __('see_more_details')  }}</span>
                             </a>
                         </div>
                     @endif
@@ -429,7 +429,6 @@
                 } else {
                     zoom = minZoom;
                 }
-
             })
         }
     </script>
