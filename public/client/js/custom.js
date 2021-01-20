@@ -62,11 +62,6 @@ $(document).ready(function () {
     $('.location-search-wrapper .search-icon').click(function () {
         $(this).parent().find('.search-input').toggleClass('active');
     })
-    $('.location-detail-wrapper .close').click(function (e) {
-        e.preventDefault();
-        $(this).parents('.location-detail-wrapper').removeClass('animate__slideInLeft');
-        $(this).parents('.location-detail-wrapper').addClass('animate__slideOutLeft');
-    })
 
     // menu mobile
     $('.menu-site .overlay .btn-close').click(function () {

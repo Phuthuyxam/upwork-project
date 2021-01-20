@@ -403,8 +403,13 @@
                         }
                         $('#location').show();
                         $('#location').addClass('animate__animated');
+                        @if($currentLanguage == 'ar')
+                        $('#location').addClass('animate__slideInRight');
+                        $('#location').removeClass('animate__slideOutRight');
+                        @else
                         $('#location').addClass('animate__slideInLeft');
                         $('#location').removeClass('animate__slideOutLeft');
+                        @endif
                         $('#location').find('img').attr('src', location.image);
                         $('#location').find('.name').text(location.name);
                         $('#location').find('.city').text(location.city);
@@ -435,5 +440,18 @@
                 }
             })
         }
+        $(document).ready(function (){
+            $('.location-detail-wrapper .close').click(function (e) {
+                e.preventDefault();
+                @if($currentLanguage == 'ar')
+                $(this).parents('.location-detail-wrapper').removeClass('animate__slideInRight');
+                $(this).parents('.location-detail-wrapper').addClass('animate__slideOutRight');
+                @else
+                $(this).parents('.location-detail-wrapper').removeClass('animate__slideInLeft');
+                $(this).parents('.location-detail-wrapper').addClass('animate__slideOutLeft');
+                @endif
+
+            })
+        })
     </script>
 @endsection

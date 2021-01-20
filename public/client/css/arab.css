@@ -135,3 +135,26 @@ span.language {
 .home-slider .slick-arrow.btn-next .slide-control {
     padding-left: 10px;
 }
+.location-search-wrapper{
+    left: 10px;
+    right: unset;
+    direction: rtl;
+}
+.search-input.active{
+    margin-left: 10px;
+}
+.zoom-control-wrapper {
+    left: 20px;
+    right: unset;
+}
+.location-detail-wrapper {
+    direction: rtl;
+    right: 0;
+    left: unset;
+}
+.location-image {
+    margin-left: 1rem;
+}
+.location-detail-wrapper .close {
+    float: left;
+}
