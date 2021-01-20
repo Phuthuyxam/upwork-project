@@ -207,7 +207,7 @@
                                                     <div class="title">
                                                         <h3>{{ $value['post_title'] }}</h3>
                                                         @if($value[\App\Core\Glosary\MetaKey::LOCATION['NAME']] && $value[\App\Core\Glosary\MetaKey::LOCATION['NAME']]->address != '')
-                                                            <p class="city">{{ $value['location']->address }}</p>
+                                                            <p class="city">{{ $value['location']->city }}</p>
                                                         @endif
                                                         <p class="price">{{ $value[\App\Core\Glosary\MetaKey::PRICE['NAME']] }}</p>
                                                     </div>
