@@ -9,6 +9,7 @@ use App\Core\Glosary\PostStatus;
 use App\Core\Glosary\MetaKey;
 use App\Core\Glosary\PostType;
 use App\Core\Glosary\ResponeCode;
+use App\Modules\Post\Model\PostMeta;
 use App\Modules\Post\Repositories\PostMetaRepository;
 use App\Modules\Post\Repositories\PostRepository;
 use App\Modules\Taxonomy\Repositories\TermRelationRepository;
@@ -177,8 +178,13 @@ class PostController extends Controller
                     ]
                 ];
 
-                if ($this->postMetaRepository->insert($dataPostMeta)) {
-                    $result = true;
+                foreach ($dataPostMeta as $value) {
+                    $postMeta = new PostMeta();
+                    $postMeta->post_id = $value['post_id'];
+                    $postMeta->meta_key = $value['meta_key'];
+                    $postMeta->meta_value = $value['meta_value'];
+
+                    $postMeta->save();
                 }
 
             }
