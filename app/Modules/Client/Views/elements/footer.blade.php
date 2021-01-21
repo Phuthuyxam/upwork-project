@@ -33,7 +33,7 @@
                 </div>
             </div>
             <div class="footer-copyright">
-                <div>{{ ( isset($footerData['copyright_text']) && !empty(isset($footerData['copyright_text'])) ) ? $footerData['copyright_text'] : "Copyright © 2021 Fronter.All Rights Reserved" }}</div>
+                <div><p>{{ ( isset($footerData['copyright_text']) && !empty(isset($footerData['copyright_text'])) ) ? $footerData['copyright_text'] : "Copyright © 2021 Fronter.All Rights Reserved" }}</p></div>
                 <div>{!! ( isset($footerData['develop_text']) && !empty(isset($footerData['develop_text'])) ) ? $footerData['develop_text'] : "Developed by : Brackets Technology"  !!}</div>
             </div>
         </div>

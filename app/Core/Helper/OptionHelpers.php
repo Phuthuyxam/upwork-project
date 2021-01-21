@@ -11,7 +11,8 @@ class OptionHelpers
 {
     public static function getOptionByKey($key) {
         $optionRepository = new OptionRepository();
-        $result = $optionRepository->filter([['option_key', $key]]);
+        $optionRepository = $optionRepository->getInstantModel();
+        $result = $optionRepository->where([['option_key', $key]])->get();
         return ($result && $result->isNotEmpty()) ? $result[0]->option_value : false;
     }
 
