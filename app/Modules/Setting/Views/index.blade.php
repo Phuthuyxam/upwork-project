@@ -73,8 +73,9 @@
         @include('backend.elements.languages')
         <div class="container-fluid">
             {!! displayAlert(Session::get('message'))  !!}
-            <form action="{{ route('option.save', ['key' => $key]) }}" method="POST">
+            
                 <div class="row">
+                <form action="{{ route('option.save', ['key' => $key]) }}" method="POST">
                     <div class="col-8">
                         <div class="card">
                             <div class="card-body">
@@ -85,31 +86,7 @@
                     </div>
                     <div class="col-4">
                         <div class="card">
-                            <h4 class="card-title card-header">Edit Option</h4>
-{{--                            <div class="card-body">--}}
-{{--                                <div class="tab-heading" style="display: flex; justify-content: space-between;align-items: center">--}}
-                                    @php
-                                        $languages = \App\Core\Glosary\LocationConfigs::getAll();
-                                        $currentLang = app()->getLocale();
-                                    @endphp
-{{--                                    @if(isset($languages) && !empty($languages))--}}
 
-{{--                                        <div class="tab-translate">--}}
-{{--                                            <b><i class="dripicons-flag"></i> Make translation</b>--}}
-{{--                                            <select id="make-translation">--}}
-{{--                                                <option value="0">---choose language---</option>--}}
-{{--                                                @foreach($languages as $lan)--}}
-{{--                                                    @if($lan['VALUE'] != $currentLang)--}}
-{{--                                                        <option value="{{ $lan['VALUE'] }}" data-display="{{ $lan['DISPLAY'] }}">--}}
-{{--                                                            {{ $lan['DISPLAY'] }}--}}
-{{--                                                        </option>--}}
-{{--                                                    @endif--}}
-{{--                                                @endforeach--}}
-{{--                                            </select>--}}
-{{--                                        </div>--}}
-{{--                                    @endif--}}
-{{--                                </div>--}}
-{{--                            </div>--}}
                             <div class="card-footer">
                                 <div class="submit-section">
                                     <div class="form-group mb-0">
@@ -123,7 +100,7 @@
                                 </div>
                             </div>
                         </div>
-            </form>
+                </form>
                         {{-- SEO form for home page --}}
                         @if($key == \App\Core\Glosary\OptionMetaKey::HOME['VALUE'])
                              @include('Seo::seo',['objectId' => \App\Core\Glosary\SeoConfigs::SEOPAGEFIXED['HOMEPAGE']['FIXID'] , 'seoType' => \App\Core\Glosary\SeoConfigs::SEOTYPE['SINGLE']['KEY'] ])

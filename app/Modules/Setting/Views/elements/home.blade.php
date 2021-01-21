@@ -4,7 +4,7 @@
     @endphp
 @endif
 @section('title')
-    Home page
+    Home page setting
 @endsection
 @section('heading')
     <h4 class="page-title font-size-18">Home Page</h4>
