@@ -414,17 +414,32 @@ class PostController extends Controller
                     $result = true;
                 }
 
-                if ($request->input('booking_type') && $request->input('type_link')) {
+                if ($request->input('booking_type') != '' && $request->input('type_link') != '') {
                     $condition = [['post_id','=',$id],['meta_key','=',MetaKey::BOOKING_TYPE['VALUE']]];
-                    $dataOption = [
-                        'type' => $request->input('booking_type'),
-                        'value' => $request->input('type_link')
-                    ];
-                    $dataPostMeta = [
-                        'meta_value' => json_encode($dataOption)
-                    ];
-                    if ($this->postMetaRepository->updateByCondition($condition,$dataPostMeta)) {
-                        $result = true;
+                    if ($this->postMetaRepository->getInstantModel()->where($condition)->first()) {
+                        $dataOption = [
+                            'type' => $request->input('booking_type'),
+                            'value' => $request->input('type_link')
+                        ];
+                        $dataPostMeta = [
+                            'meta_value' => json_encode($dataOption)
+                        ];
+                        if ($this->postMetaRepository->updateByCondition($condition,$dataPostMeta)) {
+                            $result = true;
+                        }
+                    }else{
+                        $dataOption = [
+                            'type' => $request->input('booking_type'),
+                            'value' => $request->input('type_link')
+                        ];
+                        $dataPostMeta = [
+                            'post_id' => $id,
+                            'meta_key' => MetaKey::BOOKING_TYPE['VALUE'],
+                            'meta_value' => json_encode($dataOption),
+                            'created_at' => date('Y-m-d H:i:s'),
+                            'updated_at' => date('Y-m-d H:i:s')
+                        ];
+                        $this->postMetaRepository->insert($dataPostMeta);
                     }
                 }
             }

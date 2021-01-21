@@ -115,7 +115,7 @@
                                                 && !empty($postMetaMap[\App\Core\Glosary\MetaKey::ROOM_TYPE['NAME']][0]->type))
                                                 ||(isset($postMetaMap[\App\Core\Glosary\MetaKey::ROOM_TYPE['NAME']][0]->inven)
                                                 && !empty($postMetaMap[\App\Core\Glosary\MetaKey::ROOM_TYPE['NAME']][0]->inven)))
-                                                <div class="col-xl-6 col-lg-6 col-sm-6">
+                                                <div class="col-xl-6 col-lg-6 col-sm-12">
                                                     <div class="type-table">
                                                             @php
                                                                 $types = $postMetaMap[\App\Core\Glosary\MetaKey::ROOM_TYPE['NAME']];
@@ -137,7 +137,7 @@
                                                     </div>
                                                 </div>
                                             @endif
-                                            <div class="col-xl-6 col-lg-6 col-sm-6">
+                                            <div class="col-xl-6 col-lg-6 col-sm-12">
                                                 @if(isset($postMetaMap[\App\Core\Glosary\MetaKey::FACILITY['NAME']]) && !empty($postMetaMap[\App\Core\Glosary\MetaKey::FACILITY['NAME']][0]))
                                                     @php
                                                         $facilities = $postMetaMap[\App\Core\Glosary\MetaKey::FACILITY['NAME']];
@@ -176,7 +176,9 @@
                         </div>
                     </div>
                     <div class="col-xl-3">
-                        @include('Client::elements.booking-form')
+                        @if(isset($postMetaMap[\App\Core\Glosary\MetaKey::BOOKING_TYPE['NAME']]))
+                            @include('Client::elements.booking-form',['bookingType' => $postMetaMap[\App\Core\Glosary\MetaKey::BOOKING_TYPE['NAME']]])
+                        @endif
                     </div>
                     @if(isset($relatePostMetaMap) && !empty($relatePostMetaMap))
                     <div class="col-xl-9">

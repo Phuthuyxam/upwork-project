@@ -17,13 +17,9 @@
                 <div class="footer-contact">
                     @if(isset($systemConfig['email']) && !empty($systemConfig['email']))
                         <span class="email">{{ $systemConfig['email'] }}</span>
-                        <span class="seperate"></span>
                     @endif
                     @if(isset($systemConfig['phone']) && !empty($systemConfig['phone']))
                         <span class="phone">{{ $systemConfig['phone'] }}</span>
-                            @if(isset($systemConfig['address']) && !empty($systemConfig['address']))
-                                <span class="seperate"></span>
-                            @endif
                     @endif
                     @if(isset($systemConfig['address']) && !empty($systemConfig['address']))
                         <span class="address">{{ $systemConfig['address']}}</span>
@@ -37,8 +33,8 @@
                 </div>
             </div>
             <div class="footer-copyright">
-                <p>{{ ( isset($footerData['copyright_text']) && !empty(isset($footerData['copyright_text'])) ) ? $footerData['copyright_text'] : "Copyright © 2021 Fronter.All Rights Reserved" }}</p>
-                <p>{!! ( isset($footerData['develop_text']) && !empty(isset($footerData['develop_text'])) ) ? $footerData['develop_text'] : "Developed by : Brackets Technology"  !!}</p>
+                <div>{{ ( isset($footerData['copyright_text']) && !empty(isset($footerData['copyright_text'])) ) ? $footerData['copyright_text'] : "Copyright © 2021 Fronter.All Rights Reserved" }}</div>
+                <div>{!! ( isset($footerData['develop_text']) && !empty(isset($footerData['develop_text'])) ) ? $footerData['develop_text'] : "Developed by : Brackets Technology"  !!}</div>
             </div>
         </div>
     </div>

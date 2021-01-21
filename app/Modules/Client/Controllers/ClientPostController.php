@@ -169,10 +169,6 @@ class ClientPostController extends Controller
 
                 $hotelPage = $this->postRepository->getInstantModel()->where('post_type',PageTemplateConfigs::HOTEL['NAME'])->first();
 
-                $bookingType = $this->systemRepository->findByCondition([['option_key','=','booking_type']]);
-                if ($bookingType) {
-                    $bookingType = json_decode($bookingType->option_value);
-                }
                 $relatePosts = '';
                 $relatePostMetaMap = [];
                 if ($user) {
@@ -214,7 +210,7 @@ class ClientPostController extends Controller
 
                 }
 
-                return view('Client::hotel-detail', compact('post', 'postMetaMap', 'translationMode','currentLanguage', 'seoDefault','hotelPage','bookingType','relatePostMetaMap'));
+                return view('Client::hotel-detail', compact('post', 'postMetaMap', 'translationMode','currentLanguage', 'seoDefault','hotelPage','relatePostMetaMap'));
             }
         }else{
             return view('Client::pages.404');

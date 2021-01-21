@@ -48,7 +48,7 @@
                 @endif
             @endif
             <div class="hotel-search-wrapper">
-                <form action="">
+                <form action="" id="bookingForm" method="get">
                     <div class="hotel-search-content">
                         <div class="hotel-selection search-item">
                             <p class="title tt-uper fw-bold">{{__('home_find_hotel')}}</p>
@@ -56,20 +56,20 @@
                                 <div class="select-arrow">
                                     <img src="{{ asset('client/images/Path6702.png') }}" alt="">
                                 </div>
-                                <select class="form-control" required="required">
-                                    <option value="default">{{__('home_select_hotel')}}</option>
-                                    <option value="">The Venue</option>
-                                    <option value="">Frontel</option>
-                                    <option value="">Three points hotel</option>
+                                <select class="form-control" id="hotel-select" required="required">
+                                    <option value="-1">{{__('home_select_hotel')}}</option>
+                                    @foreach(\App\Core\Glosary\EndpointConfig::getAll() as $key => $value)
+                                        <option value="{{ $value['VALUE'] }}"> {{ $value['NAME'] }}</option>
+                                    @endforeach
                                 </select>
                             </div>
                         </div>
                         <div class="check-in-out-date search-item">
                             <div class="check-in">
                                 <p class="title tt-uper fw-bold">{{__('home_check_in')}}</p>
-                                <p class="date fw-semiBold">20</p>
-                                <p class="title month-year tt-uper fw-semiBold">dec 2020</p>
-                                <input type="text" class="date-picker start-date form-control" name="start-date" readonly>
+                                <p class="date fw-semiBold">{{ date('d') }}</p>
+                                <p class="title month-year tt-uper fw-semiBold">{{ date('M Y') }}</p>
+                                <input type="text" class="date-picker start-date form-control" name="entrada" readonly>
                             </div>
                             <div class="angle-left">
                                 @if($currentLanguage == 'ar')
@@ -80,9 +80,9 @@
                             </div>
                             <div class="check-out">
                                 <p class="title tt-uper fw-bold">{{__('home_check_out')}}</p>
-                                <p class="date fw-semiBold">22</p>
-                                <p class="title month-year tt-uper fw-semiBold">dec 2020</p>
-                                <input type="text" class="date-picker end-date form-control" name="end-date" readonly>
+                                <p class="date fw-semiBold">{{ date('d',strtotime(' +1 day')) }}</p>
+                                <p class="title month-year tt-uper fw-semiBold">{{ date('M Y',strtotime(' +1 day')) }}</p>
+                                <input type="text" class="date-picker end-date form-control" name="salida" readonly>
                             </div>
                         </div>
                         <div class="occupancy search-item">
@@ -90,29 +90,31 @@
                             <div class="occupancy-detail">
                                 <div class="adult-select">
                                     <i class="fa fa-user" aria-hidden="true"></i>
-                                    <select class="form-control" name="adult">
-                                        <option value="1">1</option>
+                                    <select class="form-control" id="adult-select">
+                                        <option value="1" selected>1</option>
                                         <option value="2">2</option>
-                                        <option value="3" selected>3</option>
+                                        <option value="3">3</option>
                                         <option value="4">4</option>
                                         <option value="10">10</option>
                                     </select>
                                 </div>
                                 <div class="children-select">
                                     <i class="fa fa-male" aria-hidden="true"></i>
-                                    <select class="form-control" name="child">
+                                    <select class="form-control" id="child-select">
+                                        <option value="0"selected>0</option>
                                         <option value="1">1</option>
                                         <option value="2">2</option>
-                                        <option value="3" selected>3</option>
+                                        <option value="3">3</option>
                                         <option value="4">4</option>
                                         <option value="10">10</option>
                                     </select>
                                 </div>
+                                <input type="hidden" id="occupancies" name="occupancies">
                             </div>
                         </div>
                         <div class="promotion-code search-item">
                             <p class="title fw-bold">{{__('home_promotion_code')}}</p>
-                            <input type="text" class="form-control">
+                            <input type="text" class="form-control" name="codpromo">
                         </div>
                         <div class="btn-submit-wrapper">
                             <input type="submit" class="btn btn-check-available tt-uper fw-bold" value="{{__('home_check_availability')}}">
@@ -319,6 +321,7 @@
 @section('script')
     <script>
         const locations = JSON.parse('{!!  json_encode($mapData) !!}');
+        const endPoints = JSON.parse('{!! json_encode(\App\Core\Glosary\EndpointConfig::getAll()) !!}')
         function initMap() {
             const maxZoom = 15;
             const minZoom = 3;
@@ -441,6 +444,12 @@
             })
         }
         $(document).ready(function (){
+            var occupancies = {
+                adults : $('#adult-select').val(),
+                children : $('#child-select').val(),
+                ages : ""
+            };
+            $('#occupancies').val(JSON.stringify(occupancies));
             $('.location-detail-wrapper .close').click(function (e) {
                 e.preventDefault();
                 @if($currentLanguage == 'ar')
@@ -450,7 +459,23 @@
                 $(this).parents('.location-detail-wrapper').removeClass('animate__slideInLeft');
                 $(this).parents('.location-detail-wrapper').addClass('animate__slideOutLeft');
                 @endif
+            })
 
+            $('#child-select').on('change',function (){
+                occupancies.children =  $(this).val();
+                $('#occupancies').val(JSON.stringify(occupancies));
+            })
+            $('#adult-select').on('change',function (){
+                occupancies.adults = $(this).val();
+                $('#occupancies').val(JSON.stringify(occupancies));
+            })
+            $('#hotel-select').on('change',function (){
+                let val = $(this).val();
+                Object.values(endPoints).forEach(value => {
+                    if (parseInt(val) == value.VALUE) {
+                        $('#bookingForm').attr('action',value.LINK);
+                    }
+                })
             })
         })
     </script>
