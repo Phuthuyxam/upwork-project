@@ -1,5 +1,5 @@
 @php
-    $footerData  = OptionHelpers::getOptionByKey(\App\Core\Glosary\OptionMetaKey::FOOTER['VALUE']);
+    $footerData  = OptionHelpers::getOptionByKey(\App\Core\Glosary\OptionMetaKey::FOOTER['VALUE'] , $currentLanguage );
     if(isset($footerData) && json_decode($footerData, true))
         $footerData = json_decode($footerData,true);
 @endphp
