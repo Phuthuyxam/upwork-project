@@ -23,11 +23,11 @@ class DashboardController extends Controller{
         $pageViewData = [];
         if($pageView && $pageView->isNotEmpty()){
             foreach ($pageView as $view) {
-                $pageView['date'][] = $view->date;
-                $pageView['page_view'][] = $view->pageViews;
+                // dd($view['date']);
+                $pageViewData['date'][] = $view['date']->format('Y-m-d');
+                $pageViewData['page_view'][] = $view['pageViews'];
             }
         }
-
         $topBrowser = Analytics::fetchTopBrowsers($oneYear);
 
         $topBrowserData = [];
