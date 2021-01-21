@@ -16,7 +16,7 @@ class CreateSeoTable extends Migration
         Schema::create('seo', function (Blueprint $table) {
             $table->id();
             $table->bigInteger('object_id');
-            $table->string('seo_key')->unique();
+            $table->string('seo_key');
             $table->longText('seo_value')->nullable();
             $table->string('seo_type');
             $table->timestamps();

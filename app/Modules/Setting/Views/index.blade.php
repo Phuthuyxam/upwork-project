@@ -73,15 +73,18 @@
         @include('backend.elements.languages')
         <div class="container-fluid">
             {!! displayAlert(Session::get('message'))  !!}
-            
+
                 <div class="row">
-                <form action="{{ route('option.save', ['key' => $key]) }}" method="POST">
+
                     <div class="col-8">
                         <div class="card">
-                            <div class="card-body">
-                                @csrf
-                                @include('Setting::elements.'.$key)
-                            </div>
+                            <form action="{{ route('option.save', ['key' => $key]) }}" method="POST" id="save_option">
+                                <div class="card-body">
+                                    @csrf
+                                    @include('Setting::elements.'.$key)
+                                </div>
+                                <input type="hidden" name="translation" id="translation_mode">
+                            </form>
                         </div>
                     </div>
                     <div class="col-4">
@@ -90,9 +93,9 @@
                             <div class="card-footer">
                                 <div class="submit-section">
                                     <div class="form-group mb-0">
-                                        <input type="hidden" name="translation" id="translation_mode">
+
                                         <div>
-                                            <button type="submit" class="btn btn-primary waves-effect waves-light" id="ptx-save-btn">
+                                            <button type="button" class="btn btn-primary waves-effect waves-light" id="ptx-save-btn">
                                                 Save
                                             </button>
                                         </div>
@@ -100,7 +103,6 @@
                                 </div>
                             </div>
                         </div>
-                </form>
                         {{-- SEO form for home page --}}
                         @if($key == \App\Core\Glosary\OptionMetaKey::HOME['VALUE'])
                              @include('Seo::seo',['objectId' => \App\Core\Glosary\SeoConfigs::SEOPAGEFIXED['HOMEPAGE']['FIXID'] , 'seoType' => \App\Core\Glosary\SeoConfigs::SEOTYPE['SINGLE']['KEY'] ])
@@ -192,6 +194,11 @@
             $('form').submit();
         }
     })
+
+        $('#ptx-save-btn').click(function (e) {
+            e.preventDefault();
+            $('#save_option').submit();
+        })
     </script>
 
 @endsection
