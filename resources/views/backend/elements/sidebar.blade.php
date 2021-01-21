@@ -145,13 +145,13 @@
                         </a>
                     </li>
                 @endif
-                <li class="menu-title">Extra</li>
-                <li>
-                    <a href="{{ route('log.index') }}" class="waves-effect">
-                        <i class="dripicons-document"></i>
-                        <span>Logs</span>
-                    </a>
-                </li>
+{{--                <li class="menu-title">Extra</li>--}}
+{{--                <li>--}}
+{{--                    <a href="{{ route('log.index') }}" class="waves-effect">--}}
+{{--                        <i class="dripicons-document"></i>--}}
+{{--                        <span>Logs</span>--}}
+{{--                    </a>--}}
+{{--                </li>--}}
             </ul>
         </div>
         <!-- Sidebar -->

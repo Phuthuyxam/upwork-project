@@ -46,7 +46,7 @@
                 </button>
                 <div class="dropdown-menu dropdown-menu-right">
                     <!-- item-->
-                    <a class="dropdown-item" href="#"><i class="dripicons-user font-size-16 align-middle mr-2"></i> Profile</a>
+{{--                    <a class="dropdown-item" href="#"><i class="dripicons-user font-size-16 align-middle mr-2"></i> Profile</a>--}}
                     <a class="dropdown-item" href="{{ route('logout') }}"
                        onclick="event.preventDefault();
                                                  document.getElementById('logout-form').submit();">
