@@ -65,15 +65,18 @@ class PageController extends Controller
                 }
 
                 // add translation record
-                if (LocationConfigs::getLanguageDefault()['VALUE'] == app()->getLocale()) {
-                    $translationPost = $page->postFromTranslation;
-                }else {
-                    $translationPost = $page->postToTranslation;
-                }
+//                if (LocationConfigs::getLanguageDefault()['VALUE'] == app()->getLocale()) {
+                    $translationPostFrom = $page->postFromTranslation(app()->getLocale());
+//                }else {
+                    $translationPostTo = $page->postToTranslation(app()->getLocale());
+//                }
+                if($translationPostFrom->isNotEmpty())
+                    $translationPost = $translationPostFrom;
+                if($translationPostTo->isNotEmpty())
+                    $translationPost = $translationPostTo;
 
                 if (!empty($translationPost) && $translationPost->isNotEmpty()) {
-                    $langCode = (LocationConfigs::getLanguageDefault()['VALUE'] == app()->getLocale()) ? $translationPost[0]->to_lang : $translationPost[0]->from_lang;
-                    $langId = (LocationConfigs::getLanguageDefault()['VALUE'] == app()->getLocale()) ? $translationPost[0]->from_object_id : $translationPost[0]->to_object_id;
+                    $langCode = ($translationPost[0]->to_lang == app()->getLocale()) ? $translationPost[0]->from_lang : $translationPost[0]->to_lang;
                     $translationRecord = ['url' => renderTranslationUrl(route('page.add', ['template' => $template]), $langCode), 'lang_code' => $langCode];
                 } else {
                     $translationRecord = false;

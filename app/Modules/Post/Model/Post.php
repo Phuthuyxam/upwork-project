@@ -19,12 +19,12 @@ class Post extends Model implements Auditable
         return $this->hasMany(PostMeta::class,'post_id');
     }
 
-    public function postToTranslation() {
-        return $this->hasMany(TranslationRelationship::class, 'to_object_id');
+    public function postToTranslation($lan) {
+        return $this->hasMany(TranslationRelationship::class, 'to_object_id')->where('to_lang', $lan)->get();
     }
 
-    public function postFromTranslation() {
-        return $this->hasMany(TranslationRelationship::class, 'from_object_id');
+    public function postFromTranslation($lan) {
+        return $this->hasMany(TranslationRelationship::class, 'from_object_id')->where('from_lang',$lan)->get();
     }
 
 }
