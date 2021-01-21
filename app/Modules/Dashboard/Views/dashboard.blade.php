@@ -3,34 +3,40 @@
 <!-- C3 Chart css -->
 <link href="{{ asset('assets/libs/chartist/chartist.min.css') }}" rel="stylesheet" type="text/css" />
 @endsection
+@section('title')
+    Dashboard
+@endsection
+@section('heading')
+    <h4 class="page-title font-size-18">Dashboard</h4>
+@endsection
 @section('content')
     <div class="container-fluid">
         <div class="row">
             <div class="col-md-6 col-xl-3">
                 <div class="card text-center">
                     <div class="mb-2 card-body text-muted">
-                        <h3 class="text-info mt-2">15,852</h3> Monthly Statistics
+                        <h3 class="text-info mt-2">{{ $hotels }}</h3> Hotels
                     </div>
                 </div>
             </div>
             <div class="col-md-6 col-xl-3">
                 <div class="card text-center">
                     <div class="mb-2 card-body text-muted">
-                        <h3 class="text-purple mt-2">9,514</h3> New Orders
+                        <h3 class="text-purple mt-2">5</h3> Pages
                     </div>
                 </div>
             </div>
             <div class="col-md-6 col-xl-3">
                 <div class="card text-center">
                     <div class="mb-2 card-body text-muted">
-                        <h3 class="text-primary mt-2">289</h3> New Users
+                        <h3 class="text-primary mt-2">{{$users}}</h3> Users
                     </div>
                 </div>
             </div>
             <div class="col-md-6 col-xl-3">
                 <div class="card text-center">
                     <div class="mb-2 card-body text-muted">
-                        <h3 class="text-danger mt-2">5,220</h3> Unique Visitors
+                        <h3 class="text-danger mt-2">{{ $roles }}</h3> roles
                     </div>
                 </div>
             </div>
