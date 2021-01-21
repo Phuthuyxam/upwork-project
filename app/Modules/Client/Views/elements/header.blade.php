@@ -17,7 +17,15 @@
                         <ul class="main-menu">
                             @if(isset($menus) && !empty($menus))
                                 @foreach($menus as $menu)
-                                    <li class="menu-item {{ (url()->current() == $menu['url'] && $menu['url'] != null) ? "active" : false }}">
+                                    @php
+                                        if (isset($menu) && $menu != '') {
+                                            $slug = explode('/',$menu['url']);
+                                            $slug = $slug[count($slug) - 1];
+                                            $url = explode('/',url()->current());
+                                            $url = $url[count($url) - 1];
+                                        }
+                                    @endphp
+                                    <li class="menu-item {{ ($slug == $url && $menu['url'] != null) ? "active" : false }}">
                                         <a class="tt-uper" href="{{ $menu['url'] }}">{{ $menu['title'] }}</a>
                                     </li>
                                 @endforeach
