@@ -49,6 +49,3 @@
         </form>
     </div>
 @endsection
-@section('route')
-    <p>Don't have an account ? <a href="{{ route('register') }}" class="font-weight-bold text-primary"> Signup Now </a> </p>
-@endsection

@@ -55,6 +55,9 @@
         .action-wrapper .btn-add {
             margin-bottom: 1rem;
         }
+        .hidden {
+            display: none;
+        }
         @if($currentLanguage == 'ar/')
             input,textarea {
                 text-align: right;
@@ -371,13 +374,13 @@
                                                     $map = $postMetaMap[\App\Core\Glosary\MetaKey::LOCATION['VALUE']];
                                                 @endphp
                                                 <tr>
-                                                    <td><textarea type="text" class="form-control" name="map_address">{{ old('map_address') ? old('map_address') : $map->address}}</textarea></td>
-                                                    <td><input type="text" class="form-control" name="map_city" value="{{ old('map_city') ? old('map_city') : $map->city }}"></td>
+                                                    <td><textarea type="text" class="form-control" name="map_address">{{ old('map_address') ? old('map_address') : (isset($map->address) ? $map->address : '')}}</textarea></td>
+                                                    <td><input type="text" class="form-control" name="map_city" value="{{ old('map_city') ? old('map_city') : (isset($map->city) ? $map->city : '') }}"></td>
                                                     <td>
-                                                        <input type="number" class="form-control" name="map_lat" value="{{ old('map_lat') ? old('map_lat') : $map->location->lat }}">
+                                                        <input type="number" class="form-control" name="map_lat" value="{{ old('map_lat') ? old('map_lat') : ( isset($map->location->lat) ? $map->location->lat : '') }}">
                                                     </td>
                                                     <td>
-                                                        <input type="number" class="form-control" name="map_long" value="{{ old('map_long') ? old('map_long') : $map->location->long}}">
+                                                        <input type="number" class="form-control" name="map_long" value="{{ old('map_long') ? old('map_long') : ( isset($map->location->long) ? $map->location->long : '')}}">
                                                     </td>
                                                 </tr>
                                             </tbody>
@@ -441,6 +444,11 @@
                                 <button type="submit" class="btn btn-primary btn-submit waves-effect waves-light" id="ptx-save-btn">Publish</button>
                             </div>
                         </div>
+                        @if( isset($postMetaMap[\App\Core\Glosary\MetaKey::BOOKING_TYPE['VALUE']]) && !empty($postMetaMap[\App\Core\Glosary\MetaKey::BOOKING_TYPE['VALUE']]))
+                            @include('Post::elements.booking',[ 'record' => $postMetaMap[\App\Core\Glosary\MetaKey::BOOKING_TYPE['VALUE']]])
+                        @else
+                            @include('Post::elements.booking')
+                         @endif
                         </form>
                         {{-- SEO form for home page --}}
                         @if(isset($post) && !empty($post))
@@ -626,7 +634,7 @@
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#d33',
-                confirmButtonText: 'Yes, delete it!'
+                confirmButtonText: 'Confirm !'
             }).then((result) => {
                 if (result.value) {
                     $('#translation_mode').val(lanCode);
@@ -643,6 +651,27 @@
                 }
             })
         });
+
+        $('input[name="booking_type"]').on('change',function (){
+            $('#bookingType').find('.type_link').addClass('hidden');
+            $('#bookingType').find('.type_link').removeClass('error required');
+            $('#bookingType').find('.error-message').text('');
+            $('#bookingType').find('.type_link').attr('name','');
+            if ($(this).prop("checked")) {
+                $(this).parents('.form-group').find('.type_link').removeClass('hidden');
+                $(this).parents('.form-group').find('.type_link').addClass('required');
+                $(this).parents('.form-group').find('.type_link').attr('name','type_link');
+            }
+        })
+        $('.type_link').on('change',function (){
+            if($(this).val() == '') {
+                $(this).addClass('error');
+                $(this).parents('.form-group').find('.error-message').text('This field cannot be null');
+            }else{
+                $(this).removeClass('error');
+                $(this).parents('.form-group').find('.error-message').text('');
+            }
+        })
 
     </script>
 @endsection

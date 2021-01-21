@@ -29,7 +29,7 @@ class MetaKey extends BasicEnum
     const LOCATION = ['VALUE' => 12, 'NAME' => 'location'];
     const THUMBNAIL = ['VALUE' => 13, 'NAME' => 'thumbnail'];
     const PRICE = ['VALUE' => 14, 'NAME' => 'price'];
-//    const BRAND_LOGO = ['VALUE' => 15, 'NAME' => 'brand_logo'];
+    const BOOKING_TYPE = ['VALUE' => 15, 'NAME' => 'booking_type'];
     const LOGO = ['VALUE' => 16, 'NAME' => 'logo'];
 
     public static function display($value) {

@@ -121,14 +121,6 @@
                 </li>
                 @endif
                 <li class="menu-title">Settings</li>
-                @if(PermissionHelpers::canAccess(route('system.booking_type')))
-                    <li>
-                        <a href="{{ route('system.booking_type') }}" class="waves-effect">
-                            <i class="dripicons-checklist"></i>
-                            <span>Booking type setting</span>
-                        </a>
-                    </li>
-                @endif
                 @if(PermissionHelpers::canAccess(route('option.index')))
                     <li>
                         <a href="{{ route('option.index',\App\Core\Glosary\OptionMetaKey::MENU['VALUE']) }}"  class="waves-effect">

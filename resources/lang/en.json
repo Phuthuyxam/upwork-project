@@ -19,10 +19,13 @@
     "see_more_services" : "see more services",
     "see_more_details" : "see more details",
     "home_find_hotel" : "FIND YOUR HOTEL",
-    "home_check_in" : "CHECK IN",
-    "home_check_out" : "CHECK OUT",
+    "home_check_in" : "Check in",
+    "home_check_out" : "Check out",
     "home_occupancy" : "OCCUPANCY",
     "home_promotion_code" : "Promotional code",
     "home_check_availability" : "Check availability",
-    "home_select_hotel" : "Select Your Hotel"
+    "home_select_hotel" : "Select Your Hotel",
+    "booking_form_reservation" : "Your Reservation",
+    "booking_form_adult" : "Adults",
+    "booking_form_child" : "Children"
 }

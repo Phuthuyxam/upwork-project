@@ -47,6 +47,11 @@
                     <div class="hotels-title">
                         <h2 class="fw-bold">{{ $post->post_excerpt }}</h2>
                     </div>
+                    @if($post->post_content != '')
+                        <div class="hotels-description">
+                            {{ $post->post_content  }}
+                        </div>
+                    @endif
                 </div>
                 @if(isset($pageMetaMap[\App\Core\Glosary\MetaKey::COMPLETE_ITEM['NAME']]) && !empty($pageMetaMap[\App\Core\Glosary\MetaKey::COMPLETE_ITEM['NAME']]))
                     @php

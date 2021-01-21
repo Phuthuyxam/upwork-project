@@ -47,7 +47,7 @@
                         <h2 class="fw-bold">{{ $post->post_excerpt }}</h2>
                     </div>
                     <div class="hotels-description">
-                        {!! $post->post_content !!}
+                        {{ $post->post_content  }}
                     </div>
                 </div>
                 @if(isset($postsMetaMap) && !empty($postsMetaMap))

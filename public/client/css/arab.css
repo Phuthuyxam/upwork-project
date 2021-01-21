@@ -176,3 +176,23 @@ span.language {
 .type-table table th{
     font-family: Cairo, serif;
 }
+.btn-view-more {
+    direction: ltr;
+    justify-content: flex-end;
+}
+.btn-view-more span {
+    margin-right: 0;
+    margin-left: 1rem;
+}
+
+.services-content .service-item .content .title {
+    padding-top: 30px;
+    position: relative;
+    padding-right: 15px;
+    padding-left: 30px;
+}
+@media (min-width: 1920px){
+    .services-content .service-item .content .title {
+        padding-left: 90px;
+    }
+}

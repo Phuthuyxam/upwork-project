@@ -150,7 +150,7 @@
                                             <label for="description">Content</label>
                                             <div class="editor-wrapper">
                                                 <textarea name="post_content" id="description" class="form-control"
-                                                          style="width: 100%; height: 90px"
+                                                          rows="8"
                                                           placeholder="Description">{{ old('post_content') ? old('post_content') : ( $page ? $page->post_content : '' ) }}</textarea>
                                             </div>
                                             <p class="text-danger error-message" style="font-weight: bold"
@@ -276,7 +276,7 @@
         @else
             const slugs = '';
         @endif
-        CKEDITOR.replace('description', {filebrowserImageBrowseUrl: '/file-manager/ckeditor'});
+        // CKEDITOR.replace('description', {filebrowserImageBrowseUrl: '/file-manager/ckeditor'});
         $(document).ready(function () {
 
             $('#title').on('change', function () {
@@ -472,7 +472,7 @@
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#d33',
-                confirmButtonText: 'Yes, delete it!'
+                confirmButtonText: 'Confirm !'
             }).then((result) => {
                 if (result.value) {
                     $('#translation_mode').val(lanCode);
