@@ -213,7 +213,8 @@ class ClientPostController extends Controller
                 return view('Client::hotel-detail', compact('post', 'postMetaMap', 'translationMode','currentLanguage', 'seoDefault','hotelPage','relatePostMetaMap'));
             }
         }else{
-            return view('Client::pages.404');
+            $currentLanguage = app()->getLocale();
+            return view('Client::pages.404',compact('currentLanguage'));
         }
     }
 

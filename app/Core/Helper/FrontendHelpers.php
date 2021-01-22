@@ -15,7 +15,7 @@ class FrontendHelpers
         }
         ob_start();
         ?>
-        <img src="<?php echo $url ?>" style="width: 100%" alt="<?php echo $alt ? $alt : ( isset($pathinfo['filename']) ? $pathinfo['filename'] : "" ) ?>" title="<?php echo $title ? $title : (isset($pathinfo['filename']) ? $pathinfo['filename'] : "" ) ?>" <?php echo $class ? 'class="'. $class . '"': false ?>/>
+        <img src="<?php echo $url ?>" class="thumb" style="width: 100%" alt="<?php echo $alt ? $alt : ( isset($pathinfo['filename']) ? $pathinfo['filename'] : "" ) ?>" title="<?php echo $title ? $title : (isset($pathinfo['filename']) ? $pathinfo['filename'] : "" ) ?>" <?php echo $class ? 'class="'. $class . '"': false ?>/>
         <?php
         $content = ob_get_contents();
         ob_get_clean();

@@ -9,7 +9,7 @@ use App\Modules\SystemConfig\Repositories\SystemConfigRepository;
 
 class OptionHelpers
 {
-    public static function getOptionByKey($key, $langCode) {
+    public static function getOptionByKey($key, $langCode = null) {
         $optionRepository = new OptionRepository();
         if($langCode){
             app()->setLocale($langCode);

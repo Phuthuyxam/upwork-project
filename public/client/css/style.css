@@ -1748,6 +1748,10 @@ footer {
         max-height: 80vh;
         overflow: hidden;
     }
+    .slider-for .item {
+        max-height: 600px;
+        overflow: hidden;
+    }
 }
 
 @media (min-width: 1680px) {
