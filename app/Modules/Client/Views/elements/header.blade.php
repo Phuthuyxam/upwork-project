@@ -6,7 +6,7 @@
                     <i class="fa fa-bars" aria-hidden="true"></i>
                 </div>
                 <div class="header-logo">
-                    <a href="{{ URL::to('/') }}">
+                    <a href="{{ renderTranslationUrl(URL::to('/') , app()->getLocale())  }}">
                         @if(isset($systemConfig['logo']) && !empty($systemConfig['logo']))
                         {!! FrontendHelpers::renderImage($systemConfig['logo']) !!}
                         @endif
