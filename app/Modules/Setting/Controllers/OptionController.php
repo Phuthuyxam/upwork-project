@@ -6,6 +6,7 @@ namespace App\Modules\Setting\Controllers;
 
 use App\Core\Glosary\LocationConfigs;
 use App\Core\Glosary\OptionMetaKey;
+use App\Core\Helper\OptionHelpers;
 use App\Http\Controllers\Controller;
 use App\Modules\Setting\Repositories\OptionRepository;
 use Illuminate\Http\Request;
@@ -111,16 +112,16 @@ class OptionController extends Controller
                 $homeData['slider'][] = [
                     'desc' => $slider_desc[$key],
                     'url' => $slider_url[$key],
-                    'logo' => $slider_logo[$key],
-                    'banner_desktop' => $slider_banner_desktop[$key],
-                    'banner_tablet'  => $slider_banner_tablet[$key],
-                    'banner_mobile'  => $slider_banner_mobile[$key]
+                    'logo' => OptionHelpers::getImagePath($slider_logo[$key]),
+                    'banner_desktop' => OptionHelpers::getImagePath($slider_banner_desktop[$key]),
+                    'banner_tablet'  => OptionHelpers::getImagePath($slider_banner_tablet[$key]),
+                    'banner_mobile'  => OptionHelpers::getImagePath($slider_banner_mobile[$key])
                 ];
             }
         }
 
         $homeData['our_service'] = [
-            'background' => $request->option_our_service_bg,
+            'background' => OptionHelpers::getImagePath($request->option_our_service_bg),
             'title' => $request->option_our_service_title,
             'heading' => $request->option_our_service_heading,
             'paragraph' => $request->option_our_service_paragraph,
@@ -136,18 +137,18 @@ class OptionController extends Controller
             $hotel_logo = $request->option_home_hotel_logo;
             foreach ($hotel_banner as $key => $h_banner) {
                 $homeData['our_hotel']['hotels'][] = [
-                    'banner' => $h_banner,
+                    'banner' => OptionHelpers::getImagePath($h_banner),
                     'logo'  => $hotel_logo[$key]
                 ];
             }
         }
 
         $homeData['message'] = [
-            'background' => $request->option_our_message_bg,
+            'background' => OptionHelpers::getImagePath($request->option_our_message_bg),
             'title' => $request->option_our_message_title,
             'paragraph' => $request->option_our_message_paragraph,
             'author'    => $request->option_our_message_auth,
-            'avatar'    => $request->option_our_avatar_image,
+            'avatar'    => OptionHelpers::getImagePath($request->option_our_avatar_image),
             'sign'      => $request->option_our_message_sign,
         ];
 
@@ -160,7 +161,7 @@ class OptionController extends Controller
             $brand_url = $request->option_home_brand_url;
             foreach ($brand_banner as $key => $b_banner) {
                 $homeData['our_brand']['brands'][] = [
-                    'banner' => $b_banner,
+                    'banner' => OptionHelpers::getImagePath($b_banner),
                     'url'  => $brand_url[$key]
                 ];
             }

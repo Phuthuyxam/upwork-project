@@ -4,6 +4,7 @@
 namespace App\Modules\SystemConfig\Controllers;
 
 
+use App\Core\Helper\OptionHelpers;
 use App\Http\Controllers\Controller;
 use App\Modules\SystemConfig\Repositories\SystemConfigRepository;
 use Illuminate\Http\Request;
@@ -24,7 +25,7 @@ class SystemConfigController extends Controller
             return view('SystemConfig::index',compact('result'));
         }else {
             $data = [
-                'logo' => $request->input('logo') ,
+                'logo' => OptionHelpers::getImagePath($request->input('logo')) ,
                 'phone' => $request->input('phone'),
                 'email' => $request->input('email_'),
                 'address' => $request->input('address'),

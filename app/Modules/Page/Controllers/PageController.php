@@ -9,6 +9,7 @@ use App\Core\Glosary\MetaKey;
 use App\Core\Glosary\PageTemplateConfigs;
 use App\Core\Glosary\PostStatus;
 use App\Core\Glosary\PostType;
+use App\Core\Helper\OptionHelpers;
 use App\Http\Controllers\Controller;
 use App\Modules\Post\Repositories\PostMetaRepository;
 use App\Modules\Post\Repositories\PostRepository;
@@ -184,12 +185,12 @@ class PageController extends Controller
                     $metaImages = $this->postMetaRepository->getInstantModel()->where([['post_id', $page->id] , ['meta_key', MetaKey::BANNER['VALUE']]])->get();
                     if($metaImages->isNotEmpty()) {
                         $this->postMetaRepository->getInstantModel()->where([['post_id', $page->id] , ['meta_key', MetaKey::BANNER['VALUE']]])
-                            ->update(['meta_value' => json_encode($request->input('files'))]);
+                            ->update(['meta_value' => json_encode(OptionHelpers::getImagePaths($request->input('files')))]);
                     }else{
                         $this->postMetaRepository->getInstantModel()->create([
                             'post_id' => $page->id,
                             'meta_key' => MetaKey::BANNER['VALUE'],
-                            'meta_value' => json_encode($request->input('files'))
+                            'meta_value' =>  json_encode(OptionHelpers::getImagePaths($request->input('files')))
                         ]);
                     }
                     if ($template == PageTemplateConfigs::SERVICE['NAME']) {
@@ -217,7 +218,8 @@ class PageController extends Controller
                     $postId = $this->postRepository->create($dataPost)->id;
                     if ($postId) {
                         $result = false;
-                        $files = $request->input('files');
+                        $files = OptionHelpers::getImagePaths($request->input('files'));
+
                         if (isset($files) && !empty($files)){
                             $dataMeta =
                                 [
@@ -251,7 +253,7 @@ class PageController extends Controller
     private function createPage($request,$postId,$completeItem,$imageItem = null){
         $dataMeta = [];
         if ($imageItem) {
-            $images = $request->input('gallery');
+            $images = OptionHelpers::getImagePaths($request->input('gallery'));
             $dataMeta[] = [
                 'post_id' => $postId,
                 'meta_key' => MetaKey::IMAGE_ITEM['VALUE'],
@@ -273,7 +275,7 @@ class PageController extends Controller
             if (!empty($descriptions) && !empty($images)) {
                 foreach ($images as $key => $value) {
                     $itemMeta[] = [
-                        'image' => $value,
+                        'image' => OptionHelpers::getImagePath($value),
                         'desc' => $descriptions[$key]
                     ];
                 }
@@ -313,7 +315,7 @@ class PageController extends Controller
             $index = $request->input('rowItem');
             if (isset($images) && !empty($images)) {
                 $dataMeta = [
-                    'meta_value' => json_encode($images)
+                    'meta_value' => json_encode(OptionHelpers::getImagePaths($images))
                 ];
                 if ($this->postMetaRepository->getMetaValueByCondition($condition)){
                     $this->postMetaRepository->updateByCondition($condition,$dataMeta);
@@ -321,7 +323,7 @@ class PageController extends Controller
                     $this->postMetaRepository->create([
                         'post_id' => $postId,
                         'meta_key' => $imageItem,
-                        'meta_value' => json_encode($images)
+                        'meta_value' => json_encode(OptionHelpers::getImagePaths($images))
                     ]);
                 }
 
@@ -352,7 +354,7 @@ class PageController extends Controller
             if (isset($images) && !empty($images) && isset($descriptions) && !empty($descriptions)) {
                 foreach ($images as $key => $value) {
                     $items[] = [
-                        'image' => $value,
+                        'image' => json_encode(OptionHelpers::getImagePath($value)),
                         'desc' => $descriptions[$key]
                     ];
                 }

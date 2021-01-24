@@ -191,6 +191,10 @@ span.language {
     padding-right: 15px;
     padding-left: 30px;
 }
+.hotels-content .hotel-item h3,
+.detail-content .description{
+    font-family: Cairo, serif;
+}
 @media (min-width: 1920px){
     .services-content .service-item .content .title {
         padding-left: 90px;

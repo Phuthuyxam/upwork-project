@@ -9,6 +9,7 @@ use App\Core\Glosary\PostStatus;
 use App\Core\Glosary\MetaKey;
 use App\Core\Glosary\PostType;
 use App\Core\Glosary\ResponeCode;
+use App\Core\Helper\OptionHelpers;
 use App\Modules\Post\Model\PostMeta;
 use App\Modules\Post\Repositories\PostMetaRepository;
 use App\Modules\Post\Repositories\PostRepository;
@@ -109,14 +110,14 @@ class PostController extends Controller
                     [
                         'post_id' => $postId,
                         'meta_key' => MetaKey::BANNER['VALUE'],
-                        'meta_value' => $request->input('files') ? json_encode($request->input('files')) : '',
+                        'meta_value' => $request->input('files') ? json_encode(OptionHelpers::getImagePaths($request->input('files'))) : '',
                         'created_at' => date('Y-m-d H:i:s'),
                         'updated_at' => date('Y-m-d H:i:s')
                     ],
                     [
                         'post_id' => $postId,
                         'meta_key' => MetaKey::SLIDE['VALUE'],
-                        'meta_value' => $request->input('images') ? json_encode($request->input('images')) : '',
+                        'meta_value' => $request->input('images') ? json_encode(OptionHelpers::getImagePaths($request->input('images'))) : '',
                         'created_at' => date('Y-m-d H:i:s'),
                         'updated_at' => date('Y-m-d H:i:s')
                     ],
@@ -151,7 +152,7 @@ class PostController extends Controller
                     [
                         'post_id' => $postId,
                         'meta_key' => MetaKey::THUMBNAIL['VALUE'],
-                        'meta_value' => $request->input('thumb') ? json_encode($request->input('thumb')) : '',
+                        'meta_value' => $request->input('thumb') ? json_encode(OptionHelpers::getImagePath($request->input('thumb'))) : '',
                         'created_at' => date('Y-m-d H:i:s'),
                         'updated_at' => date('Y-m-d H:i:s')
                     ],
@@ -165,7 +166,7 @@ class PostController extends Controller
                     [
                         'post_id' => $postId,
                         'meta_key' => MetaKey::LOGO['VALUE'],
-                        'meta_value' => $request->input('logo') ? json_encode($request->input('logo')) : '',
+                        'meta_value' => $request->input('logo') ? json_encode(OptionHelpers::getImagePath($request->input('logo'))) : '',
                         'created_at' => date('Y-m-d H:i:s'),
                         'updated_at' => date('Y-m-d H:i:s')
                     ],
@@ -301,7 +302,7 @@ class PostController extends Controller
                 if ($request->input('images')) {
                     $condition = [['post_id','=',$id],['meta_key' ,'=', MetaKey::SLIDE['VALUE']]];
                     $dataPostMeta = [
-                        'meta_value' => json_encode($request->input('images'))
+                        'meta_value' => json_encode($request->input(OptionHelpers::getImagePaths('images')))
                     ];
                     if ($this->postMetaRepository->updateByCondition($condition,$dataPostMeta)) {
                         $result = true;
@@ -314,7 +315,7 @@ class PostController extends Controller
                 if ($request->input('files')) {
                     $condition = [['post_id','=',$id],['meta_key' ,'=', MetaKey::BANNER['VALUE']]];
                     $dataPostMeta = [
-                        'meta_value' => json_encode($request->input('files'))
+                        'meta_value' => json_encode(OptionHelpers::getImagePaths($request->input('files')))
                     ];
 
                     if ($this->postMetaRepository->updateByCondition($condition,$dataPostMeta)) {
@@ -383,7 +384,7 @@ class PostController extends Controller
                 if ($request->input('thumb')) {
                     $condition = [['post_id','=',$id],['meta_key' ,'=', MetaKey::THUMBNAIL['VALUE']]];
                     $dataPostMeta =[
-                        'meta_value' => json_encode($request->input('thumb'))
+                        'meta_value' => json_encode(OptionHelpers::getImagePath($request->input('thumb')))
                     ];
                     if ($this->postMetaRepository->updateByCondition($condition,$dataPostMeta)) {
                         $result = true;
@@ -394,7 +395,7 @@ class PostController extends Controller
                 if ($request->input('logo')) {
                     $condition = [['post_id','=',$id],['meta_key' ,'=', MetaKey::LOGO['VALUE']]];
                     $dataPostMeta =[
-                        'meta_value' => json_encode($request->input('logo'))
+                        'meta_value' => json_encode(OptionHelpers::getImagePath($request->input('logo')))
                     ];
                     if ($this->postMetaRepository->updateByCondition($condition,$dataPostMeta)) {
                         $result = true;
@@ -551,14 +552,14 @@ class PostController extends Controller
                     [
                         'post_id' => $postId,
                         'meta_key' => MetaKey::BANNER['VALUE'],
-                        'meta_value' => $request->input('files') ? json_encode($request->input('files')) : '',
+                        'meta_value' => $request->input('files') ? json_encode(OptionHelpers::getImagePaths($request->input('files'))) : '',
                         'created_at' => date('Y-m-d H:i:s'),
                         'updated_at' => date('Y-m-d H:i:s')
                     ],
                     [
                         'post_id' => $postId,
                         'meta_key' => MetaKey::SLIDE['VALUE'],
-                        'meta_value' => $request->input('images') ? json_encode($request->input('images')) : '',
+                        'meta_value' => $request->input('images') ? json_encode(OptionHelpers::getImagePaths($request->input('images'))) : '',
                         'created_at' => date('Y-m-d H:i:s'),
                         'updated_at' => date('Y-m-d H:i:s')
                     ],
@@ -593,7 +594,7 @@ class PostController extends Controller
                     [
                         'post_id' => $postId,
                         'meta_key' => MetaKey::THUMBNAIL['VALUE'],
-                        'meta_value' => $request->input('thumb') ? json_encode($request->input('thumb')) : '',
+                        'meta_value' => $request->input('thumb') ? json_encode(OptionHelpers::getImagePath($request->input('thumb'))) : '',
                         'created_at' => date('Y-m-d H:i:s'),
                         'updated_at' => date('Y-m-d H:i:s')
                     ],
@@ -607,7 +608,7 @@ class PostController extends Controller
                     [
                         'post_id' => $postId,
                         'meta_key' => MetaKey::LOGO['VALUE'],
-                        'meta_value' => $request->input('logo') ? json_encode($request->input('logo')) : '',
+                        'meta_value' => $request->input('logo') ? json_encode(OptionHelpers::getImagePath($request->input('logo'))) : '',
                         'created_at' => date('Y-m-d H:i:s'),
                         'updated_at' => date('Y-m-d H:i:s')
                     ],
