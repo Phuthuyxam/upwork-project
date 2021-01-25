@@ -195,12 +195,12 @@ span.language {
 .detail-content .description{
     font-family: Cairo, serif;
 }
-.description {
-    text-align: right;
+.description  pre{
     font-family: Cairo, serif;
     word-break: break-all;
     width: 100%;
     white-space: break-spaces;
+    overflow: unset;
 }
 @media (min-width: 1920px){
     .services-content .service-item .content .title {
