@@ -26,7 +26,7 @@
                     <td style="width: 200px">
                         <select class="form-control menu-type"  name="type[]">
                             @foreach(\App\Core\Glosary\MenuType::getAll() as $value)
-                                <option value="{{ $value['VALUE'] }}" {{ $value['VALUE'] == $menu['type'] ? 'selected' : '' }}>{{ $value['DISPLAY'] }}</option>
+                                <option value="{{ $value['VALUE'] }}" {{ isset($menu['type']) ? ($value['VALUE'] == $menu['type'] ? 'selected' : '') : '' }}>{{ $value['DISPLAY'] }}</option>
                             @endforeach
                         </select>
                     </td>

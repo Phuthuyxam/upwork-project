@@ -9,7 +9,7 @@
                         <input type="radio" id="{{ $value['ID'] }}" name="booking_type" value="{{ $value['VALUE'] }}" style="margin-right: 1rem" {{ $value['VALUE'] == $record->type ? 'checked' : ''}}>
                         <label for="{{ $value['ID'] }}" style="margin-bottom: 0">{{ $value['DISPLAY'] }}</label>
                         <input type="{{ $value['VALUE'] == \App\Core\Glosary\BookingTypes::FORM['VALUE'] ? 'email' : 'text'}}" name="{{ $value['VALUE'] == $record->type ? 'type_link' : ''}}"
-                               class="form-control type_link required {{ $value['VALUE'] == $record->type ? '' : 'hidden'}}" style="margin-top: .5rem;"
+                               class="form-control type_link {{ $value['VALUE'] == $record->type ? 'required' : 'hidden'}}" style="margin-top: .5rem;"
                                placeholder="{{ $value['PLACE_HOLDER'] }}" value="{{$value['VALUE'] == $record->type ? $record->value : ''}}">
                         <p class="text-danger error-message" style="font-weight: bold"></p>
                     </div>

@@ -302,7 +302,7 @@ class PostController extends Controller
                 if ($request->input('images')) {
                     $condition = [['post_id','=',$id],['meta_key' ,'=', MetaKey::SLIDE['VALUE']]];
                     $dataPostMeta = [
-                        'meta_value' => json_encode($request->input(OptionHelpers::getImagePaths('images')))
+                        'meta_value' => json_encode(OptionHelpers::getImagePaths($request->input('images')))
                     ];
                     if ($this->postMetaRepository->updateByCondition($condition,$dataPostMeta)) {
                         $result = true;
