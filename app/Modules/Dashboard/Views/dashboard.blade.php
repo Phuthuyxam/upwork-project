@@ -42,7 +42,7 @@
             </div>
         </div>
         <!-- end row -->
-
+        @if(env('ANALYTICS_VIEW_ID'))
         <div id="analytics view">
             <div class="row">
                 <div class="col-lg-6">
@@ -70,15 +70,16 @@
                     </div>
                 </div>
 
-
             </div>
         </div>
+        @endif
     </div>
 @endsection
 @section('extension_script')
     <script src="{{ asset('assets/libs/chart.js/Chart.bundle.min.js') }}"></script>
 @endsection
 @section('script')
+    @if(env('ANALYTICS_VIEW_ID'))
     <script>
         !function (d) {
             "use strict";
@@ -207,4 +208,5 @@
             window.jQuery.ChartJs.init()
         }();
     </script>
+    @endif
 @endsection

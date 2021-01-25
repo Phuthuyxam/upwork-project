@@ -1,4 +1,7 @@
 <header>
+    @php
+        $currentLan = app()->getLocale();
+    @endphp
     <div class="header-wrapper">
         <div class="container">
             <div class="header-content">
@@ -22,7 +25,7 @@
                                         $url = $url[count($url) - 1];
                                     @endphp
                                     <li class="menu-item {{ ($url == $menu['url']) ? "active" : ($menu['url'] == '' ? 'active' : '') }}">
-                                        <a class="tt-uper" href="{{ $menu['url'] }}">{{ $menu['title'] }}</a>
+                                        <a class="tt-uper" href="{{ $currentLan == 'ar' ? 'ar/'.$menu['url'] : $menu['url'] }}">{{ $menu['title'] }}</a>
                                     </li>
                                 @endforeach
                             @endif
@@ -37,7 +40,6 @@
 
                 @php
                     $languages = \App\Core\Glosary\LocationConfigs::getAll();
-                    $currentLan = app()->getLocale();
                     $modeTranslation = ( isset($translationMode) && !empty($translationMode) ) ? $translationMode : false;
                 @endphp
 
