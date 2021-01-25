@@ -24,7 +24,7 @@
                                         $url = explode('/',url()->current());
                                         $url = $url[count($url) - 1];
                                     @endphp
-                                    <li class="menu-item {{ ($url == $menu['url']) ? "active" : ($menu['url'] == '' ? 'active' : '') }}">
+                                    <li class="menu-item {{ ($url == $menu['url']) ? "active" : ( $menu['url'] == '' && url()->current() == env('APP_URL') ? 'active' : '') }}">
                                         <a class="tt-uper" href="{{ $currentLan == 'ar' ? 'ar/'.$menu['url'] : $menu['url'] }}">{{ $menu['title'] }}</a>
                                     </li>
                                 @endforeach
