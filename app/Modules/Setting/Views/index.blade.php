@@ -195,10 +195,11 @@
         }
     })
 
-        $('#ptx-save-btn').click(function (e) {
-            e.preventDefault();
-            $('#save_option').submit();
-        })
+    $('#ptx-save-btn').click(function (e) {
+        e.preventDefault();
+        $('#save_option').submit();
+    })
+
     </script>
 
 @endsection

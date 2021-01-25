@@ -31,7 +31,11 @@ class OptionHelpers
         $domain = env('APP_URL');
         $paths = [];
         foreach ($fileArray as $value) {
-            $paths[] = explode($domain,$value)[1];
+            if (strpos($value,$domain) === false) {
+                $paths[] = $value;
+            }else{
+                $paths[] = explode($domain,$value)[1];
+            }
         }
 
         return $paths;
@@ -39,8 +43,11 @@ class OptionHelpers
 
     public static function getImagePath($file) {
         $domain = env('APP_URL');
-
-        return explode($domain,$file)[1];
+        if (strpos($file,$domain) === false) {
+            return $file;
+        }else{
+            return explode($domain,$file)[1];
+        }
     }
 
 }

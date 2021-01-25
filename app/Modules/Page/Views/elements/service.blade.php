@@ -10,11 +10,12 @@
     <tbody>
 
     @if(isset($serviceItem) && !empty($serviceItem))
+
         @foreach($serviceItem as $key=> $value)
             <tr class="item">
                 <td class="counter">{{ $key + 1 }}</td>
                 <td style="max-width: 400px;">
-                    {!!  renderMediaManage('images[]', $value->image) !!}
+                    {!!  renderMediaManage('images[]',$value->image) !!}
                     <p class="text-danger error-message" style="font-weight: bold" id="excerpt-error">
                     </p>
                 </td>

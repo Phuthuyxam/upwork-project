@@ -43,8 +43,10 @@ class OptionController extends Controller
         if( isset($request->option_menu_title) && !empty($request->option_menu_title)) {
             $menuTitle = $request->option_menu_title;
             $menuUrl = $request->option_menu_url;
+            $menuType = $request->type;
             foreach ($menuTitle as $key => $title) {
                 $menuData[] = [
+                    'type' => $menuType[$key],
                     'title' => $title,
                     'url' => $menuUrl[$key]
                 ];

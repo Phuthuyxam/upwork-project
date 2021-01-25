@@ -8,6 +8,7 @@
     <thead>
     <tr>
         <th></th>
+        <th>Type</th>
         <th>Title</th>
         <th>Url</th>
         <th></th>
@@ -22,15 +23,22 @@
             @foreach( $menus as $key => $menu )
                 <tr>
                     <td class="counter">{{ $key + 1 }}</td>
-                    <td style="width: 400px;">
+                    <td style="width: 200px">
+                        <select class="form-control menu-type"  name="type[]">
+                            @foreach(\App\Core\Glosary\MenuType::getAll() as $value)
+                                <option value="{{ $value['VALUE'] }}" {{ $value['VALUE'] == $menu['type'] ? 'selected' : '' }}>{{ $value['DISPLAY'] }}</option>
+                            @endforeach
+                        </select>
+                    </td>
+                    <td>
                         <input type="text" style="padding: 3px 5px; overflow: hidden" name="option_menu_title[]"
                                value="{{ $menu['title'] }}"
                                class="form-control required option-menu-title">
                     </td>
-                    <td>
+                    <td style="width: 250px">
                         <input type="text" style="padding: 3px 5px; overflow: hidden" name="option_menu_url[]"
                                value="{{ $menu['url'] }}"
-                               class="form-control required option-menu-url">
+                               class="form-control required option-menu-url current-domain">
                     </td>
                     <td style="vertical-align: middle; width: 50px">
                         <div class="action-wrapper">
@@ -51,11 +59,18 @@
         @for($i = 0; $i < 5; $i++)
             <tr>
                 <td class="counter">{{ $i + 1 }}</td>
-                <td style="width: 400px;">
-                    <input type="text" style="padding: 3px 5px; overflow: hidden" name="option_menu_title[]" class="form-control required option-menu-title" >
+                <td style="width: 200px">
+                    <select class="form-control menu-type" name="type[]">
+                        @foreach(\App\Core\Glosary\MenuType::getAll() as $value)
+                            <option value="{{ $value['VALUE'] }}">{{ $value['DISPLAY'] }}</option>
+                        @endforeach
+                    </select>
                 </td>
                 <td>
-                    <input type="text" style="padding: 3px 5px; overflow: hidden" name="option_menu_url[]" class="form-control required option-menu-url">
+                    <input type="text" style="padding: 3px 5px; overflow: hidden" name="option_menu_title[]" class="form-control required option-menu-title" >
+                </td>
+                <td style="width: 250px">
+                    <input type="text" style="padding: 3px 5px; overflow: hidden" name="option_menu_url[]" class="form-control required option-menu-url current-domain">
                 </td>
                 <td style="vertical-align: middle; width: 50px">
                     <div class="action-wrapper">

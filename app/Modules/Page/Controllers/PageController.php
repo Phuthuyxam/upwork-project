@@ -354,7 +354,7 @@ class PageController extends Controller
             if (isset($images) && !empty($images) && isset($descriptions) && !empty($descriptions)) {
                 foreach ($images as $key => $value) {
                     $items[] = [
-                        'image' => json_encode(OptionHelpers::getImagePath($value)),
+                        'image' => OptionHelpers::getImagePath($value),
                         'desc' => $descriptions[$key]
                     ];
                 }
@@ -417,7 +417,7 @@ class PageController extends Controller
         ];
 
 //        try {
-        
+
 
             $translationRecord = $this->postRepository->filter([['post_name' , $request->input('post_name')]]);
 
