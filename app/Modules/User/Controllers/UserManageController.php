@@ -62,7 +62,7 @@ class UserManageController extends Controller
             $systemConfig = OptionHelpers::getSystemConfigByKey('general');
             if($systemConfig && json_decode($systemConfig,true))
                 $systemConfig = json_decode($systemConfig, true);
-            Mail::send('mail_temaplate.register_user', ['new_password' => $randomPass, 'login_url' => url()->to('/login') ], function ($message) use ($systemConfig, $request) {
+            Mail::send('mail_template.register_user', ['new_password' => $randomPass, 'login_url' => url()->to('/login') ], function ($message) use ($systemConfig, $request) {
                 $message->from($systemConfig['site_admin_mail']);
                 $message->to($request->email, 'Employee')
                     ->subject('Successfully activated the account on the system' . url()->to('/'));

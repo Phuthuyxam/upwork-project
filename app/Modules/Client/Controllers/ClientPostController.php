@@ -4,6 +4,7 @@
 namespace App\Modules\Client\Controllers;
 
 
+use App\Core\Glosary\BookingTypes;
 use App\Core\Glosary\MetaKey;
 use App\Core\Glosary\PageTemplateConfigs;
 use App\Core\Glosary\PostStatus;
@@ -231,7 +232,7 @@ class ClientPostController extends Controller
             $systemConfig = json_decode($systemConfig, true);
 
         $input = $request->all();
-        Mail::send('mail_temaplate.contact', ['name'=>$input["contact_name"], 'email'=>$input["contact_email"], 'phone'=>$input['contact_phone'],'project' => $input['contact_project'] ,'contact_message' => $input['contact_message'] ], function ($message) use ($systemConfig) {
+        Mail::send('mail_template.contact', ['name'=>$input["contact_name"], 'email'=>$input["contact_email"], 'phone'=>$input['contact_phone'],'project' => $input['contact_project'] ,'contact_message' => $input['contact_message'] ], function ($message) use ($systemConfig) {
             $message->from($systemConfig['site_admin_mail']);
             $message->to($systemConfig['site_admin_mail'], 'Employee')
                 ->subject('Your Website Contact Form');
@@ -240,8 +241,36 @@ class ClientPostController extends Controller
 
     }
 
-    public function booking(Request $request){
+    public function booking(Request $request,$id){
+        if ($request->input('type') == BookingTypes::FORM['VALUE']) {
+            $validate = $request->validate([
+                'start' => 'required',
+                'end' => 'required',
+                'adults' => 'required',
+                'child' => 'required'
+            ]);
 
+            $systemConfig = OptionHelpers::getSystemConfigByKey('general');
+            if($systemConfig && json_decode($systemConfig,true))
+                $systemConfig = json_decode($systemConfig, true);
+
+            $postMeta = $this->postMetaRepository->getMetaValueByCondition([['post_id','=',$id],['meta_key','=',MetaKey::BOOKING_TYPE['VALUE']]]);
+            if (isset($postMeta) && !empty($postMeta))
+            {
+                $mail_to = json_decode($postMeta->meta_value)['value'];
+                Mail::send('mail_template.booking',
+                    [
+                        'start' => $request->input('start'),
+                        'end' => $request->input('end'),
+                        'adults' => $request->input('adults'),
+                        'children' => $request->input('child')
+                    ],function ($message) use ($systemConfig,$mail_to) {
+                        $message->from($systemConfig['site_admin_mail']);
+                        $message->to($mail_to, 'Employee')
+                            ->subject('Your Website Contact Form');
+                    });
+                Session::flash('flash_message', 'Send message successfully!');
+            }
+        }
     }
-
 }
