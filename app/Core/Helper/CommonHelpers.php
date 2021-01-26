@@ -54,7 +54,13 @@ if(!function_exists('renderTranslationUrl')) {
             $translationRelationRepository = new \App\Modules\Translations\Repositories\TranslationRelationshipRepository();
             $record = $post->getBySlug($slug);
             if($record != null) {
-                $translationMapping = $translationRelationRepository->getInstantModel()->where('to_object_id', $record->id)->orWhere('from_object_id', $record->id)->get();
+                $translationPostFrom = $record->postFromTranslation(app()->getLocale());
+                $translationPostTo = $record->postToTranslation(app()->getLocale());
+                if($translationPostFrom->isNotEmpty())
+                    $translationMapping = $translationPostFrom;
+                if($translationPostTo->isNotEmpty())
+                    $translationMapping = $translationPostTo;
+
                 if($translationMapping && $translationMapping->isNotEmpty()) {
                     $postTransalation = ( $translationMapping[0]->to_object_id == $record->id ? $translationMapping[0]->from_object_id : $translationMapping[0]->to_object_id );
                     app()->setLocale($langCode);
