@@ -75,20 +75,21 @@ $(document).ready(function () {
     })
 
     // search form
-    $('.date-picker').datepicker({ autoclose: true, format: 'dd M yyyy', startDate: new Date(), todayHighlight: true, orientation: "bottom left" });
+    $('.date-picker').datepicker({ autoclose: true, format: 'yyyy-mm-dd', startDate: new Date(), todayHighlight: true, orientation: "bottom left" });
     $('.check-in').click(function () {
         $('.start-date').datepicker('show');
     })
     $('.check-out').click(function () {
         $('.end-date').datepicker('show');
     })
+
     $('.start-date').on('change', function () {
-        var date = $(this).val().split(' ');
+        var date = formatDateText(new Date($(this).val())).split('-');
         $(this).parents('.check-in').find('.date').text(date[0]);
         $(this).parents('.check-in').find('.month-year').text(date[1] + " " + date[2]);
     })
     $('.end-date').on('change', function () {
-        var date = $(this).val().split(' ');
+        var date = formatDateText(new Date($(this).val())).split('-');
         $(this).parents('.check-out').find('.date').text(date[0]);
         $(this).parents('.check-out').find('.month-year').text(date[1] + " " + date[2]);
     })
@@ -142,7 +143,7 @@ $(document).ready(function () {
         })
     })
 
-    $('.date-input .detail-date-picker').datepicker({ autoclose: true, format: 'yyyy/mm/dd', startDate: new Date(), todayHighlight: true, orientation: "bottom left" });
+    $('.date-input .detail-date-picker').datepicker({ autoclose: true, format: 'yyyy-mm-dd', startDate: new Date(), todayHighlight: true, orientation: "bottom left" });
 
     // Contact form
     // if ($(window).width() > 540) {
@@ -153,3 +154,19 @@ $(document).ready(function () {
     // }
 
 });
+
+function formatDate(date) {
+    const ye = new Intl.DateTimeFormat('en', { year: 'numeric' }).format(date);
+    const mo = new Intl.DateTimeFormat('en', { month: '2-digit' }).format(date);
+    const da = new Intl.DateTimeFormat('en', { day: '2-digit' }).format(date);
+
+    return `${da}-${mo}-${ye}`;
+}
+
+function formatDateText(date) {
+    const ye = new Intl.DateTimeFormat('en', { year: 'numeric' }).format(date);
+    const mo = new Intl.DateTimeFormat('en', { month: 'short' }).format(date);
+    const da = new Intl.DateTimeFormat('en', { day: '2-digit' }).format(date);
+
+    return `${da}-${mo}-${ye}`;
+}

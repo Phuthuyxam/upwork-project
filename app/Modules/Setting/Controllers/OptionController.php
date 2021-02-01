@@ -155,7 +155,7 @@ class OptionController extends Controller
         ];
 
         $homeData['our_brand'] = [
-            'title' => $request->option_our_brand_title,
+//            'title' => $request->option_our_brand_title,
             'heading' => $request->option_our_brand_heading,
         ];
         if(isset($request->option_home_brand_banner) && !empty($request->option_home_brand_banner)) {
@@ -163,6 +163,21 @@ class OptionController extends Controller
             $brand_url = $request->option_home_brand_url;
             foreach ($brand_banner as $key => $b_banner) {
                 $homeData['our_brand']['brands'][] = [
+                    'banner' => OptionHelpers::getImagePath($b_banner),
+                    'url'  => $brand_url[$key]
+                ];
+            }
+        }
+
+        $homeData['coming_brand'] = [
+//            'title' => $request->option_our_brand_title,
+            'heading' => $request->option_coming_brand_heading,
+        ];
+        if(isset($request->option_coming_brand_banner) && !empty($request->option_coming_brand_banner)) {
+            $brand_banner = $request->option_coming_brand_banner;
+            $brand_url = $request->option_coming_brand_url;
+            foreach ($brand_banner as $key => $b_banner) {
+                $homeData['coming_brand']['brands'][] = [
                     'banner' => OptionHelpers::getImagePath($b_banner),
                     'url'  => $brand_url[$key]
                 ];

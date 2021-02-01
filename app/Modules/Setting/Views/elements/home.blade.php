@@ -27,7 +27,10 @@
         <a class="nav-link" data-toggle="tab" href="#tab4" role="tab">Message</a>
     </li>
     <li class="nav-item">
-        <a class="nav-link" data-toggle="tab" href="#tab5" role="tab">Partner</a>
+        <a class="nav-link" data-toggle="tab" href="#tab5" role="tab">Our brands</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" data-toggle="tab" href="#tab6" role="tab">More yet to come</a>
     </li>
 </ul>
 
@@ -500,14 +503,14 @@
     </div>
 
     <div class="tab-pane p-3" id="tab5" role="tabpanel">
-        <div class="form-group row">
-            <label for="example-text-input" class="col-sm-2 col-form-label">Title</label>
-            <div class="col-sm-10">
-                <input class="form-control" type="text"
-                       value="{{ isset($dataHome['our_brand']['title']) && !empty($dataHome['our_brand']['title']) ? $dataHome['our_brand']['title'] : "" }}"
-                       name="option_our_brand_title">
-            </div>
-        </div>
+{{--        <div class="form-group row">--}}
+{{--            <label for="example-text-input" class="col-sm-2 col-form-label">Title</label>--}}
+{{--            <div class="col-sm-10">--}}
+{{--                <input class="form-control" type="text"--}}
+{{--                       value="{{ isset($dataHome['our_brand']['title']) && !empty($dataHome['our_brand']['title']) ? $dataHome['our_brand']['title'] : "" }}"--}}
+{{--                       name="option_our_brand_title">--}}
+{{--            </div>--}}
+{{--        </div>--}}
         <div class="form-group row">
             <label for="example-text-input" class="col-sm-2 col-form-label">Heading paragraph</label>
             <div class="col-sm-10">
@@ -627,7 +630,134 @@
             </table>
         </div>
     </div>
+    <div class="tab-pane p-3" id="tab6" role="tabpanel">
+{{--        <div class="form-group row">--}}
+{{--            <label for="example-text-input" class="col-sm-2 col-form-label">Title</label>--}}
+{{--            <div class="col-sm-10">--}}
+{{--                <input class="form-control" type="text"--}}
+{{--                       value="{{ isset($dataHome['our_brand']['title']) && !empty($dataHome['our_brand']['title']) ? $dataHome['our_brand']['title'] : "" }}"--}}
+{{--                       name="option_our_brand_title">--}}
+{{--            </div>--}}
+{{--        </div>--}}
+        <div class="form-group row">
+            <label for="example-text-input" class="col-sm-2 col-form-label">Heading paragraph</label>
+            <div class="col-sm-10">
+                <input class="form-control" type="text"
+                       value="{{ isset($dataHome['coming_brand']['heading']) && !empty($dataHome['coming_brand']['heading']) ? $dataHome['coming_brand']['heading'] : "" }}"
+                       name="option_coming_brand_heading">
+            </div>
+        </div>
 
+        <div class="form-group row">
+            <table class="table table-bordered table-striped">
+                <thead>
+                <tr>
+                    <th></th>
+                    <th>Add Brand</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+
+                @if(isset($dataHome['coming_brand']['brands']) && !empty($dataHome['coming_brand']['brands']))
+                    @foreach($dataHome['coming_brand']['brands'] as $key => $brand)
+                        <tr>
+                            <td class="counter">{{ $key + 1 }}</td>
+                            <td style="">
+                                <div class="row">
+
+                                    <div class="col-lg-12">
+                                        <label class="mb-1">
+                                            Logo Brand
+                                        </label>
+                                        <div class="form-group media-load-image">
+                                            <div class="preview-image" >
+                                                <div class="close" onclick="deleteImagePreview(this)">
+                                                    <i class="dripicons-cross"></i>
+                                                </div>
+                                                <div class="image-preview-container">
+                                                    @if(isset($brand['banner']) && !empty($brand['banner']))
+                                                        <img class="image-preview" style="width: 100%" src="{{ $brand['banner'] }}" alt="your image">
+                                                    @endif
+                                                </div>
+                                            </div>
+                                            <div class="input-group">
+                                                <input type="text" style="padding: 3px 5px; overflow: hidden" name="option_coming_brand_banner[]" class="form-control required home-slider-image" aria-describedby="button-image" readonly
+                                                       value="{{ (isset($brand['banner']) && !empty($brand['banner']) ) ? $brand['banner'] : "" }}">
+                                                <div class="input-group-append">
+                                                    <button class="btn btn-primary waves-effect waves-light btn-popup-media" type="button" onclick="openMediaManager(this)">Select Image</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label for="example-text-input" class="col-sm-2 col-form-label">Url</label>
+                                    <div class="col-sm-10">
+                                        <input class="form-control home_brand_url" type="text"
+                                               value="{{ isset($brand['url']) && !empty($brand['url']) ? $brand['url'] : "" }}"
+                                               name="option_coming_brand_url[]">
+                                    </div>
+                                </div>
+
+
+                            </td>
+                            <td style="width: 50px; vertical-align: middle">
+                                <div class="action-wrapper">
+                                    <button type="button" class="btn btn-success btn-add-type"><i class="dripicons-plus"></i></button>
+                                </div>
+                            </td>
+                        </tr>
+                    @endforeach
+                @else
+                    <tr>
+                        <td class="counter">1</td>
+                        <td style="">
+                            <div class="row">
+
+                                <div class="col-lg-12">
+                                    <label class="mb-1">
+                                        Logo Brand
+                                    </label>
+                                    <div class="form-group media-load-image">
+                                        <div class="preview-image" >
+                                            <div class="close" onclick="deleteImagePreview(this)">
+                                                <i class="dripicons-cross"></i>
+                                            </div>
+                                            <div class="image-preview-container">
+                                            </div>
+                                        </div>
+                                        <div class="input-group">
+                                            <input type="text" style="padding: 3px 5px; overflow: hidden" name="option_coming_brand_banner[]" class="form-control required home-slider-image" aria-describedby="button-image" readonly>
+                                            <div class="input-group-append">
+                                                <button class="btn btn-primary waves-effect waves-light btn-popup-media" type="button" onclick="openMediaManager(this)">Select Image</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label for="example-text-input" class="col-sm-2 col-form-label">Url</label>
+                                <div class="col-sm-10">
+                                    <input class="form-control home_brand_url" type="text"
+                                           value=""
+                                           name="option_coming_brand_url[]">
+                                </div>
+                            </div>
+                        </td>
+                        <td style="width: 50px; vertical-align: middle">
+                            <div class="action-wrapper">
+                                <button type="button" class="btn btn-success btn-add-type"><i class="dripicons-plus"></i></button>
+                            </div>
+                        </td>
+                    </tr>
+                @endif
+                </tbody>
+            </table>
+        </div>
+    </div>
 
 </div>
 

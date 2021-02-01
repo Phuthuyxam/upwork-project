@@ -7,83 +7,131 @@
             <a href="{{ $bookingType->value }}" class="btn btn-submit">Click here</a>
         </div>
     @elseif($bookingType->type == \App\Core\Glosary\BookingTypes::FORM['VALUE'])
-        <form action="{{ route('booking',$post->id)}}" method="post">
+        <form action="{{ route('booking')}}" id="detail-booking" method="post">
+            @csrf
             <input type="hidden" name="type" value="{{ $bookingType->type }}">
-            <div class="date-input">
-                <div class="icon-calendar">
-                    <img src="{{ asset('client/images/Icon feathercalendar.svg') }}" alt="">
+            <input type="hidden" name="postId" value="{{ $post->id }}">
+            <div class="date-input-wrapper form-group">
+                <div class="date-input">
+                    <div class="icon-calendar">
+                        <img src="{{ asset('client/images/Icon feathercalendar.svg') }}" alt="">
+                    </div>
+                    <input type="text" id="arrival" name="start" class="form-control detail-date-picker required" value=""
+                           placeholder="{{ __('home_check_in') }}" required="required" title="" readonly>
                 </div>
-                <input type="text" name="start" class="form-control detail-date-picker" value=""
-                       placeholder="{{ __('home_check_in') }}" required="required" title="">
-                @error('start')
-                    <p class="text-danger" style="font-weight: bold"></p>
-                @enderror
+                <p class="text-danger error" style="font-weight: bold"> {{__('required_error')}}</p>
             </div>
-            <div class="date-input">
-                <div class="icon-calendar">
-                    <img src="{{ asset('client/images/Icon feathercalendar.svg') }}" alt="">
+            <div class="date-input-wrapper form-group">
+                <div class="date-input">
+                    <div class="icon-calendar">
+                        <img src="{{ asset('client/images/Icon feathercalendar.svg') }}" alt="">
+                    </div>
+                    <input type="text" id="departure" name="end" class="form-control detail-date-picker required" value=""
+                           placeholder="{{ __('home_check_out') }}" required="required" title="" readonly>
                 </div>
-                <input type="text" name="end" class="form-control detail-date-picker" value=""
-                       placeholder="{{ __('home_check_out') }}" required="required" title="">
-                @error('end')
-                    <p class="text-danger" style="font-weight: bold"></p>
-                @enderror
+                <p class="text-danger error" style="font-weight: bold">{{__('required_error')}}</p>
             </div>
-            <select class="form-control" name="adults">
-                <option value="default">{{ __('booking_form_adult') }}</option>
-                <option value="1">1</option>
-                <option value="1">2</option>
-                <option value="1">3</option>
-                <option value="1">4</option>
-            </select>
-            @error('adults')
-                <p class="text-danger" style="font-weight: bold"></p>
-            @enderror
-            <select class="form-control" name="child">
-                <option value="default">{{ __('booking_form_child') }}</option>
-                <option value="1">1</option>
-                <option value="1">2</option>
-                <option value="1">3</option>
-                <option value="1">4</option>
-            </select>
-            @error('child')
-                <p class="text-danger" style="font-weight: bold"></p>
-            @enderror
+            <div class="form-group">
+                <select class="form-control required" id="adults" name="adults">
+                    <option value="-1">{{ __('booking_form_adult') }}</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                </select>
+                <p class="text-danger error" style="font-weight: bold">{{__('required_error')}}</p>
+            </div>
+            <div class="form-group">
+                <select class="form-control" id="children" name="child">
+                    <option value="-1">{{ __('booking_form_child') }}</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                </select>
+                <p class="text-danger error" style="font-weight: bold">{{__('required_error')}}</p>
+            </div>
+            <div class="form-group children-age-wrapper">
+                <p class="fw-bold tt-uper" style="margin-bottom: 0">{{__('children_age_text')}}</p>
+
+                @for($i = 0 ; $i < 5; $i++)
+                    <select class="children-age" name="childrenAge[]" id="">
+                        <option value="-1">-</option>
+                        @for($j = 0; $j <= 11; $j++)
+                            <option value="{{ $j }}">{{ $j }}</option>
+                        @endfor
+                    </select>
+                @endfor
+
+                <p class="error text-danger fw-bold">{{__('children_age_error')}}</p>
+            </div>
             <div class="submit-wrapper">
                 <input type="submit" class="btn btn-submit" value="SUBMIT">
             </div>
         </form>
     @else
-        <form action="{{ route('booking',$post->id)}}" method="post">
-            <input type="hidden" name="type" value="{{ $bookingType->type }}">
-            <div class="date-input">
-                <div class="icon-calendar">
-                    <img src="{{ asset('client/images/Icon feathercalendar.svg') }}" alt="">
+        <form action="https://bookcore.backhotelengine.com/redirect-avail/" id="detail-booking" method="post">
+            <input type="hidden" name="partner">
+            <input type="hidden" name="lange" value="{{ $currentLanguage }}">
+            <input type="hidden" name="hotel_code" value="{{ $bookingType->value }}">
+            <div class="date-input-wrapper form-group">
+                <div class="date-input ">
+                    <div class="icon-calendar">
+                        <img src="{{ asset('client/images/Icon feathercalendar.svg') }}" alt="">
+                    </div>
+                    <input type="text" id="arrival" name="arrival" class="form-control detail-date-picker required" value=""
+                           placeholder="{{ __('home_check_in') }}" required="required" title="" readonly>
                 </div>
-                <input type="text" name="" class="form-control detail-date-picker" value=""
-                       placeholder="{{ __('home_check_in') }}" required="required" title="">
+                <p class="error text-danger fw-bold">{{__('required_error')}}</p>
             </div>
-            <div class="date-input">
-                <div class="icon-calendar">
-                    <img src="{{ asset('client/images/Icon feathercalendar.svg') }}" alt="">
+            <div class="date-input-wrapper form-group">
+                <div class="date-input">
+                    <div class="icon-calendar">
+                        <img src="{{ asset('client/images/Icon feathercalendar.svg') }}" alt="">
+                    </div>
+                    <input type="text" id="departure" name="departure" class="form-control detail-date-picker required" value=""
+                           placeholder="{{ __('home_check_out') }}" required="required" title="" readonly>
                 </div>
-                <input type="text" name="" class="form-control detail-date-picker" value=""
-                       placeholder="{{ __('home_check_out') }}" required="required" title="">
+                <p class="error text-danger fw-bold">{{__('required_error')}}</p>
             </div>
-            <select class="form-control" name="">
-                <option value="default">{{ __('booking_form_adult') }}</option>
-                <option value="1">1</option>
-                <option value="1">2</option>
-                <option value="1">3</option>
-                <option value="1">4</option>
-            </select>
-            <select class="form-control" name="">
-                <option value="default">{{ __('booking_form_child') }}</option>
-                <option value="1">1</option>
-                <option value="1">2</option>
-                <option value="1">3</option>
-                <option value="1">4</option>
-            </select>
+            <div class="form-group">
+                <select class="form-control required" id="adults" name="">
+                    <option value="-1">{{ __('booking_form_adult') }}</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                </select>
+                <p class="error text-danger fw-bold">{{__('required_error')}}</p>
+            </div>
+            <div class="form-group">
+                <select class="form-control required" id="children" name="">
+                    <option value="0">{{ __('booking_form_child') }}</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                </select>
+            </div>
+            <div class="form-group children-age-wrapper">
+                <p class="fw-bold tt-uper" style="margin-bottom: 0">{{__('children_age_text')}}</p>
+
+                @for($i = 0 ; $i < 5; $i++)
+                    <select class="children-age" name="" id="">
+                        <option value="-1">-</option>
+                        @for($j = 1; $j <= 11; $j++)
+                            <option value="{{ $j }}">{{ $j }}</option>
+                        @endfor
+                    </select>
+                @endfor
+
+                <p class="error text-danger fw-bold">{{__('children_age_error')}}</p>
+            </div>
+            <input type="hidden" id="occupancies">
             <div class="submit-wrapper">
                 <input type="submit" class="btn btn-submit" value="{{ __('home_check_availability') }}">
             </div>

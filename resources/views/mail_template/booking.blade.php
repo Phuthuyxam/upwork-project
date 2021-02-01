@@ -18,6 +18,15 @@
 <br>
 <b>Children :</b> <p>{{ $children }}</p>
 <br>
+@if(isset($ages) && !empty($ages))
+    @php
+        $ageText = '';
+        foreach ($ages as $value) {
+            $ageText .= $value.', ';
+        }
+    @endphp
+    <b>Children age : {{ substr(0,strlen(trim($ageText)) - 1) }}</b>
+@endif
 ===========================================
 </body>
 </html>

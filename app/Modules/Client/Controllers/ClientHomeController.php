@@ -4,6 +4,7 @@
 namespace App\Modules\Client\Controllers;
 
 
+use App\Core\Glosary\BookingTypes;
 use App\Core\Glosary\MetaKey;
 use App\Core\Glosary\PageTemplateConfigs;
 use App\Core\Glosary\PostStatus;
@@ -63,9 +64,11 @@ class ClientHomeController extends Controller
         ];
 
         if (Auth::user()){
-            $posts = $this->postRepository->getInstantModel()->where('post_type',PageTemplateConfigs::POST['NAME'])->get();
+            $posts = $this->postRepository->getInstantModel()->where('post_type',PageTemplateConfigs::POST['NAME'])->orderby('created_at','DESC')->limit(4)->get();
+            $hotels = $this->postRepository->getInstantModel()->where('post_type',PageTemplateConfigs::POST['NAME'])->get();
         }else{
-            $posts = $this->postRepository->getInstantModel()->where([['post_type','=',PageTemplateConfigs::POST['NAME']],['post_status','=',PostStatus::PUBLIC['VALUE']]])->get();
+            $posts = $this->postRepository->getInstantModel()->where([['post_type','=',PageTemplateConfigs::POST['NAME']],['post_status','=',PostStatus::PUBLIC['VALUE']]])->orderby('created_at','DESC')->limit(4)->get();
+            $hotels = $this->postRepository->getInstantModel()->where([['post_type','=',PageTemplateConfigs::POST['NAME']],['post_status','=',PostStatus::PUBLIC['VALUE']]])->get();
         }
         $postMap = [];
         $mapData = [];
@@ -106,7 +109,31 @@ class ClientHomeController extends Controller
                 }
             }
         }
-        return view('Client::homepage',compact('page', 'seoDefault','currentLanguage','mapData','postMap'));
+        $hotel_code = [];
+        if (count($hotels)) {
+            $ids = [];
+            foreach ($posts->toArray() as $value) {
+                $ids[] = $value['id'];
+                $hotel_codes[$value['id']] = [
+                    'name' => $value['post_title'],
+                ];
+            }
+
+            $postMeta = $this->postMetaRepository->getInstantModel()->whereIn('post_id',$ids)->where('meta_key','=',MetaKey::BOOKING_TYPE['VALUE'])->get();
+            if (count($postMeta)) {
+                if (isset($postMeta) && !empty($postMeta)) {
+                    foreach ($postMeta as $value) {
+                        $metaValue = json_decode($value->meta_value);
+                        if ($value->meta_key == MetaKey::BOOKING_TYPE['VALUE'] && $metaValue->type == BookingTypes::INTEGRATION['VALUE']) {
+                            $hotel_codes[$value->post_id]['code'] = $metaValue->value;
+                        }else{
+                            unset($hotel_codes[$value->post_id]);
+                        }
+                    }
+                }
+            }
+        }
+        return view('Client::homepage',compact('page', 'seoDefault','currentLanguage','mapData','postMap','hotel_codes'));
     }
 
 }

@@ -229,3 +229,104 @@
         </section>
     </div>
 @endsection
+@section('script')
+    <script>
+        $(document).ready(function () {
+            var occupancies = [{
+                adults : $('#adults').val(),
+                children : $('#children').val(),
+                ages : ""
+            }];
+            $('#occupancies').val(JSON.stringify(occupancies));
+            $('#adults').change(function (){
+                if ($(this).val() == -1) {
+                    $(this).parents('.form-group').find('.error').show();
+                }else{
+                    occupancies[0].adults = $(this).val();
+                    $('#occupancies').val(JSON.stringify(occupancies));
+                    $(this).parents('.form-group').find('.error').hide();
+                }
+            })
+
+            $('#children').change(function (){
+                if ($(this).val() == -1) {
+                    $(this).parents('.form-group').find('.error').show();
+                    $('.children-age-wrapper').hide();
+                }else{
+                    $(this).parents('.form-group').find('.error').hide();
+
+                    let val = $(this).val();
+                    $('.children-age-wrapper').find('.children-age').val(-1);
+                    if (val > 0) {
+                        occupancies[0].children = $(this).val();
+                        $('#occupancies').val(JSON.stringify(occupancies));
+                        $('.children-age-wrapper').show();
+                        $('.children-age-wrapper').find('.children-age').each(function (i){
+                            if (i < parseInt(val)) {
+                                $(this).addClass('show required');
+                            }else{
+                                $(this).removeClass('show required');
+                            }
+                        });
+                    }
+                }
+            })
+
+            $('#arrival').change(function (){
+                if ($(this).val() == '') {
+                    $(this).parents('.form-group').find('.error').show();
+                }else{
+                    $(this).parents('.form-group').find('.error').hide();
+                }
+            })
+
+            $('#departure').change(function (){
+                if ($(this).val() == '') {
+                    $(this).parents('.form-group').find('.error').show();
+                }else{
+                    $(this).parents('.form-group').find('.error').hide();
+                }
+            })
+            $('.children-age').on('change',function () {
+                if ($(this).val() == -1) {
+                    $(this).parents('.form-group').find('.error').show();
+                }else{
+                    $(this).parents('.form-group').find('.error').hide();
+                }
+            })
+            $('.btn-submit').on('click',function (e) {
+                e.preventDefault();
+                let valid = true;
+                $('#detail-booking').find('.required').each(function (){
+                    if ($(this).val() === '' || $(this).val() == -1) {
+                        valid = false;
+                        $(this).parents('.form-group').find('.error').show();
+                    }else{
+                        $(this).parents('.form-group').find('.error').hide();
+                    }
+                })
+
+                if ( new Date($('#arrival').val()) > new Date($('#departure').val())) {
+                    valid = false;
+                    alert('{{__("date_error")}}');
+                }
+                if (valid) {
+                    let ages = '';
+                    $('.children-age-wrapper').find('.children-age').each(function (){
+                        if ($(this).hasClass('show')) {
+                            ages += $(this).val()+';';
+                        }
+                    })
+
+                    occupancies[0].ages = ages.substr(0,ages.length - 1);
+
+                    $('#occupancies').val(JSON.stringify(occupancies));
+
+                    $('#detail-booking').submit();
+                }else {
+                    e.preventDefault();
+                }
+            })
+        })
+    </script>
+@endsection

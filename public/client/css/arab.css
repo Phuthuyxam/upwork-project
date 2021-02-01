@@ -202,6 +202,17 @@ span.language {
     white-space: break-spaces;
     overflow: unset;
 }
+.occupancy-item {
+    direction: ltr;
+}
+.occupancy-item:first-child {
+    margin-left: 10px;
+    margin-right: 0;
+}
+.modal-header .close {
+    padding: 0;
+    margin: 0;
+}
 @media (min-width: 1920px){
     .services-content .service-item .content .title {
         padding-left: 90px;

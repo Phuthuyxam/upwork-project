@@ -27,5 +27,14 @@
     "home_select_hotel" : "اختر فندقك",
     "booking_form_reservation" : "الحجز الخاص بك",
     "booking_form_adult" : "كبار",
-    "booking_form_child" : "أطفال"
+    "booking_form_child" : "أطفال",
+    "children_age_error" : "Children ages are mandatory",
+    "save_button_text" : "Save",
+    "children_age_text" : "children ages",
+    "children_text" : "Children",
+    "child_text" : "Child",
+    "adults_text" : "Adults",
+    "adult_text" : "Adult",
+    "required_error": "This field cannot be null",
+    "date_error": "Check Out date must greater than Check In date"
 }

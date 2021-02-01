@@ -414,52 +414,6 @@ header.fixed {
     position: relative;
 }
 
-.occupancy-detail select {
-    width: 50px;
-    padding-left: 28px;
-    padding-right: 5px;
-    margin-right: 10px;
-    /* for Firefox */
-    -moz-appearance: none;
-    /* for Chrome */
-    -webkit-appearance: none;
-    background: #102447;
-    border: unset;
-    color: #fff;
-}
-
-/* For IE10 */
-
-.occupancy-detail select::-ms-expand {
-    display: none;
-}
-
-.occupancy-detail i {
-    color: #fff;
-    position: absolute;
-    left: 10px;
-    top: 50%;
-    transform: translateY(-50%);
-    -webkit-transform: translateY(-50%);
-    -moz-transform: translateY(-50%);
-    -ms-transform: translateY(-50%);
-    -o-transform: translateY(-50%);
-}
-
-.occupancy-detail select.form-control:focus {
-    background: #102447;
-    color: #fff;
-    border: unset;
-    box-shadow: unset;
-}
-
-.hotel-selection select {
-    font-size: 16px;
-    font-family: MontserratMedium;
-    border: 1px solid #102447;
-    color: #102447;
-}
-
 .hotel-selection select {
     -o-appearance: none;
     -ms-appearance: none;
@@ -1723,6 +1677,82 @@ footer {
 .location-image {
     width: 200px;
 }
+
+.slide-logo {
+    max-width: 200px;
+}
+#occupancyModal .modal-dialog {
+    width: 100%;
+    height: 100vh;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    max-width: unset;
+}
+#occupancyModal .modal-content {
+    max-width: 220px;
+}
+#occupancyModal i {
+    color: #000;
+    font-size: 20px;
+}
+#occupancyModal .form-group {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+#occupancyModal .occupancy-select {
+    width: 150px;
+}
+#occupancyModal .icon {
+    width: 20px;
+    text-align: center;
+}
+#occupancyModal button.btn-save {
+    background: #102447;
+}
+.occupancy-item {
+    background: #102447;
+    width: 50px;
+    padding: .5rem 0;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.occupancy-item:first-child {
+    margin-right: 10px;
+}
+.occupancy-item i {
+    margin-right: 5px;
+}
+.occupancy-detail {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+#occupancyModal .children-age {
+    display: none;
+    margin-right: 5px;
+    margin-bottom: 5px;
+}
+#occupancyModal .children-age.show{
+    display: unset;
+}
+#detail-booking .children-age-wrapper {
+    display: none;
+}
+#detail-booking .children-age {
+    display: none;
+}
+#detail-booking .children-age.show{
+    display: unset;
+}
+#detail-booking .error {
+    display: none;
+}
+#detail-booking .date-input-wrapper input[readonly] {
+    background: #fff;
+}
 @media screen and (min-width: 2000px) {
     .home-slider .item {
         height: 80vh;
@@ -2086,9 +2116,6 @@ footer {
     }
     .occupancy-detail select {
         padding-left: 36px;
-    }
-    .occupancy-detail i {
-        top: 49%;
     }
     .home-service-intro h2, .home-hotel-heading h2 {
         font-size: 36px;

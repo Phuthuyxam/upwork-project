@@ -27,5 +27,14 @@
     "home_select_hotel" : "Select Your Hotel",
     "booking_form_reservation" : "Your Reservation",
     "booking_form_adult" : "Adults",
-    "booking_form_child" : "Children"
+    "booking_form_child" : "Children",
+    "children_age_error" : "Children ages are mandatory",
+    "save_button_text" : "Save",
+    "children_age_text" : "children ages",
+    "children_text" : "Children",
+    "child_text" : "Child",
+    "adults_text" : "Adults",
+    "adult_text" : "Adult",
+    "required_error": "This field cannot be null",
+    "date_error": "Check Out date must greater than Check In date"
 }

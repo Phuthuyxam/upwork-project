@@ -48,7 +48,9 @@
                 @endif
             @endif
             <div class="hotel-search-wrapper">
-                <form action="" id="bookingForm" method="get">
+                <form action="https://bookcore.backhotelengine.com/redirect-avail/" id="bookingForm" method="post">
+                    <input type="hidden" name="partner">
+                    <input type="hidden" name="lang" value="{{ $currentLanguage }}">
                     <div class="hotel-search-content">
                         <div class="hotel-selection search-item">
                             <p class="title tt-uper fw-bold">{{__('home_find_hotel')}}</p>
@@ -56,20 +58,23 @@
                                 <div class="select-arrow">
                                     <img src="{{ asset('client/images/Path6702.png') }}" alt="">
                                 </div>
-                                <select class="form-control" id="hotel-select" required="required">
+                                <select class="form-control" id="hotel_code" name="hotel_code" style="padding-right: 2rem" required="required">
                                     <option value="-1">{{__('home_select_hotel')}}</option>
-                                    @foreach(\App\Core\Glosary\EndpointConfig::getAll() as $key => $value)
-                                        <option value="{{ $value['VALUE'] }}"> {{ $value['NAME'] }}</option>
-                                    @endforeach
+                                    @if(isset($hotel_codes) && !empty($hotel_codes))
+                                        @foreach($hotel_codes as $value)
+                                            <option value="{{ $value['code'] }}"> {{ $value['name'] }}</option>
+                                        @endforeach
+                                    @endif
                                 </select>
                             </div>
+                            <p class="error text-danger fw-bold" style="font-size: 12px;display: none; margin-top: .5rem">Please choose hotel</p>
                         </div>
                         <div class="check-in-out-date search-item">
                             <div class="check-in">
                                 <p class="title tt-uper fw-bold">{{__('home_check_in')}}</p>
                                 <p class="date fw-semiBold">{{ date('d') }}</p>
                                 <p class="title month-year tt-uper fw-semiBold">{{ date('M Y') }}</p>
-                                <input type="text" class="date-picker start-date form-control" name="entrada" readonly>
+                                <input type="text" class="date-picker start-date form-control" id="arrival" name="arrival" readonly value="{{ date('Y-m-d') }}">
                             </div>
                             <div class="angle-left">
                                 @if($currentLanguage == 'ar')
@@ -82,32 +87,19 @@
                                 <p class="title tt-uper fw-bold">{{__('home_check_out')}}</p>
                                 <p class="date fw-semiBold">{{ date('d',strtotime(' +1 day')) }}</p>
                                 <p class="title month-year tt-uper fw-semiBold">{{ date('M Y',strtotime(' +1 day')) }}</p>
-                                <input type="text" class="date-picker end-date form-control" name="salida" readonly>
+                                <input type="text" class="date-picker end-date form-control" id="departure" name="departure" readonly value="{{ date('Y-m-d',strtotime('+1 day')) }}">
                             </div>
                         </div>
                         <div class="occupancy search-item">
                             <p class="title tt-uper fw-bold">{{__('home_occupancy')}}</p>
                             <div class="occupancy-detail">
-                                <div class="adult-select">
+                                <div class="occupancy-item" data-toggle="modal" data-target="#occupancyModal" data-backdrop="static" data-keyboard="false">
                                     <i class="fa fa-user" aria-hidden="true"></i>
-                                    <select class="form-control" id="adult-select">
-                                        <option value="1" selected>1</option>
-                                        <option value="2">2</option>
-                                        <option value="3">3</option>
-                                        <option value="4">4</option>
-                                        <option value="10">10</option>
-                                    </select>
+                                    <span id="adults">1</span>
                                 </div>
-                                <div class="children-select">
+                                <div class="occupancy-item" data-toggle="modal" data-target="#occupancyModal" data-backdrop="static" data-keyboard="false">
                                     <i class="fa fa-male" aria-hidden="true"></i>
-                                    <select class="form-control" id="child-select">
-                                        <option value="0"selected>0</option>
-                                        <option value="1">1</option>
-                                        <option value="2">2</option>
-                                        <option value="3">3</option>
-                                        <option value="4">4</option>
-                                        <option value="10">10</option>
-                                    </select>
+                                    <span id="children">0</span>
                                 </div>
                                 <input type="hidden" id="occupancies" name="occupancies">
                             </div>
@@ -249,10 +241,7 @@
                     <div class="home-hotel-heading" style="display: block;">
                         <div class="heading">
                             @if(isset($brands->heading) && !empty($brands->heading))
-                            <h3 class="tt-uper">{{ $brands->heading }}</h3>
-                            @endif
-                            @if(isset($brands->title) && !empty($brands->title))
-                                <h2 class="tt-uper fw-bold">{{ $brands->title }}</h2>
+                                <h3 class="tt-uper fw-bold" style="font-size: 40px;">{{ $brands->heading }}</h3>
                             @endif
                         </div>
                     </div>
@@ -276,7 +265,39 @@
                 </div>
             </section>
         @endif
-
+        @if(isset($page->coming_brand) && !empty($page->coming_brand))
+            @php
+                $brands = $page->coming_brand;
+            @endphp
+            <section class="brand-wrapper">
+                <div class="container">
+                    <div class="home-hotel-heading" style="display: block;">
+                        <div class="heading">
+                            @if(isset($brands->heading) && !empty($brands->heading))
+                                <h3 class="tt-uper fw-bold" style="font-size: 40px;">{{ $brands->heading }}</h3>
+                            @endif
+                        </div>
+                    </div>
+                    <div class="brand-content">
+                        @if(isset($brands->brands) && !empty($brands->brands))
+                            @if($brands->brands[0]->banner != null)
+                                <div class="brand-slider">
+                                    @foreach($brands->brands as $brand)
+                                        @if($brand->banner != '')
+                                            <div class="item">
+                                                <a href="{{ $brand->url }}">
+                                                    {!! \App\Core\Helper\FrontendHelpers::renderImage($brand->banner) !!}
+                                                </a>
+                                            </div>
+                                        @endif
+                                    @endforeach
+                                </div>
+                            @endif
+                        @endif
+                    </div>
+                </div>
+            </section>
+        @endif
 
         <section class="map-wrapper">
             <div class="location-search-wrapper">
@@ -316,6 +337,61 @@
             </div>
             <div id="map"></div>
         </section>
+    </div>
+
+    <div class="modal fade" id="occupancyModal" tabindex="-1" role="dialog" aria-labelledby="occupancyModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title tt-uper" style="color: #000;font-weight: bold;font-size: 16px" id="occupancyModalLabel">{{__('home_occupancy')}}</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <div class="icon">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <select name="" id="adult-select" class="form-control occupancy-select">
+                            @for($i = 1; $i <= 5; $i++)
+                                <option value="{{ $i }}">{{ $i }} {{ $i > 1 ? __('adults_text') : __('adult_text') }}</option>
+                            @endfor
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <div class="icon">
+                            <i class="fas fa-male"></i>
+                        </div>
+                        <select name="" id="child-select" class="form-control occupancy-select">
+                            @for($i = 0; $i <= 5; $i++)
+                                <option value="{{ $i }}">{{ $i }} {{ $i > 1 ? __('children_text') : __('child_text') }}</option>
+                            @endfor
+                        </select>
+                    </div>
+                    <div class="children-age-wrapper" style="display: none">
+                        <div class="form-group" style="justify-content: flex-start;">
+                            <div class="icon" style="width: 40px;"></div>
+                            <div class="children-age-select">
+                                <p class="tt-uper" style="color: #000; font-size: 10px">{{__('children_age_text')}}</p>
+                                @for($j = 1; $j <= 5; $j++)
+                                    <select name="" class="children-age">
+                                        <option value="-1">-</option>
+                                        @for($i = 0; $i <= 11; $i++)
+                                            <option value="{{ $i }}">{{ $i }}</option>
+                                        @endfor
+                                    </select>
+                                @endfor
+                                <p class="error text-danger" style="margin-bottom: 0; font-size: 10px;display: none">{{__('children_age_error')}}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary btn-save">{{ __('save_button_text') }}</button>
+                </div>
+            </div>
+        </div>
     </div>
 @endsection
 @section('script')
@@ -444,11 +520,11 @@
             })
         }
         $(document).ready(function (){
-            var occupancies = {
+            var occupancies = [{
                 adults : $('#adult-select').val(),
                 children : $('#child-select').val(),
                 ages : ""
-            };
+            }];
             $('#occupancies').val(JSON.stringify(occupancies));
             $('.location-detail-wrapper .close').click(function (e) {
                 e.preventDefault();
@@ -461,21 +537,77 @@
                 @endif
             })
 
-            $('#child-select').on('change',function (){
-                occupancies.children =  $(this).val();
-                $('#occupancies').val(JSON.stringify(occupancies));
-            })
-            $('#adult-select').on('change',function (){
-                occupancies.adults = $(this).val();
-                $('#occupancies').val(JSON.stringify(occupancies));
-            })
-            $('#hotel-select').on('change',function (){
-                let val = $(this).val();
-                Object.values(endPoints).forEach(value => {
-                    if (parseInt(val) == value.VALUE) {
-                        $('#bookingForm').attr('action',value.LINK);
+            $('.btn-save').on('click',function (){
+                let valid = true;
+                let adult = $('#adult-select').val();
+                let child = $('#child-select').val();
+                let ages = '';
+                $('.children-age-wrapper').find('.children-age').each(function (){
+                    if ($(this).hasClass('show') && $(this).val() < 0) {
+                        valid = false;
                     }
                 })
+                if (valid) {
+                    $('#adults').text(adult);
+                    $('#children').text(child);
+                    $('.children-age-wrapper').find('.children-age').each(function (){
+                        if ($(this).hasClass('show')) {
+                            ages += $(this).val()+';';
+                        }
+                    })
+                    occupancies[0].ages = ages.substr(0,ages.length - 1);
+                    occupancies[0].children = child;
+                    occupancies[0].adults = adult;
+
+                    $('#occupancies').val(JSON.stringify(occupancies));
+                    $(this).parents('.modal-content').find('.error').hide();
+                    $('#occupancyModal').modal('hide');
+                }else {
+                    $(this).parents('.modal-content').find('.error').show();
+                }
+
+            })
+            $('#child-select').on('change',function (){
+                let val = $(this).val();
+                $('.children-age-wrapper').find('.children-age').val(-1);
+                if (val > 0) {
+                    $('.children-age-wrapper').show();
+                    $('.children-age-wrapper').find('.children-age').each(function (i){
+                        if (i < parseInt(val)) {
+                            $(this).addClass('show');
+                        }else{
+                            $(this).removeClass('show');
+                        }
+                    });
+                }else{
+                    $('.children-age-wrapper').hide();
+                }
+            })
+
+            $('#hotel_code').on('change',function () {
+                if ($(this).val() != -1) {
+                    $('#bookingForm').find('.error').hide();
+                }else{
+                    $('#bookingForm').find('.error').show();
+                }
+            })
+
+            $('.btn-check-available').on('click',function (e) {
+                let valid = true;
+
+                if(new Date($('#arrival').val()) > new Date($('#departure').val())) {
+                    valid = false;
+                    alert('{{__("date_error")}}');
+                }
+                if ($('#hotel_code').val() == -1 ){
+                    valid = false;
+                    $('#bookingForm').find('.error').show();
+                }else{
+                    $('#bookingForm').find('.error').hide();
+                }
+                if (!valid){
+                    e.preventDefault();
+                }
             })
         })
     </script>
