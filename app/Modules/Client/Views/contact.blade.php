@@ -97,7 +97,13 @@
                         </div>
                         <div class="col-xl-5 col-lg-5">
                             <div class="contact-list">
+                                @php
+                                    $systemConfig = OptionHelpers::getSystemConfigByKey('general');
+                                    if($systemConfig && json_decode($systemConfig,true))
+                                    $systemConfig = json_decode($systemConfig, true);
+                                @endphp
                                 <div class="row">
+                                    @if(isset($systemConfig['email']) && !empty($systemConfig['email']))
                                     <div class="col-xl-6 col-lg-6 col-sm-6 col-6">
                                         <div class="item">
                                             <div class="icon">
@@ -105,30 +111,29 @@
                                                     <i class="far fa-envelope"></i>
                                                 </div>
                                             </div>
-                                            @php
-                                                $systemConfig = OptionHelpers::getSystemConfigByKey('general');
-                                                if($systemConfig && json_decode($systemConfig,true))
-                                                $systemConfig = json_decode($systemConfig, true);
-                                            @endphp
+
                                             <div class="content">
                                                 <p class="title fw-medium">{{__('contact_form_label_email')}} :</p>
                                                 <a href="mailto:{{ isset($systemConfig['email']) ? $systemConfig['email'] : ""  }}">{{ isset($systemConfig['email']) ? $systemConfig['email'] : ""  }}</a>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-xl-6 col-lg-6 col-sm-6 col-6">
-                                        <div class="item">
-                                            <div class="icon">
-                                                <div class="diamond">
-                                                    <i class="fas fa-phone-alt"></i>
+                                    @endif
+                                    @if(isset($systemConfig['phone']) && !empty($systemConfig['phone']))
+                                        <div class="col-xl-6 col-lg-6 col-sm-6 col-6">
+                                            <div class="item">
+                                                <div class="icon">
+                                                    <div class="diamond">
+                                                        <i class="fas fa-phone-alt"></i>
+                                                    </div>
+                                                </div>
+                                                <div class="content">
+                                                    <p class="title fw-medium">{{__('contact_form_label_phone')}} :</p>
+                                                    <a href="tel:{{ isset($systemConfig['phone']) ? $systemConfig['phone'] : ""  }}">{{ isset($systemConfig['phone']) ? $systemConfig['phone'] : ""  }}</a>
                                                 </div>
                                             </div>
-                                            <div class="content">
-                                                <p class="title fw-medium">{{__('contact_form_label_phone')}} :</p>
-                                                <a href="tel:{{ isset($systemConfig['phone']) ? $systemConfig['phone'] : ""  }}">{{ isset($systemConfig['phone']) ? $systemConfig['phone'] : ""  }}</a>
-                                            </div>
                                         </div>
-                                    </div>
+                                    @endif
                                 </div>
                             </div>
                         </div>
