@@ -715,6 +715,9 @@
                             <td style="width: 50px; vertical-align: middle">
                                 <div class="action-wrapper">
                                     <button type="button" class="btn btn-success btn-add-type"><i class="dripicons-plus"></i></button>
+                                    @if($key > 0)
+                                        <button type="button" class="btn btn-danger btn-delete-type"><i class="dripicons-minus"></i></button>
+                                    @endif
                                 </div>
                             </td>
                         </tr>
@@ -759,9 +762,6 @@
                         <td style="width: 50px; vertical-align: middle">
                             <div class="action-wrapper">
                                 <button type="button" class="btn btn-success btn-add-type"><i class="dripicons-plus"></i></button>
-                                @if($key > 0)
-                                    <button type="button" class="btn btn-danger btn-delete-type"><i class="dripicons-minus"></i></button>
-                                @endif
                             </div>
                         </td>
                     </tr>
