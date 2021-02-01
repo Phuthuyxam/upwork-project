@@ -1753,6 +1753,9 @@ footer {
 #detail-booking .date-input-wrapper input[readonly] {
     background: #fff;
 }
+.thanks-wrapper {
+    color: #102447;
+}
 @media screen and (min-width: 2000px) {
     .home-slider .item {
         height: 80vh;

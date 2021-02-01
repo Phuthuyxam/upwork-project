@@ -176,8 +176,13 @@
                         </div>
                     </div>
                     <div class="col-xl-3">
-                        @if(isset($postMetaMap[\App\Core\Glosary\MetaKey::BOOKING_TYPE['NAME']]))
+                        @if(isset($postMetaMap[\App\Core\Glosary\MetaKey::BOOKING_TYPE['NAME']]) && !\Illuminate\Support\Facades\Session::has('message'))
                             @include('Client::elements.booking-form',['bookingType' => $postMetaMap[\App\Core\Glosary\MetaKey::BOOKING_TYPE['NAME']]])
+                        @else
+                            <div class="reservation-form" style="background-image: url({{ asset('client/images/MaskGroup31.jpg') }});">
+                                <h3 class="fw-bold">Thank you !</h3>
+                                <p>Your information has been submitted. Our sales team will contact you</p>
+                            </div>
                         @endif
                     </div>
                     @if(isset($relatePostMetaMap) && !empty($relatePostMetaMap))

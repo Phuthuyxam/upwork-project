@@ -68,7 +68,7 @@
                 <p class="error text-danger fw-bold">{{__('children_age_error')}}</p>
             </div>
             <div class="submit-wrapper">
-                <input type="submit" class="btn btn-submit" value="SUBMIT">
+                <input type="submit" class="btn btn-submit btn-send-mail" value="SUBMIT">
             </div>
         </form>
     @else

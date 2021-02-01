@@ -21,11 +21,17 @@
 @if(isset($ages) && !empty($ages))
     @php
         $ageText = '';
-        foreach ($ages as $value) {
-            $ageText .= $value.', ';
+        foreach ($ages as $key => $value) {
+            if ($key < count($ages) - 1) {
+                 $ageText .= $value.', ';
+            }else{
+                $ageText .= $value;
+            }
         }
     @endphp
-    <b>Children age : {{ substr(0,strlen(trim($ageText)) - 1) }}</b>
+    <b>Children age : {{ $ageText }}</b>
+    <br>
+    <br>
 @endif
 ===========================================
 </body>

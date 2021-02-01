@@ -242,44 +242,49 @@ class ClientPostController extends Controller
     }
 
     public function booking(Request $request){
-        if ($request->input('type') == BookingTypes::FORM['VALUE']) {
-            $validate = $request->validate([
-                'start' => 'required',
-                'end' => 'required',
-                'adults' => 'required',
-                'child' => 'required'
-            ]);
-            $ages = [];
-            if($request->input('childrenAge')) {
-                $ages = $request->input('childrenAge');
-                foreach ($ages as $key => $value ) {
-                    if ($value < 0) {
-                        unset($ages[$key]);
+        try {
+            if ($request->input('type') == BookingTypes::FORM['VALUE']) {
+                $validate = $request->validate([
+                    'start' => 'required',
+                    'end' => 'required',
+                    'adults' => 'required',
+                    'child' => 'required'
+                ]);
+                $ages = [];
+                if($request->input('childrenAge')) {
+                    $ages = $request->input('childrenAge');
+                    foreach ($ages as $key => $value ) {
+                        if ($value < 0) {
+                            unset($ages[$key]);
+                        }
                     }
                 }
-            }
-            $systemConfig = OptionHelpers::getSystemConfigByKey('general');
-            if($systemConfig && json_decode($systemConfig,true))
-                $systemConfig = json_decode($systemConfig, true);
+                $systemConfig = OptionHelpers::getSystemConfigByKey('general');
+                if($systemConfig && json_decode($systemConfig,true))
+                    $systemConfig = json_decode($systemConfig, true);
 
-            $postMeta = $this->postMetaRepository->getMetaValueByCondition([['post_id','=',$request->input('postId')],['meta_key','=',MetaKey::BOOKING_TYPE['VALUE']]]);
-            if (isset($postMeta) && !empty($postMeta))
-            {
-                $mail_to = json_decode($postMeta->meta_value)->value;
-                Mail::send('mail_template.booking',
-                    [
-                        'start' => $request->input('start'),
-                        'end' => $request->input('end'),
-                        'adults' => $request->input('adults'),
-                        'children' => $request->input('child'),
-                        'ages' => $ages
-                    ],function ($message) use ($systemConfig,$mail_to) {
-                        $message->from($systemConfig['site_admin_mail']);
-                        $message->to($mail_to, 'Employee')
-                            ->subject('Your Website Contact Form');
-                    });
-                Session::flash('flash_message', 'Send message successfully!');
+                $postMeta = $this->postMetaRepository->getMetaValueByCondition([['post_id','=',$request->input('postId')],['meta_key','=',MetaKey::BOOKING_TYPE['VALUE']]]);
+                if (isset($postMeta) && !empty($postMeta))
+                {
+                    $mail_to = json_decode($postMeta->meta_value)->value;
+                    Mail::send('mail_template.booking',
+                        [
+                            'start' => $request->input('start'),
+                            'end' => $request->input('end'),
+                            'adults' => $request->input('adults'),
+                            'children' => $request->input('child'),
+                            'ages' => $ages
+                        ],function ($message) use ($systemConfig,$mail_to) {
+                            $message->from($systemConfig['site_admin_mail']);
+                            $message->to($mail_to, 'Employee')
+                                ->subject('Your Website Contact Form');
+                        });
+                    return redirect()->back()->with('message','success');
+                }
             }
+        }catch (\Throwable $th){
+            Session::flash('flash_message', 'Send message successfully!');
+            return redirect()->back();
         }
     }
 }
