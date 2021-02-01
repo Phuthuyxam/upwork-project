@@ -180,7 +180,10 @@
                             </td>
                             <td style="width: 50px; vertical-align: middle">
                                 <div class="action-wrapper">
-                                    <button type="button" class="btn btn-success btn-add-type"><i class="dripicons-plus"></i></button><button type="button" class="btn btn-danger btn-delete-type"><i class="dripicons-minus"></i></button>
+                                    <button type="button" class="btn btn-success btn-add-type"><i class="dripicons-plus"></i></button>
+                                    @if($key > 0)
+                                        <button type="button" class="btn btn-danger btn-delete-type"><i class="dripicons-minus"></i></button>
+                                    @endif
                                 </div>
                             </td>
                         </tr>
@@ -495,6 +498,9 @@
                         value="{{ isset($dataHome['message']['sign']) && !empty($dataHome['message']['sign']) ? $dataHome['message']['sign'] : "" }}">
                         <div class="input-group-append">
                             <button class="btn btn-primary waves-effect waves-light btn-popup-media" type="button" onclick="openMediaManager(this)">Select Image</button>
+                            @if($key > 0)
+                                <button type="button" class="btn btn-danger btn-delete-type"><i class="dripicons-minus"></i></button>
+                            @endif
                         </div>
                     </div>
                 </div>
@@ -578,6 +584,9 @@
                             <td style="width: 50px; vertical-align: middle">
                                 <div class="action-wrapper">
                                     <button type="button" class="btn btn-success btn-add-type"><i class="dripicons-plus"></i></button>
+                                    @if($key > 0)
+                                        <button type="button" class="btn btn-danger btn-delete-type"><i class="dripicons-minus"></i></button>
+                                    @endif
                                 </div>
                             </td>
                         </tr>

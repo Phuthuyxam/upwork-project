@@ -283,8 +283,7 @@ class ClientPostController extends Controller
                 }
             }
         }catch (\Throwable $th){
-            Session::flash('flash_message', 'Send message successfully!');
-            return redirect()->back();
+            return redirect()->back()->with('message','Send Fail');
         }
     }
 }
