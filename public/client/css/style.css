@@ -1030,7 +1030,7 @@ footer a {color: #ffffff !important}
 .banner-title {
     margin-bottom: 2rem;
 }
-
+.banner-title img.thumb {max-width: 250px !important}
 .breadscrum .rectangle {
     width: 10px;
     height: 10px;
@@ -2244,3 +2244,5 @@ footer a {color: #ffffff !important}
 
 #loading {background: #102447 !important;}
 #loading img {width: 5% !important;}
+
+
