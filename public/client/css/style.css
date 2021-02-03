@@ -55,7 +55,7 @@ ul {
 }
 
 .fw-bold {
-    font-family: MontserratBold;
+    font-family: MontserratSemiBold;
 }
 
 .fw-extraBold {
@@ -464,11 +464,11 @@ header.fixed {
 .btn-check-available {
     font-size: 14px;
     text-align: center;
-    background-color: #102447;
+    background-color: #C19B76;
     color: #fff;
     width: 190px;
     height: 60px;
-    border: 1px solid #102447;
+    border: 1px solid #C19B76;
     transition: ease-in-out .4s all;
     -webkit-transition: ease-in-out .4s all;
     -moz-transition: ease-in-out .4s all;
@@ -478,7 +478,7 @@ header.fixed {
 
 .btn-check-available:hover {
     background-color: #fff;
-    color: #102447;
+    color: #C19B76;
 }
 
 .promotion-code p.title {
@@ -661,7 +661,7 @@ header.fixed {
 
 .home-hotel-heading h3 {
     font-size: 20px;
-    color: #102447;
+    color: #C19B76;
     position: relative;
     padding-top: 1.5rem;
     margin-bottom: 1.5rem;
@@ -679,7 +679,7 @@ header.fixed {
 
 .home-hotel-heading h2 {
     font-size: 40px;
-    color: #102447;
+    color: #C19B76;
     margin-bottom: 0;
 }
 
@@ -784,7 +784,7 @@ footer {
     background: #102447;
     padding: 1rem 0;
 }
-
+footer a {color: #ffffff !important}
 .footer-content {
     display: flex;
     padding-bottom: 2rem;
@@ -2241,6 +2241,6 @@ footer {
         padding: 1rem;
     }
 }
-.banner-title img.thumb {
-    max-width: 200px !important;
-}
+
+#loading {background: #102447 !important;}
+#loading img {width: 5% !important;}
