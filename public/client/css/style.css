@@ -2241,3 +2241,6 @@ footer {
         padding: 1rem;
     }
 }
+.banner-title img.thumb {
+    max-width: 200px !important;
+}
