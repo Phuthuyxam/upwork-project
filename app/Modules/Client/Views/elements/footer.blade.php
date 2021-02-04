@@ -27,10 +27,10 @@
                     @endif
                 </div>
                 <div class="footer-social">
-                    <a href="{{ isset($systemConfig['social_link'][0]) && !empty($systemConfig['social_link'][0]) ? $systemConfig['social_link'][0] : "#" }}"><i class="fab fa-facebook-f aria-hidden="true"></i></a>
-                    <a href="{{ isset($systemConfig['social_link'][1]) && !empty($systemConfig['social_link'][1]) ? $systemConfig['social_link'][1] : "#" }}"><i class="fab fa-twitter" aria-hidden="true"></i></a>
-                    <a href="{{ isset($systemConfig['social_link'][2]) && !empty($systemConfig['social_link'][2]) ? $systemConfig['social_link'][2] : "#" }}"><i class="fab fa-instagram" aria-hidden="true"></i></a>
-                    <a href="{{ isset($systemConfig['social_link'][3]) && !empty($systemConfig['social_link'][3]) ? $systemConfig['social_link'][3] : "#" }}"><i class="fab fa-youtube" aria-hidden="true"></i></a>
+                    <a href="{{ isset($systemConfig['social_link'][0]) && !empty($systemConfig['social_link'][0]) ? $systemConfig['social_link'][0] : "#" }}" target="_blank"><i class="fab fa-facebook-f aria-hidden="true"></i></a>
+                    <a href="{{ isset($systemConfig['social_link'][1]) && !empty($systemConfig['social_link'][1]) ? $systemConfig['social_link'][1] : "#" }}" target="_blank"><i class="fab fa-twitter" aria-hidden="true"></i></a>
+                    <a href="{{ isset($systemConfig['social_link'][2]) && !empty($systemConfig['social_link'][2]) ? $systemConfig['social_link'][2] : "#" }}" target="_blank"><i class="fab fa-instagram" aria-hidden="true"></i></a>
+                    <a href="{{ isset($systemConfig['social_link'][3]) && !empty($systemConfig['social_link'][3]) ? $systemConfig['social_link'][3] : "#" }}" target="_blank"><i class="fab fa-youtube" aria-hidden="true"></i></a>
                 </div>
             </div>
             <div class="footer-copyright">
