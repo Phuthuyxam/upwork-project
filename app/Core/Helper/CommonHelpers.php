@@ -99,6 +99,11 @@ if(!function_exists('generateSeoOption')) {
 
 if(!function_exists('getDataSeoOption')) {
     function getDataSeoOption($objectId, $seoType, $defaultData = []) {
+
+        $systemConfig = \App\Core\Helper\OptionHelpers::getSystemConfigByKey('general');
+        if($systemConfig && json_decode($systemConfig,true))
+            $systemConfig = json_decode($systemConfig, true);
+
         $seoRepository = \App\Modules\Seo\Repositories\SeoRepository::class;
         $seoConfig = \App\Core\Glosary\SeoConfigs::getSeoKey();
         $seoRepository = app()->make(
@@ -134,8 +139,8 @@ if(!function_exists('getDataSeoOption')) {
         $currentLocel = LocationConfigs::getLanguageByCode(app()->getLocale());
         ob_start();
         ?>
-        <title><?php echo ( isset($resultData[$seoConfig['SEO']['TITLE']]) && !empty($resultData[$seoConfig['SEO']['TITLE']]) ) ? $resultData[$seoConfig['SEO']['TITLE']] :
-                ( isset($defaultData[$seoConfig['SEO']['TITLE']]) ? $defaultData[$seoConfig['SEO']['TITLE']] : "" ) ?></title>
+        <title><?php echo (isset($systemConfig['site_title']) ? $systemConfig['site_title']:'').((env('APP_URL') == url()->current()) ? "" : ' | '.(( isset($resultData[$seoConfig['SEO']['TITLE']]) && !empty($resultData[$seoConfig['SEO']['TITLE']]) ) ? $resultData[$seoConfig['SEO']['TITLE']] :
+                ( isset($defaultData[$seoConfig['SEO']['TITLE']]) ? $defaultData[$seoConfig['SEO']['TITLE']] : "" ))) ?></title>
         <meta name="description" content="<?php echo ( isset($resultData[$seoConfig['SEO']['DESC']]) && !empty($resultData[$seoConfig['SEO']['DESC']]) ) ? $resultData[$seoConfig['SEO']['DESC']] :
                   (isset($defaultData[$seoConfig['SEO']['DESC']]) ? $defaultData[$seoConfig['SEO']['DESC']] : "") ?>"/>
         <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1<?php echo ( !empty($robots) ? ",". $robots : false ) ?> "/>

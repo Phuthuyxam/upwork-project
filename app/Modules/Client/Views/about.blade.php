@@ -8,7 +8,7 @@
 @endsection
 
 @section('seo')
-    {!! getDataSeoOption($post->id, \App\Core\Glosary\SeoConfigs::SEOTYPE['SINGLE']['KEY'], $seoDefault) !!}
+    {!! getDataSeoOption($post->id, \App\Core\Glosary\SeoConfigs::SEOTYPE['SINGLE']['KEY'],  $seoDefault) !!}
 @endsection
 @section('style')
     @if($currentLanguage == 'ar')
@@ -69,11 +69,9 @@
                                                {!! \App\Core\Helper\FrontendHelpers::renderImage($item->image) !!}
                                             </div>
                                             <div class="content">
-                                                <a href="#" title="title">
-                                                    <div class="title">
-                                                        <p>{{ $item->desc }}</p>
-                                                    </div>
-                                                </a>
+                                                <div class="title">
+                                                    <p>{{ $item->desc }}</p>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -95,11 +93,9 @@
                                                 {!! \App\Core\Helper\FrontendHelpers::renderImage($item->image) !!}
                                             </div>
                                             <div class="content">
-                                                <a href="#" title="title">
-                                                    <div class="title">
-                                                        <p>{{ $item->desc }}</p>
-                                                    </div>
-                                                </a>
+                                                <div class="title">
+                                                    <p>{{ $item->desc }}</p>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>

@@ -66,11 +66,9 @@
                                         {!! \App\Core\Helper\FrontendHelpers::renderImage($item->image) !!}
                                     </div>
                                     <div class="content">
-                                        <a href="#" title="title">
-                                            <div class="title">
-                                                <h3>{{ $item->desc }}</h3>
-                                            </div>
-                                        </a>
+                                        <div class="title">
+                                            <h3>{{ $item->desc }}</h3>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

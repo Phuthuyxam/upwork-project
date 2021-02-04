@@ -560,6 +560,7 @@
                                                 </div>
                                             </div>
                                             <div class="input-group">
+
                                                 <input type="text" style="padding: 3px 5px; overflow: hidden" name="option_home_brand_banner[]" class="form-control required home-slider-image" aria-describedby="button-image" readonly
                                                        value="{{ (isset($brand['banner']) && !empty($brand['banner']) ) ? $brand['banner'] : "" }}">
                                                 <div class="input-group-append">
@@ -569,17 +570,22 @@
                                         </div>
                                     </div>
                                 </div>
-
                                 <div class="form-group row">
-                                    <label for="example-text-input" class="col-sm-2 col-form-label">Url</label>
+                                    <label class="col-sm-2 col-form-label">Name</label>
+                                    <div class="col-sm-10">
+                                        <input class="form-control " type="text"
+                                               value="{{ isset($brand['name']) && !empty($brand['name']) ? $brand['name'] : "" }}"
+                                               name="option_home_brand_name[]">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-2 col-form-label">Url</label>
                                     <div class="col-sm-10">
                                         <input class="form-control home_brand_url" type="text"
                                                value="{{ isset($brand['url']) && !empty($brand['url']) ? $brand['url'] : "" }}"
                                                name="option_home_brand_url[]">
                                     </div>
                                 </div>
-
-
                             </td>
                             <td style="width: 50px; vertical-align: middle">
                                 <div class="action-wrapper">
@@ -596,7 +602,6 @@
                         <td class="counter">1</td>
                         <td style="">
                             <div class="row">
-
                                 <div class="col-lg-12">
                                     <label class="mb-1">
                                         Logo Brand
@@ -618,7 +623,14 @@
                                     </div>
                                 </div>
                             </div>
-
+                            <div class="form-group row">
+                                <label class="col-sm-2 col-form-label">Name</label>
+                                <div class="col-sm-10">
+                                    <input class="form-control " type="text"
+                                           value=""
+                                           name="option_home_brand_name[]">
+                                </div>
+                            </div>
                             <div class="form-group row">
                                 <label for="example-text-input" class="col-sm-2 col-form-label">Url</label>
                                 <div class="col-sm-10">
@@ -700,7 +712,14 @@
                                         </div>
                                     </div>
                                 </div>
-
+                                <div class="form-group row">
+                                    <label class="col-sm-2 col-form-label">Name</label>
+                                    <div class="col-sm-10">
+                                        <input class="form-control " type="text"
+                                               value="{{ isset($brand['name']) && !empty($brand['name']) ? $brand['name'] : "" }}"
+                                               name="option_coming_brand_name[]">
+                                    </div>
+                                </div>
                                 <div class="form-group row">
                                     <label for="example-text-input" class="col-sm-2 col-form-label">Url</label>
                                     <div class="col-sm-10">
@@ -709,8 +728,6 @@
                                                name="option_coming_brand_url[]">
                                     </div>
                                 </div>
-
-
                             </td>
                             <td style="width: 50px; vertical-align: middle">
                                 <div class="action-wrapper">
@@ -749,7 +766,14 @@
                                     </div>
                                 </div>
                             </div>
-
+                            <div class="form-group row">
+                                <label class="col-sm-2 col-form-label">Name</label>
+                                <div class="col-sm-10">
+                                    <input class="form-control" type="text"
+                                           value=""
+                                           name="option_coming_brand_name[]">
+                                </div>
+                            </div>
                             <div class="form-group row">
                                 <label for="example-text-input" class="col-sm-2 col-form-label">Url</label>
                                 <div class="col-sm-10">

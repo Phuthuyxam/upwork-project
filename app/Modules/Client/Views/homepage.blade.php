@@ -252,8 +252,11 @@
                                     @foreach($brands->brands as $brand)
                                         @if($brand->banner != '')
                                             <div class="item">
-                                                <a href="{{ $brand->url }}">
-                                                    {!! \App\Core\Helper\FrontendHelpers::renderImage($brand->banner) !!}
+                                                <a href="{{ $brand->url ? $brand->url : 'javascript:void(0)'}}">
+                                                    <div class="image">
+                                                        {!! \App\Core\Helper\FrontendHelpers::renderImage($brand->banner) !!}
+                                                    </div>
+                                                    <p class="name fw-bold">{{ $brand->name ? $brand->name : '' }}</p>
                                                 </a>
                                             </div>
                                         @endif
@@ -285,8 +288,11 @@
                                     @foreach($brands->brands as $brand)
                                         @if($brand->banner != '')
                                             <div class="item">
-                                                <a href="{{ $brand->url }}">
-                                                    {!! \App\Core\Helper\FrontendHelpers::renderImage($brand->banner) !!}
+                                                <a href="{{ $brand->url ? $brand->url : 'javascript:void(0)'}}">
+                                                    <div class="image">
+                                                        {!! \App\Core\Helper\FrontendHelpers::renderImage($brand->banner) !!}
+                                                    </div>
+                                                    <p class="name fw-bold">{{ $brand->name ? $brand->name : '' }}</p>
                                                 </a>
                                             </div>
                                         @endif

@@ -5,7 +5,6 @@
         $systemConfig = json_decode($systemConfig, true);
     if($menusData && json_decode($menusData, true))
         $menus = json_decode($menusData,true);
-
 @endphp
 <!DOCTYPE html>
 @yield('html')

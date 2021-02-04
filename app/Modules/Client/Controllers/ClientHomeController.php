@@ -109,7 +109,7 @@ class ClientHomeController extends Controller
                 }
             }
         }
-        $hotel_code = [];
+        $hotel_codes = [];
         if (count($hotels)) {
             $ids = [];
             foreach ($posts->toArray() as $value) {

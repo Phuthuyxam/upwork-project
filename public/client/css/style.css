@@ -1112,6 +1112,9 @@ footer a {color: #ffffff !important}
     color: #102447;
     font-family: MontserratSemiBold;
     margin-top: 1rem;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
 }
 
 .hotels-content .hotel-item .image {
@@ -1647,7 +1650,6 @@ footer a {color: #ffffff !important}
 
 .brand-slider .slick-track {
     display: flex;
-    align-items: center;
 }
 .brand-slider .slick-track .item {
     padding: 0 30px;
@@ -1755,6 +1757,26 @@ footer a {color: #ffffff !important}
 }
 .thanks-wrapper {
     color: #102447;
+}
+.brand-slider .item a {
+    display: flex;
+    align-items: center;
+    flex-flow: column;
+    justify-content: space-between;
+}
+.brand-slider .item {
+    flex: 1;
+    display: flex;
+    height: auto;
+}
+.brand-slider .item .image {
+    height: 90%;
+    display: flex;
+    align-items: center;
+}
+.brand-slider .item .name{
+    height: 10%;
+    color: #000;
 }
 @media screen and (min-width: 2000px) {
     .home-slider .item {
