@@ -256,7 +256,7 @@
                                                     <div class="image">
                                                         {!! \App\Core\Helper\FrontendHelpers::renderImage($brand->banner) !!}
                                                     </div>
-                                                    <p class="name fw-bold">{{ $brand->name ? $brand->name : '' }}</p>
+                                                    <p class="name fw-bold">{{ isset($brand->name) && !empty($brand->name) ? $brand->name : '' }}</p>
                                                 </a>
                                             </div>
                                         @endif
@@ -292,7 +292,7 @@
                                                     <div class="image">
                                                         {!! \App\Core\Helper\FrontendHelpers::renderImage($brand->banner) !!}
                                                     </div>
-                                                    <p class="name fw-bold">{{ $brand->name ? $brand->name : '' }}</p>
+                                                    <p class="name fw-bold">{{ isset($brand->name) && !empty($brand->name) ? $brand->name : '' }}</p>
                                                 </a>
                                             </div>
                                         @endif

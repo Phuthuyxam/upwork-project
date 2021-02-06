@@ -131,7 +131,7 @@
 
                 <p class="error text-danger fw-bold">{{__('children_age_error')}}</p>
             </div>
-            <input type="hidden" id="occupancies">
+            <input type="hidden" name="occupancies" id="occupancies">
             <div class="submit-wrapper">
                 <input type="submit" class="btn btn-submit" value="{{ __('home_check_availability') }}">
             </div>
